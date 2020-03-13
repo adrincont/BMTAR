@@ -1,0 +1,147 @@
+# Date:
+# Description:
+# Coments:
+#-> dependent function of mvtnorm library.
+#-> In the simulation the first values of Ut are considered zeros and the first values 
+#-  of Yt as normal noises. Additionally a burn of 100.
+#-> hacer comentario respecto a los casos donde explota y aclarar que no se evalua "estabilidad" 
+# No evaluamos que Ut cumpla las propiedades de ser proceso markov
+# Function:
+mtarsim = function(N, Rg, r = NULL, Ut = NULL, seed = NULL, ...){
+  burn = 1000
+  l = length(Rg)
+  if (l == 1) {
+    rj = matrix(c(-Inf,Inf),nrow = 2,ncol = l)
+    if (is.null(Ut)) {
+      Ut = matrix(0, ncol = N,nrow = 1)
+    }else{
+      Ut = rbind(matrix(0, ncol = N,nrow = 1),t(Ut)) # only for covariable
+    }
+  }else{
+    if (is.null(Ut)) {
+      stop('Ut must be enter with threshold process (and optional covariate process)')
+    }else{
+      Ut = t(Ut)
+    }
+  }
+  # Validations
+  if (!is.list(Rg)) {stop("Rg must be a list of objects of class regime")}
+  if (ncol(Ut) != N | !is.numeric(Ut) | !is.matrix(Ut)) {stop("Ut must be a matrix of dimension nx(nu+1)")}
+  for (i in 1:l) {
+    if (class(Rg[[i]]) != "regime") {stop("Rg must be a list of objects of class regime")}
+  }
+  if (l >= 2) {
+    if (length(r) < 1 | length(r) != (l - 1) | !is.numeric(r) | is.null(r)) {
+      stop("r must be a numeric vector of length(Rg)-1 ")}else{
+      if (l > 2) {for (i in 1:{l - 2}) {
+        if (r[i] >= r[i + 1]) {stop('r[i] must be smaller than r[i+1]')}}
+      }
+    }
+  }
+  if (!{round(N) == N & N > 1}) {stop("N must be an integer greater than 1")}
+  # values by regime
+  k = nrow(Rg[[1]]$sigma)
+  nu = nrow(Ut) - 1
+  pj = qj = dj = c()
+  for (i in 1:l) {
+    pj[i] = length(Rg[[i]]$phi)
+    qj[i] = length(Rg[[i]]$beta)
+    dj[i] = length(Rg[[i]]$delta)
+  }
+  # create intervals
+  if (l != 1) {
+    rj = matrix(nrow = 2,ncol = l)
+    rj[,1] = c(-Inf,r[1])
+    rj[,l] = c(rev(r)[1],Inf)
+    if (l > 2) {
+      for (i in 2:{l - 1}) {rj[,i] = c(r[i - 1],r[i])}
+    }
+  }
+  # initial Vectors
+  maxj = max(pj,qj,dj)
+  Yt = matrix(0,nrow = k,ncol = N + maxj + burn)
+  if (!is.null(seed)) {set.seed(seed)}
+  et = t(mvtnorm::rmvnorm(N + maxj + burn,mean = rep(0,k),sigma = diag(k)))
+  Yt[,1:(maxj + burn)] = et[,1:(maxj + burn)]
+  Zt = c(rep(0,maxj + burn),Ut[1,])
+  if (nu == 0) {
+    Xt = matrix(0,ncol = N + maxj + burn,nrow = 1)
+  }else{
+    Xt = cbind(rep(0,nu) %x% matrix(1,ncol = maxj + burn),matrix(Ut[-1,],nrow = nu))
+  }
+  # iterations of the simulation
+  for (i in (maxj + burn + 1):(N + maxj + burn)) {
+    ## evaluate regime
+    for (w in 1:l) {
+      if (Zt[i] > rj[1,w] & Zt[i] <= rj[2,w]) {Ri = Rg[[w]]}
+    }
+    ## calculate from according regime selected
+    p = length(Ri$phi)
+    q = length(Ri$beta)
+    d = length(Ri$delta)
+    ## create matrices
+    cs = Ri$cs
+    At = as.matrix(as.data.frame(Ri$phi))
+    if (q != 0) {
+      Bt = as.matrix(as.data.frame(Ri$beta))
+    }else{Bt = matrix(0,nrow = k,ncol = 1)}
+    if (d != 0) {
+      Dt = as.matrix(as.data.frame(Ri$delta))
+    }else{Dt = matrix(0,nrow = k,ncol = 1)}
+    Sig = as.matrix(Ri$sigma)
+    ## make lags and calculate
+    yti = c()
+    for (w in 1:p) {yti = c(yti,Yt[,i - w])}
+    xti = c()
+    if (l == 1 & nrow(Ut) != 1) {
+      xti = c(xti,Xt[,i])
+    }else{
+      for (w in 1:ifelse(q == 0,1,q)) {xti = c(xti,Xt[,i - w])} 
+    }
+    zti = c()
+    for (w in 1:ifelse(d == 0,1,d)) {zti = c(zti,Zt[i - w])}
+    Yt[,i] = cs + At %*% yti + Bt %*% xti + Dt %*% zti + Sig %*% et[,i]
+  }
+  # delete burn
+  Yt = matrix(Yt[,-(1:{maxj + burn})],ncol = k,nrow = N,byrow = TRUE)
+  Zt = Zt[-c(1:{maxj + burn})]
+  # count number of observations in each regime
+  Ind = c()
+  for (j in 1:l) {
+    for (w in 1:N) {
+      if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
+        Ind[w] = j
+      }
+    }
+  }
+  Nrg = c()
+  for (lj in 1:l) {Nrg[lj] = sum(Ind == lj)}
+  return(list(Yt = Yt,pj = pj,qj = qj,dj = dj,Nrg = Nrg))
+}
+# Example:
+## get Ut data process
+Tlen = 1000
+k = 2
+nu = 0
+Sigma_ut = expm::sqrtm(matrix(c(1,0.4,0.4,2),k,k))
+Phi_ut = list(phi1 = matrix(c(0.5,0.1,0.4,0.5),k,k,byrow = T))
+R_ut = list(R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = Sigma_ut))
+Ut = mtarsim(N = Tlen,Rg = R_ut)$Yt
+forecast::autoplot(ts(Ut),facets = TRUE)
+## R1 regime
+Phi_R1 = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = T))
+Delta_R1 = list(delta1 = matrix(c(0.6,1),k,1))
+Sigma_R1 = matrix(c(1,0,0,1),k,k,byrow = T)
+cs_R1 = matrix(c(1,-1),nrow = 2)
+R1 = mtaregim(orders = list(p = 2,q = 0,d = 1),Phi = Phi_R1,Delta = Delta_R1,Sigma = Sigma_R1,cs = cs_R1)
+## R2 regime
+Phi_R2 = list(phi1 = matrix(c(0.3,0.5,0.2,0.7),2,2,byrow = T))
+Sigma_R2 = matrix(c(2.5,0.5,0.5,1),2,2,byrow = T)
+cs_R2 = matrix(c(5,2),nrow = 2)
+R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2,cs = cs_R2)
+## create list of regime-type objects
+Rg = list(R1 = R1,R2 = R2)
+r = qnorm(0.3)
+## get the simulation
+datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Ut = Ut)
+forecast::autoplot(ts(datasim$Yt),facets = T)
