@@ -338,12 +338,12 @@ rmeanSmp = thetaymp$Pseudo$r$mean
 rcovSmp = thetaymp$Pseudo$r$cov
 # Valor del numerador
 for (lj in 1:lmp) {
-pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,1],size = 1,prob = pijmp[[lj]])))
-pthetaPn = pthetaPn*dmnormB(theta_itermp[[lj]][,1],mean = theta0jmp[[lj]], sigma = sigma0jmp[[lj]])
-psigmaPn = psigmaPn*dinvwishartB(sigma_itermp[[lj]][[1]], nu = nu0jmp[[lj]],S = S0jmp[[lj]])
-pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,1],size = 1,prob = pijSmp[[lj]])))
-pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,1],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
-psigmaSd = psigmaSd*dwishartB(sigma_itermp[[lj]][[1]], nu = nu0jSmp[[lj]],S = S0jSmp[[lj]])
+pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iA],size = 1,prob = pijmp[[lj]])))
+pthetaPn = pthetaPn*dmnormB(theta_itermp[[lj]][,iA],mean = theta0jmp[[lj]], sigma = sigma0jmp[[lj]])
+psigmaPn = psigmaPn*dinvwishartB(sigma_itermp[[lj]][[iA]], nu = nu0jmp[[lj]],S = S0jmp[[lj]])
+pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iA],size = 1,prob = pijSmp[[lj]])))
+pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,iA],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
+psigmaSd = psigmaSd*dwishartB(sigma_itermp[[lj]][[iA]], nu = nu0jSmp[[lj]],S = S0jSmp[[lj]])
 }
 prPn = dmunif(r_itermp[,1],a,b)
 prSn = dmnormB(r_iterm[,iA - 1],mean = rmeanSm, sigma = rcovSm)
