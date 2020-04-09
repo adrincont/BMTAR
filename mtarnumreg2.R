@@ -3,6 +3,8 @@ rm(list = list[!(list %in% c("Yt","Ut","list"))])
 Yt = t(Yt)
 Ut = t(Ut)
 #------------------------------------------------------------------#
+rm(list = ls())
+load("~/Val/Unal/MTAR/libreria-MTAR/DATA_ABR_9.RData")
 l0 = 3
 niter = 6000
 chain = T
@@ -10,8 +12,8 @@ level = 0.95
 burn = 2000
 method = 'KUO'
 kappa = 0.5
-k = ncol(Yt)
-N = nrow(Yt)
+k = nrow(Yt)
+N = ncol(Yt)
 nu = nrow(Ut) - 1
 Zt = Ut[1,]
 if (nu == 0) {
@@ -158,8 +160,8 @@ fill = function(m, iter = 500, kappa = 0.5, burn = 500, ...){
   return(list(i = i,orders = ordersm,Priori = iniP,Pseudo = iniS,Chain = listchain,listr = listr,par = par))
 }
 listm = list()
-listm[[paste0('m',2)]] = fill(m = 2,iter = 2000,burn = 4000)
-listm[[paste0('m',3)]] = fill(m = 3,iter = 2000,burn = 4000)
+listm[[paste0('m',2)]] = fill(m = 2,iter = 2000,burn = 1000)
+listm[[paste0('m',3)]] = fill(m = 3,iter = 2000,burn = 1000)
 
 updatelist = function(l, ...){
   rgamber = function(pos, reg, ig, ...){
