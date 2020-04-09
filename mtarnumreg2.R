@@ -10,8 +10,8 @@ level = 0.95
 burn = 2000
 method = 'KUO'
 kappa = 0.5
-k = nrow(Yt)
-N = ncol(Yt)
+k = ncol(Yt)
+N = nrow(Yt)
 nu = nrow(Ut) - 1
 Zt = Ut[1,]
 if (nu == 0) {
@@ -286,7 +286,9 @@ rpseudo = function(l,...){
     theta_iter[[lj]][,i2] = mvtnorm::rmvnorm(1,mean = theta0jS[[lj]],sigma = sigma0jS[[lj]])
     sigma_iter[[lj]][[i2]] = 1/nu0jS[[lj]]*MCMCpack::rwish(v = nu0jS[[lj]] ,S = S0jS[[lj]])
     #sigma_iter[[lj]][[1]] = 1/nu0jS[[lj]]*LaplacesDemon::rwishart(nu = nu0jS[[lj]],S = round(S0jS[[lj]],15))
-    gam_iter[[lj]][,i2] = rbinom(n = 1,size = 1,prob = pijS[[lj]])
+    for (iga in 1:{k*etam[lj]}) {
+      gam_iter[[lj]][iga,i2] = rbinom(n = 1,size = 1,prob = pijS[[lj]][iga])
+    }
   }
   r_iter[,i2] = mvtnorm::rmvnorm(1,mean = rmeanS, sigma = rcovS)
   listPr$Chain = list(Theta = theta_iter, Sigma = sigma_iter,Gamma = gam_iter, r = r_iter)
