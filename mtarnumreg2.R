@@ -307,7 +307,8 @@ theta_iterm = thetaym$Chain$Theta
 sigma_iterm = thetaym$Chain$Sigma
 gam_iterm = thetaym$Chain$Gamma
 r_iterm = thetaym$Chain$r
-iA = thetaym$i
+iAm = thetaym$i
+iAmp = thetaymp$i
 theta_itermp = thetaymp$Chain$Theta
 sigma_itermp = thetaymp$Chain$Sigma
 gam_itermp = thetaymp$Chain$Gamma
@@ -336,29 +337,29 @@ nu0jSmp = thetaymp$Pseudo$Sigma$gl
 pijSmp = thetaymp$Pseudo$Gamma$prob
 rmeanSmp = thetaymp$Pseudo$r$mean
 rcovSmp = thetaymp$Pseudo$r$cov
-# Valor del numerador
+
 for (lj in 1:lmp) {
-pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iA],size = 1,prob = pijmp[[lj]])))
-pthetaPn = pthetaPn*dmnormB(theta_itermp[[lj]][,iA],mean = theta0jmp[[lj]], sigma = sigma0jmp[[lj]])
-psigmaPn = psigmaPn*dinvwishartB(sigma_itermp[[lj]][[iA]], nu = nu0jmp[[lj]],S = S0jmp[[lj]])
-pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iA],size = 1,prob = pijSmp[[lj]])))
-pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,iA],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
-psigmaSd = psigmaSd*dwishartB(sigma_itermp[[lj]][[iA]], nu = nu0jSmp[[lj]],S = S0jSmp[[lj]])
+pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijmp[[lj]])))
+pthetaPn = pthetaPn*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jmp[[lj]], sigma = sigma0jmp[[lj]])
+psigmaPn = psigmaPn*dinvwishartB(sigma_itermp[[lj]][[iAmp]], nu = nu0jmp[[lj]],S = S0jmp[[lj]])
+pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijSmp[[lj]])))
+pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
+psigmaSd = psigmaSd*dwishartB(sigma_itermp[[lj]][[iAmp]], nu = nu0jSmp[[lj]],S = S0jSmp[[lj]])
 }
-prPn = dmunif(r_itermp[,1],a,b)
-prSn = dmnormB(r_iterm[,iA - 1],mean = rmeanSm, sigma = rcovSm)
+prPn = dmunif(r_itermp[,iAmp],a,b)
+prSn = dmnormB(r_iterm[,iAm],mean = rmeanSm, sigma = rcovSm)
 fn = fycond(1,thetaymp$listr,thetaymp$Chain$Gamma,thetaymp$Chain$Theta,thetaymp$Chain$Sigma)
-# Valor para denominador
+
 for (lj in 1:lm) {
-pgammaPd = pgammaPd*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iA],size = 1,prob = pijm[[lj]])))
-pthetaPd = pthetaPd*dmnormB(theta_iterm[[lj]][,iA],mean = theta0jm[[lj]], sigma = sigma0jm[[lj]])
-psigmaPd = psigmaPd*dinvwishartB(sigma_iterm[[lj]][[iA]], nu = nu0jm[[lj]],S = S0jm[[lj]])
-pgammaSn = pgammaSn*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iA],size = 1,prob = pijSm[[lj]])))
-pthetaSn = pthetaSn*dmnormB(theta_iterm[[lj]][,iA],mean = theta0jSm[[lj]], sigma = sigma0jSm[[lj]])
-psigmaSn = psigmaSn*dwishartB(sigma_iterm[[lj]][[iA]], nu = nu0jSm[[lj]],S = S0jSm[[lj]])
+pgammaPd = pgammaPd*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijm[[lj]])))
+pthetaPd = pthetaPd*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jm[[lj]], sigma = sigma0jm[[lj]])
+psigmaPd = psigmaPd*dinvwishartB(sigma_iterm[[lj]][[iAm]], nu = nu0jm[[lj]],S = S0jm[[lj]])
+pgammaSn = pgammaSn*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijSm[[lj]])))
+pthetaSn = pthetaSn*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jSm[[lj]], sigma = sigma0jSm[[lj]])
+psigmaSn = psigmaSn*dwishartB(sigma_iterm[[lj]][[iAm]], nu = nu0jSm[[lj]],S = S0jSm[[lj]])
 }
-prPd = dmunif(r_iterm[,iA],a,b)
-prSd = dmnormB(r_itermp[,1],mean = rmeanSmp, sigma = as.matrix(rcovSmp))
+prPd = dmunif(r_iterm[,iAm],a,b)
+prSd = dmnormB(r_itermp[,iAmp],mean = rmeanSmp, sigma = as.matrix(rcovSmp))
 fd = fycond(thetaym$i,thetaym$listr,thetaym$Chain$Gamma,thetaym$Chain$Theta,thetaym$Chain$Sigma)
 # Calculo para el valor del cociente
 vald = fd*(pgammaPd*pthetaPd*psigmaPd*prPd)*(pgammaSd*pthetaSd*psigmaSd*prSd)
