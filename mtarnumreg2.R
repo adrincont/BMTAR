@@ -266,7 +266,7 @@ return(listPr)
 }
 rpseudo = function(l,...){
 listPr = listm[[paste0('m',l)]]
-i2 = listPr$i
+i2 = listPr$i + 1
 pjmax = listPr$orders$pjmax
 qjmax = listPr$orders$qjmax
 djmax = listPr$orders$djmax
