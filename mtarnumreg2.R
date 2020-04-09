@@ -172,22 +172,22 @@ updatelist = function(l, ...){
       aij = pycond1*pij[[reg]][pos]
       bij = pycond0*(1 - pij[[reg]][pos])
     }else if (method == 'SSVS') {
-    Xj = listaj$listaX[[reg]]
-    yj = c(listaj$listaY[[reg]])
-    gam_j[[reg]][pos,ig] = 1
-    itauij[[reg]][gam_j[[reg]][,ig] == 0] = tauij[[reg]][gam_j[[reg]][,ig] == 0]
-    itauij[[reg]][gam_j[[reg]][,ig] == 1] =
-    cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
-    Dj[[reg]] = diag(itauij[[reg]])
-    pthetacond1 = dmnormB(x = theta_iter[[reg]][,ig],mean = rep(0,k*etam[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
-    aij = pycond1*pthetacond1*pij[[reg]][pos]
-    gam_j[[reg]][pos,ig] = 0
-    itauij[[reg]][gam_j[[reg]][,ig] == 0] = tauij[[reg]][gam_j[[reg]][,ig] == 0]
-    itauij[[reg]][gam_j[[reg]][,ig] == 1] =
-    cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
-    Dj[[reg]] = diag(itauij[[reg]])
-    pthetacond0 = dmnormB(x = theta_iter[[reg]][,ig],mean = rep(0,k*etam[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
-    bij = pycond0*pthetacond0*(1 - pij[[reg]][pos])
+      Xj = listaj$listaX[[reg]]
+      yj = c(listaj$listaY[[reg]])
+      gam_j[[reg]][pos,ig] = 1
+      itauij[[reg]][gam_j[[reg]][,ig] == 0] = tauij[[reg]][gam_j[[reg]][,ig] == 0]
+      itauij[[reg]][gam_j[[reg]][,ig] == 1] =
+      cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
+      Dj[[reg]] = diag(itauij[[reg]])
+      pthetacond1 = dmnormB(x = theta_iter[[reg]][,ig],mean = rep(0,k*etam[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
+      aij = pycond1*pthetacond1*pij[[reg]][pos]
+      gam_j[[reg]][pos,ig] = 0
+      itauij[[reg]][gam_j[[reg]][,ig] == 0] = tauij[[reg]][gam_j[[reg]][,ig] == 0]
+      itauij[[reg]][gam_j[[reg]][,ig] == 1] =
+      cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
+      Dj[[reg]] = diag(itauij[[reg]])
+      pthetacond0 = dmnormB(x = theta_iter[[reg]][,ig],mean = rep(0,k*etam[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
+      bij = pycond0*pthetacond0*(1 - pij[[reg]][pos])
     }
     return(rbinom(1,size = 1,prob = as.numeric((aij)/(aij + bij))))
   }
