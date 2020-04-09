@@ -215,7 +215,7 @@ updatelist = function(l, ...){
   cij = listPr$Priori$Gamma$cij
   Rj = listPr$Priori$Gamma$Rj
   }
-  #iterations updatde
+  #iterations update
   listaj = lists(l,r_iter[,i2],pjmax,qjmax,djmax)
   for (lj in 1:l) {
     Xj = listaj$listaX[[lj]]
