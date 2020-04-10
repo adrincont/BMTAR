@@ -14,6 +14,19 @@ if (nu == 0) {
 }else{
   Xt = matrix(Ut[-1,],nrow = nu,ncol = N,byrow = TRUE)
 }
+# Necesaria ----#
+dwishartB = function(x, nu, S){
+  k = nrow(x)
+  gamsum = 0
+  for (i in 1:k) {
+    gamsum = gamsum + lgamma((nu + 1 - i)/2)
+  }
+  dens = -(nu * k/2) * log(2) - ((k * (k - 1))/4) * log(pi) - 
+    gamsum - (nu/2) * log(det(S*1/nu)) + ((nu - k - 1)/2) * log(det(x)) - 
+    0.5 * sum(diag(solve(S*1/nu) %*% x))
+  dens = exp(Brobdingnag::as.brob(dens))
+  return(dens)
+}
 # Simulacion de previas -------------------------------------------#
 lists = function(l, r, pjmax, qjmax, djmax, ...){
   rj = matrix(nrow = 2,ncol = l)
@@ -102,7 +115,7 @@ fill = function(m, iter = 500, kappa = 0.5, burn = 500, ...){
   theta0Sm = lapply(par$estimates$Theta,function(x){x[,2]})
   sigma0Sm = lapply(par$Chain$Theta,function(x){cov(t(x))})
   #Parametros seudo Sigma
-  S0Sm = lapply(par$regime,function(x){x$sigma %*% t(x$sigma)})
+  S0Sm = lapply(par$regime,function(x){x$sigma})
   nu0Sm = lapply(1:m,function(x){1000})
   #Parametros seudo Gamma
   pij0Sm = lapply(par$Chain$Gamma,function(x){apply(x,1,mean)})
