@@ -342,6 +342,7 @@ rpseudo = function(l,...){
   for (lj in 1:l) {
     theta_iter[[lj]][,i2] = mvtnorm::rmvnorm(1,mean = theta0jS[[lj]],sigma = sigma0jS[[lj]])
     sigma_iter[[lj]][[i2]] = 1/nu0jS[[lj]]*MCMCpack::rwish(v = nu0jS[[lj]] ,S = S0jS[[lj]])
+    sigma_iter[[lj]][[i2]] = sigma_iter[[lj]][[i2]] %*% sigma_iter[[lj]][[i2]]
     #sigma_iter[[lj]][[1]] = 1/nu0jS[[lj]]*LaplacesDemon::rwishart(nu = nu0jS[[lj]],S = round(S0jS[[lj]],15))
     for (iga in 1:{k*etam[lj]}) {
       gam_iter[[lj]][iga,i2] = rbinom(n = 1,size = 1,prob = pijS[[lj]][iga])
@@ -401,7 +402,7 @@ prodA = function(thetaym, thetaymp){
     psigmaPn = psigmaPn*dinvwishartB(sigma_itermp[[lj]][[iAmp]], nu = nu0jmp[[lj]],S = S0jmp[[lj]])
     pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijSmp[[lj]])))
     pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
-    psigmaSd = psigmaSd*dwishartB(sigma_itermp[[lj]][[iAmp]], nu = nu0jSmp[[lj]],S = S0jSmp[[lj]])
+    psigmaSd = psigmaSd*dwishartB(expm::sqrtm(sigma_itermp[[lj]][[iAmp]]), nu = nu0jSmp[[lj]],S = S0jSmp[[lj]])
   }
   prPn = dmunif(r_itermp[,iAmp],a,b)
   prSn = dmnormB(r_iterm[,iAm],mean = rmeanSm, sigma = rcovSm)
@@ -413,7 +414,7 @@ prodA = function(thetaym, thetaymp){
     psigmaPd = psigmaPd*dinvwishartB(sigma_iterm[[lj]][[iAm]], nu = nu0jm[[lj]],S = S0jm[[lj]])
     pgammaSn = pgammaSn*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijSm[[lj]])))
     pthetaSn = pthetaSn*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jSm[[lj]], sigma = sigma0jSm[[lj]])
-    psigmaSn = psigmaSn*dwishartB(sigma_iterm[[lj]][[iAm]], nu = nu0jSm[[lj]],S = S0jSm[[lj]])
+    psigmaSn = psigmaSn*dwishartB(expm::sqrtm(sigma_iterm[[lj]][[iAm]]), nu = nu0jSm[[lj]],S = S0jSm[[lj]])
   }
   prPd = dmunif(r_iterm[,iAm],a,b)
   prSd = dmnormB(r_itermp[,iAmp],mean = rmeanSmp, sigma = as.matrix(rcovSmp))
