@@ -1,3 +1,53 @@
+list = ls()
+rm(list = list[!(list %in% c("Yt","Ut"))])
+Yt = t(Yt)
+Ut = t(Ut)
+# Umbrales
+listm$m2$Pseudo$r$mean = umbralesminimos[[2-1]][[1]]
+listm$m3$Pseudo$r$mean = umbralesminimos[[3-1]][[1]]
+listm$m2$Pseudo$r$cov = umbralesminimos[[2-1]][[2]]
+listm$m3$Pseudo$r$cov = umbralesminimos[[3-1]][[2]]
+# Theta
+listm$m2$Pseudo$Theta$mean$R1 = estimaciones[[2-1]][[3]][[1]]
+listm$m2$Pseudo$Theta$mean$R2 = estimaciones[[2-1]][[3]][[2]]
+listm$m2$Pseudo$Theta$cov$R1 = covarianzastheta[[2-1]][[1]]
+listm$m2$Pseudo$Theta$cov$R2 = covarianzastheta[[2-1]][[2]]
+
+listm$m3$Pseudo$Theta$mean$R1 = estimaciones[[3-1]][[3]][[1]]
+listm$m3$Pseudo$Theta$mean$R2 = estimaciones[[3-1]][[3]][[2]]
+listm$m3$Pseudo$Theta$mean$R3 = estimaciones[[3-1]][[3]][[3]]
+listm$m2$Pseudo$Theta$cov$R1 = covarianzastheta[[3-1]][[1]]
+listm$m2$Pseudo$Theta$cov$R2 = covarianzastheta[[3-1]][[2]]
+listm$m2$Pseudo$Theta$cov$R3 = covarianzastheta[[3-1]][[3]]
+# Gamma
+listm$m2$Pseudo$Gamma$prob$R1 = probstodosregimes[[2-1]][[1]]
+listm$m2$Pseudo$Gamma$prob$R2 = probstodosregimes[[2-1]][[2]]
+
+listm$m3$Pseudo$Gamma$prob$R1 = probstodosregimes[[3-1]][[1]]
+listm$m3$Pseudo$Gamma$prob$R2 = probstodosregimes[[3-1]][[2]]
+listm$m3$Pseudo$Gamma$prob$R3 = probstodosregimes[[3-1]][[3]]
+# Sigma
+xpdn = function (x, nrow = NULL) 
+{
+  dim(x) <- NULL
+  if (is.null(nrow)) 
+    nrow <- (-1 + sqrt(1 + 8 * length(x)))/2
+  output <- matrix(0, nrow, nrow)
+  output[lower.tri(output, diag = TRUE)] <- x
+  hold <- output
+  hold[upper.tri(hold, diag = TRUE)] <- 0
+  output <- output + t(hold)
+  return(output)
+}
+listm$m2$Pseudo$Sigma$cov = xpdn(estimaciones[[2-1]][[5]][[1]])
+listm$m2$Pseudo$Sigma$cov = xpdn(estimaciones[[2-1]][[5]][[2]])
+
+listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[1]])
+listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[2]])
+listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[3]])
+
+
+#------------------------------------------------------------------#
 l0 = 3
 niter = 6000
 chain = T
