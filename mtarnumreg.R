@@ -46,7 +46,6 @@ listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[1]])
 listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[2]])
 listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[3]])
 
-
 #------------------------------------------------------------------#
 l0 = 3
 niter = 6000
