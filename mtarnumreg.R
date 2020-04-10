@@ -39,12 +39,12 @@ xpdn = function (x, nrow = NULL)
   output <- output + t(hold)
   return(output)
 }
-listm$m2$Pseudo$Sigma$cov = xpdn(estimaciones[[2-1]][[5]][[1]])
-listm$m2$Pseudo$Sigma$cov = xpdn(estimaciones[[2-1]][[5]][[2]])
+listm$m2$Pseudo$Sigma$cov$R1 = xpdn(estimaciones[[2-1]][[5]][[1]])
+listm$m2$Pseudo$Sigma$cov$R2 = xpdn(estimaciones[[2-1]][[5]][[2]])
 
-listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[1]])
-listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[2]])
-listm$m3$Pseudo$Sigma$cov = xpdn(estimaciones[[3-1]][[5]][[3]])
+listm$m3$Pseudo$Sigma$cov$R1 = xpdn(estimaciones[[3-1]][[5]][[1]])
+listm$m3$Pseudo$Sigma$cov$R2 = xpdn(estimaciones[[3-1]][[5]][[2]])
+listm$m3$Pseudo$Sigma$cov$R3 = xpdn(estimaciones[[3-1]][[5]][[3]])
 # Hola mundo
 #------------------------------------------------------------------#
 l0 = 3
@@ -65,16 +65,21 @@ if (nu == 0) {
 }
 # Necesaria ----#
 dwishartB = function(x, nu, S){
-  k = nrow(x)
-  gamsum = 0
+  k = ncol(x)
+  producto = as.brob(1)
   for (i in 1:k) {
-    gamsum = gamsum + lgamma((nu + 1 - i)/2)
+    producto = producto*exp(as.brob(lgamma((nu + 1 - i)/2)))
   }
-  dens = -(nu * k/2) * log(2) - ((k * (k - 1))/4) * log(pi) - 
-    gamsum - (nu/2) * log(det(S*1/nu)) + ((nu - k - 1)/2) * log(det(x)) - 
-    0.5 * sum(diag(solve(S*1/nu) %*% x))
-  dens = exp(Brobdingnag::as.brob(dens))
-  return(dens)
+  densidades = (as.brob(2)^(nu*k/2)*as.brob(pi^(k*(k - 1)/4))*producto)^(-1)*
+    as.brob(det((1/nu)*S))^(-nu/2)*as.brob(det(x))^((nu - k - 1)/2)*
+    exp(as.brob(-0.5*sum(diag(solve((1/nu)*S) %*% x))))
+  return(densidades)
+}
+dmnormB = function(x, mean, sigma){
+  dist = Brobdingnag::as.brob(t(x - mean) %*% solve(sigma) %*% (x - mean))
+  # cte = (2*pi)^{-nrow(sigma)/2}*determinant(sigma, logarithm = FALSE)$modulus^{-1/2}
+  # return(cte*exp(-1/2*dist))
+  return(exp(-1/2*dist))
 }
 # Simulacion de previas -------------------------------------------#
 lists = function(l, r, pjmax, qjmax, djmax, ...){
@@ -348,7 +353,7 @@ rpseudo = function(l,...){
       gam_iter[[lj]][iga,i2] = rbinom(n = 1,size = 1,prob = pijS[[lj]][iga])
     }
   }
-  r_iter[,i2] = mvtnorm::rmvnorm(1,mean = rmeanS, sigma = rcovS)
+  r_iter[,i2] = mvtnorm::rmvnorm(1,mean = rmeanS, sigma = as.matrix(rcovS))
   listPr$Chain = list(Theta = theta_iter, Sigma = sigma_iter,Gamma = gam_iter, r = r_iter)
   listPr$listr = lists(l,r_iter[,i2],pjmax,qjmax,djmax)
   listPr$i = i2
@@ -399,10 +404,10 @@ prodA = function(thetaym, thetaymp){
   for (lj in 1:lmp) {
     pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijmp[[lj]])))
     pthetaPn = pthetaPn*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jmp[[lj]], sigma = sigma0jmp[[lj]])
-    psigmaPn = psigmaPn*dinvwishartB(sigma_itermp[[lj]][[iAmp]], nu = nu0jmp[[lj]],S = S0jmp[[lj]])
+    psigmaPn = psigmaPn*dwishartB(sigma_itermp[[lj]][[iAmp]], nu = nu0jmp[[lj]],S = solve(as.matrix(S0jmp[[lj]])))
     pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijSmp[[lj]])))
     pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
-    psigmaSd = psigmaSd*dwishartB(expm::sqrtm(sigma_itermp[[lj]][[iAmp]]), nu = nu0jSmp[[lj]],S = S0jSmp[[lj]])
+    psigmaSd = psigmaSd*dwishartB(expm::sqrtm(sigma_itermp[[lj]][[iAmp]]), nu = nu0jSmp[[lj]],S = as.matrix(S0jSmp[[lj]]))
   }
   prPn = dmunif(r_itermp[,iAmp],a,b)
   prSn = dmnormB(r_iterm[,iAm],mean = rmeanSm, sigma = rcovSm)
@@ -411,10 +416,10 @@ prodA = function(thetaym, thetaymp){
   for (lj in 1:lm) {
     pgammaPd = pgammaPd*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijm[[lj]])))
     pthetaPd = pthetaPd*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jm[[lj]], sigma = sigma0jm[[lj]])
-    psigmaPd = psigmaPd*dinvwishartB(sigma_iterm[[lj]][[iAm]], nu = nu0jm[[lj]],S = S0jm[[lj]])
+    psigmaPd = psigmaPd*dwishartB(sigma_iterm[[lj]][[iAm]], nu = nu0jm[[lj]],S = solve(as.matrix(S0jm[[lj]])))
     pgammaSn = pgammaSn*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijSm[[lj]])))
     pthetaSn = pthetaSn*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jSm[[lj]], sigma = sigma0jSm[[lj]])
-    psigmaSn = psigmaSn*dwishartB(expm::sqrtm(sigma_iterm[[lj]][[iAm]]), nu = nu0jSm[[lj]],S = S0jSm[[lj]])
+    psigmaSn = psigmaSn*dwishartB(expm::sqrtm(sigma_iterm[[lj]][[iAm]]), nu = nu0jSm[[lj]],S = as.matrix(S0jSm[[lj]]))
   }
   prPd = dmunif(r_iterm[,iAm],a,b)
   prSd = dmnormB(r_itermp[,iAmp],mean = rmeanSmp, sigma = as.matrix(rcovSmp))
