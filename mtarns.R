@@ -11,7 +11,7 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
   if (!is.matrix(Yt)) {stop('Yt must be a matrix type object')}
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(pj, qj, dj)')
-  }else if (sum(names(orders) %in% c("pj","qj","dj")) != 3) {
+  }else if (sum(names(orders) %in% c('pj','qj','dj')) != 3) {
     stop('orders must be a list of length 3 list(pj, qj, dj)')
   }
   burn = ifelse(is.null(burn),0.1*niter,burn)
@@ -47,7 +47,7 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
   if (!is.numeric(Yt)) {stop('Yt must be a real matrix of dimension Nxk')}
   if (l != 1) {
     if (!is.numeric(Ut)) {stop('Ut must be a real matrix of dimension Nx(nu+1)')}
-    if (ncol(Ut) != ncol(Yt)) {stop("Ut and Yt number of rows must match")}
+    if (ncol(Ut) != ncol(Yt)) {stop('Ut and Yt number of rows must match')}
   }
   if (!is.null(r)) {
     if (!length(r) == {l - 1}) {stop('r must have length l-1')}
@@ -234,7 +234,7 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
       }
     }
     Nrg = c()
-    listaWj = listaYj = vector("list", l)
+    listaWj = listaYj = vector('list', l)
     for (lj in 1:l) {
       p = pj[lj]
       q = qj[lj]
@@ -295,11 +295,11 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
   return(val)
 }
   #objects for each regimen and iterations
-  theta_iter = itheta0j = isigma0j = vector("list", l)
+  theta_iter = itheta0j = isigma0j = vector('list', l)
   if (is.null(Sigma)) {
-    sigma_iter = iS0j = inu0j = vector("list", l)
+    sigma_iter = iS0j = inu0j = vector('list', l)
   }else{
-    sigma = vector("list", l)
+    sigma = vector('list', l)
   }
   #set initial values for each regime in each chain
   for (lj in 1:l) {
@@ -427,10 +427,10 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
     close(pb)
   }
   # objects for chains and info in each regime
-  Rest = thetaest = thetachain = vector("list", l)
+  Rest = thetaest = thetachain = vector('list', l)
   names(Rest) = names(thetaest) = names(thetachain) = paste0('R',1:l)
   if (is.null(Sigma)) {
-    sigmaest = sigmachain = vector("list", l)
+    sigmaest = sigmachain = vector('list', l)
     names(sigmaest) = names(sigmachain) = paste0('R',1:l)
   }
   # save chains and creation of the 'regime' type object
@@ -489,18 +489,18 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
     Thetaj = ks::invvec(thetaest[[lj]][,2],ncol = eta[lj],nrow = k)
     Ri = NULL
     Ri$cs = matrix(Thetaj[,thetaind == 0],nrow = k,ncol = 1)
-    Ri$phi = vector("list", p)
+    Ri$phi = vector('list', p)
     names(Ri$phi) = paste0('phi',1:p)
     for (j in 1:p) {
       Ri$phi[[j]] = matrix(Thetaj[,thetaind == (10 + j)],nrow = k,ncol = k)
     }
     if (q != 0) {
-      Ri$beta = vector("list", q)
+      Ri$beta = vector('list', q)
       names(Ri$beta) = paste0('beta',1:q)
       for (j in 1:q) {Ri$beta[[j]] = matrix(Thetaj[,thetaind == (20 + j)],nrow = k,ncol = nu)}
     }
     if (d != 0) {
-      Ri$delta = vector("list", d)
+      Ri$delta = vector('list', d)
       names(Ri$delta) = paste0('delta',1:d)
       for (j in 1:d) {Ri$delta[[j]] = matrix(Thetaj[,thetaind == (30 + j)],nrow = k,ncol = 1)}
     }
@@ -515,7 +515,7 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
   if (is.null(r)) {
     rest = matrix(nrow = l - 1,ncol = 3)
     colnames(rest) = colnames(rest) = 
-      c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""))
+      c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
     rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
@@ -552,10 +552,10 @@ mtarns = function(Yt, Ut = NULL, l = 1, orders, r = NULL, Sigma = NULL, level = 
   data$Ut = t(Ut)
   if (chain) {
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = r,orders = list(pj = pj,qj = qj,dj = dj))
-    class(results) = "regime-model" 
+    class(results) = 'regime-model' 
   }else{
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = r,orders = list(pj = pj,qj = qj,dj = dj))
-    class(results) = "regime-model"
+    class(results) = 'regime-model'
   }
   return(results)
 }
