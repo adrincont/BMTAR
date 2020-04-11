@@ -4,41 +4,48 @@
 #-> dependent function of mvtnorm library.
 #-> In the simulation the first values of Ut are considered zeros and the first values 
 #-  of Yt as normal noises. Additionally a burn of 100.
-#-> hacer comentario respecto a los casos donde explota y aclarar que no se evalua "estabilidad" 
+#-> hacer comentario respecto a los casos donde explota y aclarar que no se evalua 'estabilidad' 
 # No evaluamos que Ut cumpla las propiedades de ser proceso markov
 # Function:
-mtarsim = function(N, Rg, r = NULL, Ut = NULL, seed = NULL, ...){
+mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...){
   burn = 1000
+  if (!{round(N) == N & N > 1}) {stop('N must be an integer greater than 1')}
+  if (!is.null(Zt)) {
+    if (!is.numeric(Zt)) {stop('Zt must be a real matrix of dimension Nx1')}
+    if (!is.matrix(Zt)) {Zt = as.matrix(Zt)}
+    if (nrow(Zt) != N) {stop('Zt and Yt number of rows must match')}
+    Zt = t(Zt)
+  }
+  if (!is.null(Xt)) {
+    if (!is.numeric(Xt)) {stop('Xt must be a real matrix of dimension Nx(nu+1)')}
+    if (!is.matrix(Xt)) {Xt = as.matrix(Xt)}
+    if (nrow(Xt) != N) {stop('Xt and Yt number of rows must match')}
+    Xt = t(Xt)
+  }
+  Ut = rbind(Zt,Xt)
   l = length(Rg)
   if (l == 1) {
     rj = matrix(c(-Inf,Inf),nrow = 2,ncol = l)
     if (is.null(Ut)) {
       Ut = matrix(0, ncol = N,nrow = 1)
     }else{
-      Ut = rbind(matrix(0, ncol = N,nrow = 1),t(Ut)) # only for covariable
-    }
-  }else{
-    if (is.null(Ut)) {
-      stop('Ut must be enter with threshold process (and optional covariate process)')
-    }else{
-      Ut = t(Ut)
+      Ut = rbind(matrix(0, ncol = N,nrow = 1),Xt) # only for covariable
     }
   }
   # Validations
-  if (!is.list(Rg)) {stop("Rg must be a list of objects of class regime")}
-  if (ncol(Ut) != N | !is.numeric(Ut) | !is.matrix(Ut)) {stop("Ut must be a matrix of dimension nx(nu+1)")}
+  if (!is.list(Rg)) {stop('Rg must be a list of objects of class regime')}
+  if (ncol(Ut) != N | !is.numeric(Ut) | !is.matrix(Ut)) {stop('Ut must be a matrix of dimension nx(nu+1)')}
   for (i in 1:l) {
-    if (class(Rg[[i]]) != "regime") {stop("Rg must be a list of objects of class regime")}
+    if (class(Rg[[i]]) != 'regime') {stop('Rg must be a list of objects of class regime')}
   }
   if (l >= 2) {
     if (length(r) < 1 | length(r) != (l - 1) | !is.numeric(r) | is.null(r)) {
-      stop("r must be a numeric vector of length(Rg)-1 ")}else{
+      stop('r must be a numeric vector of length(Rg)-1 ')}else{
       if (l > 2) {for (i in 1:{l - 2}) {
         if (r[i] >= r[i + 1]) {stop('r[i] must be smaller than r[i+1]')}}
       }
     }
   }
-  if (!{round(N) == N & N > 1}) {stop("N must be an integer greater than 1")}
   # values by regime
   k = nrow(Rg[[1]]$sigma)
   nu = nrow(Ut) - 1
@@ -103,21 +110,24 @@ mtarsim = function(N, Rg, r = NULL, Ut = NULL, seed = NULL, ...){
     Yt[,i] = cs + At %*% yti + Bt %*% xti + Dt %*% zti + Sig %*% et[,i]
   }
   # delete burn
-  Yt = matrix(Yt[,-(1:{maxj + burn})],ncol = k,nrow = N,byrow = TRUE)
+  Yt = t(Yt[,-(1:{maxj + burn})])
   Zt = Zt[-c(1:{maxj + burn})]
-  # count number of observations in each regime
-  Ind = c()
-  for (j in 1:l) {
-    for (w in 1:N) {
-      if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
-        Ind[w] = j
-      }
-    }
+  if (nu == 1) {
+    Xt = as.matrix(Xt[,-c(1:{maxj + burn})])
+  }else{
+    Xt = t(Xt[,-c(1:{maxj + burn})])
   }
-  Nrg = c()
-  for (lj in 1:l) {Nrg[lj] = sum(Ind == lj)}
-  List_RS = list(Yt = Yt,pj = pj,qj = qj,dj = dj,Nrg = Nrg)
-  class(List_RS) = "mtarsim"
+  if (sum(Xt) != 0 & sum(Zt) != 0) {
+    sim = tsregim(Yt = Yt,Xt = Xt,Zt = Zt,r = r)
+  }else if (sum(Xt) == 0 & sum(Zt) != 0) {
+    sim = tsregim(Yt = Yt,Zt = Zt,r = r)
+  }else if (sum(Zt) == 0 & sum(Xt) != 0) {
+    sim = tsregim(Yt = Yt,Xt = Xt)
+  }else if (sum(Zt) == 0 & sum(Xt) == 0) {
+    sim = tsregim(Yt = Yt)
+  }
+  List_RS = list(Sim = sim, Reg = Rg)
+  class(List_RS) = 'mtarsim'
   return(List_RS)
 }
 # Example:
@@ -125,11 +135,12 @@ mtarsim = function(N, Rg, r = NULL, Ut = NULL, seed = NULL, ...){
 Tlen = 1000
 k = 2
 nu = 0
-Sigma_ut = expm::sqrtm(matrix(c(1,0.4,0.4,2),k,k))
+Sigma_ut = matrix(c(1,0.4,0.4,2),k,k)
 Phi_ut = list(phi1 = matrix(c(0.5,0.1,0.4,0.5),k,k,byrow = T))
 R_ut = list(R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = Sigma_ut))
 Ut = mtarsim(N = Tlen,Rg = R_ut)
-autoplot(Ut)
+Xt = Ut$Sim$Yt[,-1]
+Zt = Ut$Sim$Yt[,1]
 ## R1 regime
 Phi_R1 = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = T))
 Delta_R1 = list(delta1 = matrix(c(0.6,1),k,1))
@@ -145,5 +156,5 @@ R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2,cs 
 Rg = list(R1 = R1,R2 = R2)
 r = qnorm(0.3)
 ## get the simulation
-datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Ut = Ut$Yt)
+datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Xt = Xt,Zt = Zt)
 autoplot(datasim)
