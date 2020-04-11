@@ -116,7 +116,9 @@ mtarsim = function(N, Rg, r = NULL, Ut = NULL, seed = NULL, ...){
   }
   Nrg = c()
   for (lj in 1:l) {Nrg[lj] = sum(Ind == lj)}
-  return(list(Yt = Yt,pj = pj,qj = qj,dj = dj,Nrg = Nrg))
+  List_RS = list(Yt = Yt,pj = pj,qj = qj,dj = dj,Nrg = Nrg)
+  class(List_RS) = "mtarsim"
+  return(List_RS)
 }
 # Example:
 ## get Ut data process
@@ -126,8 +128,8 @@ nu = 0
 Sigma_ut = expm::sqrtm(matrix(c(1,0.4,0.4,2),k,k))
 Phi_ut = list(phi1 = matrix(c(0.5,0.1,0.4,0.5),k,k,byrow = T))
 R_ut = list(R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = Sigma_ut))
-Ut = mtarsim(N = Tlen,Rg = R_ut)$Yt
-forecast::autoplot(ts(Ut),facets = TRUE)
+Ut = mtarsim(N = Tlen,Rg = R_ut)
+autoplot(Ut)
 ## R1 regime
 Phi_R1 = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = T))
 Delta_R1 = list(delta1 = matrix(c(0.6,1),k,1))
@@ -143,5 +145,5 @@ R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2,cs 
 Rg = list(R1 = R1,R2 = R2)
 r = qnorm(0.3)
 ## get the simulation
-datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Ut = Ut)
-forecast::autoplot(ts(datasim$Yt),facets = T)
+datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Ut = Ut$Yt)
+autoplot(datasim)

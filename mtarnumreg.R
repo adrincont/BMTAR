@@ -221,8 +221,8 @@ fill = function(m, iter = 500, kappa = 0.5, burn = 500, ...){
   return(list(i = i,orders = ordersm,Priori = iniP,Pseudo = iniS,Chain = listchain,listr = listr,par = par))
 }
 listm = list()
-listm[[paste0('m',2)]] = fill(m = 2,iter = 2000,burn = 4000)
-listm[[paste0('m',3)]] = fill(m = 3,iter = 2000,burn = 4000)
+listm[[paste0('m',2)]] = fill(m = 2,iter = 1000,burn = 2000)
+listm[[paste0('m',3)]] = fill(m = 3,iter = 1000,burn = 2000)
 
 updatelist = function(l, ...){
   rgamber = function(pos, reg, ig, ...){
