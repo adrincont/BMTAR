@@ -1,5 +1,5 @@
 list = ls()
-rm(list = list[!(list %in% c("Yt","Ut"))])
+rm(list = list[!(list %in% c('Yt','Ut'))])
 Yt = t(Yt)
 Ut = t(Ut)
 # Umbrales
@@ -51,7 +51,7 @@ l0 = 3
 niter_m = 6000
 chain = T
 level = 0.95
-burn_m = 2000
+burn_m = 100
 method = 'KUO'
 kappa = 0.5
 k = nrow(Yt)
