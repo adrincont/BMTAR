@@ -28,7 +28,7 @@ k = nrow(Yt)
 N = ncol(Yt)
 nu = nrow(Ut) - 1
 b = ifelse(is.null(b),1,b)
-PosNAMat = PosNAvec = PosNAvecT = vector(mode = "list",2)
+PosNAMat = PosNAvec = PosNAvecT = vector(mode = 'list',2)
 PosNAMat[[1]] = apply(Yt,2,is.na)
 PosNAvec[[1]] = c(1:ncol(Yt))[apply(PosNAMat[[1]],2,any)]
 PosNAvecT[[1]] = matrix(rep(c(1:Tlen),k),nrow = k,ncol = Tlen,byrow = T)[PosNAMat[[1]]]
@@ -151,8 +151,8 @@ transker = function(t, Ut, ...){
   val = dmnormB(Ut[,t], cs + At %*% uti, Sig %*% Sig)
   return(c(val))
 }
-kernU = Vectorize(ker,vectorize.args = "t")
-transkernU = Vectorize(transker,vectorize.args = "t")
+kernU = Vectorize(ker,vectorize.args = 't')
+transkernU = Vectorize(transker,vectorize.args = 't')
 state_space = function(reg, iSS, theta, sigma, ...) {
   p = pj[reg]
   q = qj[reg]
@@ -231,7 +231,7 @@ alphacond = function(t, iA, Ut, Yt, theta, sigma, ...) {
   val = dmnormB(Yt[,t], {Hj %*% Wj}, sigma[[lj]][[iA]])
   return(val)
 }
-alphacond = Vectorize(alphacond,vectorize.args = "t")
+alphacond = Vectorize(alphacond,vectorize.args = 't')
 #objects for each regimen and iterations
 theta_iter = sigma_iter = list()
 length(theta_iter) = length(sigma_iter) = l
@@ -305,9 +305,9 @@ pb = txtProgressBar(min = 2, max = niter + burn, style = 3)
 acepU = 0
 for (i in 2:{niter + burn}) {
   #State space model
-  PtC = AlphatC = vector("list",Tlen)
-  QtC = ytC = vector("list",Tlen)
-  Pt = Alphat = vector("list",Tlen + 1)
+  PtC = AlphatC = vector('list',Tlen)
+  QtC = ytC = vector('list',Tlen)
+  Pt = Alphat = vector('list',Tlen + 1)
   Alphat[[1]] = matrix(0,nrow = k*max(pj) + nu*max(qj) + max(dj),ncol = 1)
   Pt[[1]] = 10*diag(k*max(pj) + nu*max(qj) + max(dj))
   # iteraciones
@@ -325,7 +325,7 @@ for (i in 2:{niter + burn}) {
     Pt[[i1 + 1]] = PtC[[i1]] - St %*% K_zti[[i1]] %*% PtC[[i1]]
   }
   #sampling for state vector (pg37)
-  PT = AlphaT = vector("list",Tlen + 1)
+  PT = AlphaT = vector('list',Tlen + 1)
   AlphaT[[Tlen + 1]] = Alphat[[Tlen + 1]]
   PT[[Tlen + 1]] = Pt[[Tlen + 1]]
   
