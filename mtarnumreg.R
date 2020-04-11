@@ -63,7 +63,16 @@ if (nu == 0) {
 }else{
   Xt = matrix(Ut[-1,],nrow = nu,ncol = N,byrow = TRUE)
 }
-# Necesaria ----#
+a = min(Zt)
+b = max(Zt)
+### producto brodingans
+prodB = function(x){
+  prod = 1
+  for (a in 1:length(x)) {
+    prod = prod*x[a]
+  }
+  return(prod)
+}
 dwishartB = function(x, nu, S){
   k = ncol(x)
   producto = Brobdingnag::as.brob(1)
@@ -82,7 +91,55 @@ dmnormB = function(x, mean, sigma){
   return(cte*exp(-1/2*dist))
   #return(exp(-1/2*dist))
 }
-# Simulacion de previas -------------------------------------------#
+### simular reguimen propuesto en cada caso
+dmunif = function(r, a, b){
+  l = length(r) + 1
+  names(a) = names(b) = NULL
+  volume = ((b - a)^{l - 1})/(factorial(l - 1))
+  for (i in 1:{l - 1}) {
+    if (r[i] >= a & r[i] <= b) {
+      if (l <= 2) {prob = 1}
+      if (l > 2) {
+        prob = 1
+        for (j in 1:{l - 2}) {
+          if (r[j] < r[j + 1]) {prob = prob*1}else{prob = prob*0}
+        }
+      }
+    }else{prob = 0}
+  }
+  rj = matrix(nrow = 2,ncol = l)
+  rj[,1] = c(-Inf,r[1])
+  rj[,l] = c(rev(r)[1],Inf)
+  if (l > 2) {
+    for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}
+  }
+  Ind = c()
+  for (j in 1:l) {
+    for (w in 1:N) {
+      if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
+        Ind[w] = j
+      }
+    }
+  }
+  Nrg = c()
+  for (lj in 1:l) {
+    Nrg[lj] = length(Ind[Ind == lj])
+  }
+  if (sum(Nrg/sum(Nrg) > 0.2) == l) {prob = 1*prob}else{prob = 0*prob}
+  return(prob/volume)
+}
+### simular reguimen propuesto en cada caso
+rdunif = function(m,l0){
+  sec = 2:l0
+  sec = sec[sec != m]
+  if (length(sec) == 1) {
+    muestra = sec
+  }else{
+    muestra = sample(x = sec, size = 1)
+  }
+  return(muestra)
+}
+### Funcion para crear las listas
 lists = function(l, r, pjmax, qjmax, djmax, ...){
   rj = matrix(nrow = 2,ncol = l)
   rj[,1] = c(-Inf,r[1])
@@ -135,6 +192,7 @@ lists = function(l, r, pjmax, qjmax, djmax, ...){
   }
   return(list(Nrg = Nrg,listaX = listaXj,listaY = listaYj))
 }
+### Funcion verosimilitud para y
 fycond = function(ir, listar, gamma, theta, sigma){
   acum = 0
   l = length(listar$listaY)
@@ -152,7 +210,8 @@ fycond = function(ir, listar, gamma, theta, sigma){
   val = cte*exp(-1/2*Brobdingnag::as.brob(acum))
   return(val)
 }
-fill = function(m, iter = 500, kappa = 0.5, burn = 500, ...){
+### Crear iteraciones previas
+fill = function(m, iter = 500, kappa = 0.5, burn = 1000, ...){
   i = 1
   ordersm = list(pjmax = rep(3,m),qjmax = rep(3,m),djmax = rep(3,m))
   etam = 1 + ordersm$pjmax*k + ordersm$qjmax*nu + ordersm$djmax
@@ -220,10 +279,7 @@ fill = function(m, iter = 500, kappa = 0.5, burn = 500, ...){
   listr = lists(m,r_iter[,1],ordersm$pjmax,ordersm$qjmax,ordersm$djmax)
   return(list(i = i,orders = ordersm,Priori = iniP,Pseudo = iniS,Chain = listchain,listr = listr,par = par))
 }
-listm = list()
-listm[[paste0('m',2)]] = fill(m = 2,iter = 1000,burn = 2000)
-listm[[paste0('m',3)]] = fill(m = 3,iter = 1000,burn = 2000)
-
+### Funcion para actualizar listas
 updatelist = function(l, ...){
   rgamber = function(pos, reg, ig, ...){
     gam_j = gam_iter
@@ -240,14 +296,14 @@ updatelist = function(l, ...){
       gam_j[[reg]][pos,ig] = 1
       itauij[[reg]][gam_j[[reg]][,ig] == 0] = tauij[[reg]][gam_j[[reg]][,ig] == 0]
       itauij[[reg]][gam_j[[reg]][,ig] == 1] =
-      cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
+        cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
       Dj[[reg]] = diag(itauij[[reg]])
       pthetacond1 = dmnormB(x = theta_iter[[reg]][,ig],mean = rep(0,k*etam[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
       aij = pycond1*pthetacond1*pij[[reg]][pos]
       gam_j[[reg]][pos,ig] = 0
       itauij[[reg]][gam_j[[reg]][,ig] == 0] = tauij[[reg]][gam_j[[reg]][,ig] == 0]
       itauij[[reg]][gam_j[[reg]][,ig] == 1] =
-      cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
+        cij[[reg]][gam_j[[reg]][,ig] == 1]*tauij[[reg]][gam_j[[reg]][,ig] == 1]
       Dj[[reg]] = diag(itauij[[reg]])
       pthetacond0 = dmnormB(x = theta_iter[[reg]][,ig],mean = rep(0,k*etam[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
       bij = pycond0*pthetacond0*(1 - pij[[reg]][pos])
@@ -273,10 +329,10 @@ updatelist = function(l, ...){
   nu0j = listPr$Priori$Sigma$gl
   pij = listPr$Priori$Gamma$prob
   if (method == 'SSVS') {
-  itauij = listPr$Priori$Gamma$itauij
-  tauij = listPr$Priori$Gamma$tauij
-  cij = listPr$Priori$Gamma$cij
-  Rj = listPr$Priori$Gamma$Rj
+    itauij = listPr$Priori$Gamma$itauij
+    tauij = listPr$Priori$Gamma$tauij
+    cij = listPr$Priori$Gamma$cij
+    Rj = listPr$Priori$Gamma$Rj
   }
   #iterations update
   listaj = lists(l,r_iter[,i2],pjmax,qjmax,djmax)
@@ -291,8 +347,8 @@ updatelist = function(l, ...){
       Dj[[lj]] = diag(itauij[[lj]])
       theta0j = rep(0,k*etam[lj])
     }else if (method == 'KUO') {
-    Dj[[lj]] = diag(k*etam[lj])
-    Rj[[lj]] = sigma0j[[lj]]}
+      Dj[[lj]] = diag(k*etam[lj])
+      Rj[[lj]] = sigma0j[[lj]]}
     Vj = solve(t(diag(gam_iter[[lj]][,i2])) %*% t(Xj) %*% {diag(Nj) %x% solve(sigma_iter[[lj]][[i2]])} %*% Xj %*% diag(gam_iter[[lj]][,i2]) + solve(Dj[[lj]] %*% Rj[[lj]] %*% Dj[[lj]]))
     thetaj = Vj %*% {t(diag(gam_iter[[lj]][,i2])) %*% t(Xj) %*% {diag(Nj) %x% solve(sigma_iter[[lj]][[i2]])} %*% yj + solve(sigma0j[[lj]]) %*% theta0j[[lj]]}
     theta_iter[[lj]][,i2 + 1] = mvtnorm::rmvnorm(1,mean = thetaj,sigma = Vj)
@@ -360,6 +416,7 @@ rpseudo = function(l,...){
   listPr$i = i2
   return(listPr)
 }
+### Funcion calculo verosimilitudes
 prodA = function(thetaym, thetaymp){
   pgammaPn = pthetaPn = psigmaPn = Brobdingnag::as.brob(1)
   pgammaPd = pthetaPd = psigmaPd = Brobdingnag::as.brob(1)
@@ -401,7 +458,7 @@ prodA = function(thetaym, thetaymp){
   pijSmp = thetaymp$Pseudo$Gamma$prob
   rmeanSmp = thetaymp$Pseudo$r$mean
   rcovSmp = thetaymp$Pseudo$r$cov
-
+  
   for (lj in 1:lmp) {
     pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijmp[[lj]])))
     pthetaPn = pthetaPn*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jmp[[lj]], sigma = sigma0jmp[[lj]])
@@ -413,7 +470,7 @@ prodA = function(thetaym, thetaymp){
   prPn = dmunif(r_itermp[,iAmp],a,b)
   prSn = dmnormB(r_iterm[,iAm],mean = rmeanSm, sigma = rcovSm)
   fn = fycond(iAmp,thetaymp$listr,thetaymp$Chain$Gamma,thetaymp$Chain$Theta,thetaymp$Chain$Sigma)
-
+  
   for (lj in 1:lm) {
     pgammaPd = pgammaPd*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijm[[lj]])))
     pthetaPd = pthetaPd*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jm[[lj]], sigma = sigma0jm[[lj]])
@@ -430,17 +487,22 @@ prodA = function(thetaym, thetaymp){
   valn = fn*(pgammaPn*pthetaPn*psigmaPn*prPn)*(pgammaSn*pthetaSn*psigmaSn*prSn)
   val = valn/vald
   prodTS = c(fd = as.numeric(fd),fn = as.numeric(fn),c1 = as.numeric(fn/fd),
-  thetaPn = as.numeric(pgammaPn*pthetaPn*psigmaPn*prPn),
-  thetaPd = as.numeric(pgammaPd*pthetaPd*psigmaPd*prPd),
-  c2 = as.numeric((pgammaPn*pthetaPn*psigmaPn*prPn)/(pgammaPd*pthetaPd*psigmaPd*prPd)),
-  pthetaPd = as.numeric(pthetaPd),pgammaPd = as.numeric(pgammaPd),psigmaPd = as.numeric(psigmaPd),prPd = as.numeric(prPd),
-  pthetaPn = as.numeric(pthetaPn),pgammaPn = as.numeric(pgammaPn),psigmaPn = as.numeric(psigmaPn),prPn = as.numeric(prPn),
-  c3 = as.numeric((pgammaSn*pthetaSn*psigmaSn*prSn)/(pgammaSd*pthetaSd*psigmaSd*prSd)),
-  pthetaSd = as.numeric(pthetaSd),pgammaSd = as.numeric(pgammaSd),psigmaSd = as.numeric(psigmaSd),prSd = as.numeric(prSd),
-  pthetaSn = as.numeric(pthetaSn),pgammaSn = as.numeric(pgammaSn),psigmaSn = as.numeric(psigmaSn),prSn = as.numeric(prSn)
+             thetaPn = as.numeric(pgammaPn*pthetaPn*psigmaPn*prPn),
+             thetaPd = as.numeric(pgammaPd*pthetaPd*psigmaPd*prPd),
+             c2 = as.numeric((pgammaPn*pthetaPn*psigmaPn*prPn)/(pgammaPd*pthetaPd*psigmaPd*prPd)),
+             pthetaPd = as.numeric(pthetaPd),pgammaPd = as.numeric(pgammaPd),psigmaPd = as.numeric(psigmaPd),prPd = as.numeric(prPd),
+             pthetaPn = as.numeric(pthetaPn),pgammaPn = as.numeric(pgammaPn),psigmaPn = as.numeric(psigmaPn),prPn = as.numeric(prPn),
+             c3 = as.numeric((pgammaSn*pthetaSn*psigmaSn*prSn)/(pgammaSd*pthetaSd*psigmaSd*prSd)),
+             pthetaSd = as.numeric(pthetaSd),pgammaSd = as.numeric(pgammaSd),psigmaSd = as.numeric(psigmaSd),prSd = as.numeric(prSd),
+             pthetaSn = as.numeric(pthetaSn),pgammaSn = as.numeric(pgammaSn),psigmaSn = as.numeric(psigmaSn),prSn = as.numeric(prSn)
   )
   return(list(val = val,prodTS = prodTS))
 }
+# Necesaria ----#
+listm = list()
+listm[[paste0('m',2)]] = fill(m = 2,iter = 1000,burn = 2000)
+listm[[paste0('m',3)]] = fill(m = 3,iter = 1000,burn = 2000)
+
 m_iter = c()
 m_iter[1] = 3
 acepm = 0
