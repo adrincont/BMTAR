@@ -12,7 +12,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
   if (l != 1 & !is.matrix(Ut)) {stop('Ut must be a matrix type object')}
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(pjmax, qjmax, djmax)')
-  }else if (sum(names(orders) %in% c("pjmax","qjmax","djmax")) != 3) {
+  }else if (sum(names(orders) %in% c('pjmax','qjmax','djmax')) != 3) {
     stop('orders must be a list of length 3 list(pjmax, qjmax, djmax)')
   }
   burn = ifelse(is.null(burn),round(0.1*niter),burn)
@@ -54,7 +54,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
   if (!is.numeric(Yt)) {stop('Yt must be a real matrix of dimension Nxk')}
   if (l != 1) {
     if (!is.numeric(Ut)) {stop('Ut must be a real matrix of dimension Nx(nu+1)')}
-    if (ncol(Ut) != ncol(Yt)) {stop("Ut and Yt number of rows must match")}
+    if (ncol(Ut) != ncol(Yt)) {stop('Ut and Yt number of rows must match')}
   }
   if (!is.null(thetaini)) {
     if (!is.list(thetaini)) {
@@ -182,13 +182,13 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
   }
   #
   #objects for each regimen and iterations
-  theta_iter = sigma_iter = gam_iter = pij =  Dj = Rj = vector("list", l)
+  theta_iter = sigma_iter = gam_iter = pij =  Dj = Rj = vector('list', l)
   if (method == 'SSVS') {
-    tauij = itauij = cij = vector("list", l)
+    tauij = itauij = cij = vector('list', l)
   }
   if (l != 1) {r_iter = matrix(ncol = niter + burn,nrow = l - 1)}
   #set initial values for each regime in each chain
-  itheta0j = isigma0j = iS0j = inu0j = vector("list",l)
+  itheta0j = isigma0j = iS0j = inu0j = vector('list',l)
   for (lj in 1:l) {
     theta_iter[[lj]] = gam_iter[[lj]] = matrix(ncol = niter + burn,nrow = k*eta[lj])
     sigma_iter[[lj]] = list()
@@ -242,7 +242,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
   #
   #objects for save regimes, chains and credibility intervals
   Rest = thetaest = thetachain = 
-    gamest = gamchain = sigmaest = sigmachain = vector("list", l)
+    gamest = gamchain = sigmaest = sigmachain = vector('list', l)
   names(Rest) = names(thetaest) = names(thetachain) = names(gamest) = names(gamchain) = 
     names(sigmaest) = names(sigmachain) = paste0('R',1:l)
   #
@@ -313,7 +313,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
       }
     }
     Nrg = c()
-    listaXj = listaYj = listaWj = vector("list", l)
+    listaXj = listaYj = listaWj = vector('list', l)
     for (lj in 1:l) {
       p = pjmax[lj]
       q = qjmax[lj]
@@ -475,7 +475,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
   if (l != 1) {
     rest = matrix(nrow = l - 1,ncol = 3)
     colnames(rest) = colnames(rest) = 
-      c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""))
+      c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
     rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
@@ -545,7 +545,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
     Ri = list()
     cs = matrix(Thetaj[,thetaind == 90],nrow = k,ncol = 1)
     if (sum(cs == 0) != k) {Ri$cs = cs}
-    phiest = vector("list", p)
+    phiest = vector('list', p)
     names(phiest) = paste0('phi',1:p)
     for (j in 1:p) {phiest[[j]] = matrix(Thetaj[,thetaind == (10 + j)],nrow = k,ncol = k)}
     pest = sapply(phiest,function(x){sum(x == 0) != k*k})
@@ -553,7 +553,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
       Ri$phi = phiest[pest]
     }
     if (q != 0) {
-      betaest = vector("list", q)
+      betaest = vector('list', q)
       names(betaest) = paste0('beta',1:q)
       for (j in 1:q) {betaest[[j]] = matrix(Thetaj[,thetaind == (20 + j)],nrow = k,ncol = nu)}
       qest = sapply(betaest,function(x){sum(x == 0) != k*nu})
@@ -562,7 +562,7 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
       }
     }
     if (d != 0) {
-      deltaest = vector("list", d)
+      deltaest = vector('list', d)
       names(deltaest) = paste0('delta',1:d)
       for (j in 1:d) {deltaest[[j]] = matrix(Thetaj[,thetaind == (30 + j)],nrow = k,ncol = 1)}
       dest = sapply(deltaest,function(x){sum(x == 0) != k})
@@ -609,10 +609,10 @@ mtarstr = function(Yt, Ut = NULL, l, orders, level = 0.95, method= c('KUO','SSVS
   if (l != 1) {estimates$r = rest}
   if (chain) {
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rest[,2],orders = orders)
-    class(results) = "regime-model" 
+    class(results) = 'regime-model' 
   }else{
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = rest[,2],orders = orders)
-    class(results) = "regime-model"
+    class(results) = 'regime-model'
   }
   return(results)
 }

@@ -1,5 +1,5 @@
 list = ls()
-rm(list = list[!(list %in% c("Yt","Ut"))])
+rm(list = list[!(list %in% c('Yt','Ut'))])
 Yt = t(Yt)
 Ut = t(Ut)
 # Umbrales
@@ -48,10 +48,10 @@ listm$m3$Pseudo$Sigma$cov$R3 = xpdn(estimaciones[[3-1]][[5]][[3]])
 # Hola mundo
 #------------------------------------------------------------------#
 l0 = 3
-niter = 6000
+niter_m = 6000
 chain = T
 level = 0.95
-burn = 2000
+burn_m = 100
 method = 'KUO'
 kappa = 0.5
 k = nrow(Yt)
@@ -244,11 +244,11 @@ fill = function(m, iter = 500, kappa = 0.5, burn = 1000, ...){
     tauij = itauij = cij = list()
     length(tauij) = length(itauij) = length(cij) = m
   }
-  r_iter = matrix(ncol = niter + burn,nrow = m - 1)
+  r_iter = matrix(ncol = niter_m + burn_m,nrow = m - 1)
   for (lj in 1:m) {
-    theta_iter[[lj]] = gam_iter[[lj]] = matrix(ncol = niter + burn,nrow = k*etam[lj])
+    theta_iter[[lj]] = gam_iter[[lj]] = matrix(ncol = niter_m + burn_m,nrow = k*etam[lj])
     sigma_iter[[lj]] = list()
-    length(sigma_iter[[lj]]) = niter + burn
+    length(sigma_iter[[lj]]) = niter_m + burn_m
     gam_iter[[lj]][,1] = rep(1,k*etam[lj])
     if (method == 'KUO') {
       theta_iter[[lj]][,1] = mvtnorm::rmvnorm(1,mean = theta0Pm[[lj]],sigma = sigma0Pm[[lj]])

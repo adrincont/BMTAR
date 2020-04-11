@@ -8,7 +8,7 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
   repM = function(M,r){lapply(rep(0,r),function(x){x*M})}
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')
-  }else if (sum(names(orders) %in% c("p","q","d")) != 3) {
+  }else if (sum(names(orders) %in% c('p','q','d')) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')
   }
   p = orders$p
@@ -29,7 +29,7 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
       vl = sum(is.numeric(Phi[[i]]) & {dim(Phi[[i]]) == c(k,k)})
       if (vl != 2) {stop('Phi must be a list of real matrix of dimension kxk')}
       if (!is.matrix(Phi[[i]])) {stop('Phi[[i]] must be a matrix type object')}
-      if (substr(names(Phi[i]),1,3) != "phi" | !{as.numeric(substr(names(Phi[i]),4,4)) %in% c(1:p)}) {
+      if (substr(names(Phi[i]),1,3) != 'phi' | !{as.numeric(substr(names(Phi[i]),4,4)) %in% c(1:p)}) {
         stop('names  in the list Phi must be \'phii\' with a integer i in 1:q')
       }
     }
@@ -47,7 +47,7 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
         if (!is.matrix(Beta[[i]])) {stop('Beta[[i]] must be a matrix type object')}
         vl = sum(is.numeric(Beta[[i]]) & {dim(Beta[[i]]) == c(k,nu)})
         if (vl != 2) {stop('Beta must be a list of real matrix of dimension kxnu')}
-        if (substr(names(Beta[i]),1,4) != "beta" | !{as.numeric(substr(names(Beta[i]),5,5)) %in% c(1:q)}) {
+        if (substr(names(Beta[i]),1,4) != 'beta' | !{as.numeric(substr(names(Beta[i]),5,5)) %in% c(1:q)}) {
           stop('names  in the list Beta must be \'betai\' with a integer i in 1:q')
         }
       }
@@ -66,7 +66,7 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
         vl = sum(is.numeric(Delta[[i]]) & {dim(Delta[[i]]) == c(k,1)})
         if (vl != 2) {stop('Delta must be a list of real matrix of dimension kx1')}
         if (!is.matrix(Delta[[i]])) {stop('Delta[[i]] must be a matrix type object')}
-        if (substr(names(Delta[i]),1,5) != "delta" | !{as.numeric(substr(names(Delta[i]),6,6)) %in% c(1:d)}) {
+        if (substr(names(Delta[i]),1,5) != 'delta' | !{as.numeric(substr(names(Delta[i]),6,6)) %in% c(1:d)}) {
           stop('names  in the list Delta must be \'deltai\' with a integer i in 1:q')
         }
       }
@@ -103,20 +103,20 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
     cs = rep(0,k)
   }
   Ri$cs = cs
-  Ri$phi = vector("list", p)
+  Ri$phi = vector('list', p)
   names(Ri$phi) = paste0('phi',1:p)
   Ri$phi[names(Phi)] = Phi
   Ri$phi[names(Ri$phi)[!(names(Ri$phi) %in% names(Phi))]] = repM(matrix(0,k,k),
                                                              sum(!(names(Ri$phi) %in% names(Phi))))
   if (q != 0) {
-    Ri$beta = vector("list", q)
+    Ri$beta = vector('list', q)
     names(Ri$beta) = paste0('beta',1:q)
     Ri$beta[names(Beta)] = Beta
     Ri$beta[names(Ri$beta)[!(names(Ri$beta) %in% names(Beta))]] = repM(matrix(0,k,nu),
                                                                    sum(!(names(Ri$beta) %in% names(Beta))))
   }
   if (d != 0) {
-    Ri$delta = vector("list", d)
+    Ri$delta = vector('list', d)
     names(Ri$delta) = paste0('delta',1:d)
     Ri$delta[names(Delta)] = Delta
     Ri$delta[names(Ri$delta)[!(names(Ri$delta) %in% names(Delta))]] = repM(matrix(0,k,1),

@@ -6,8 +6,8 @@
 # Function:
 mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, modelU){
   # validaciones
-  if (class(regimemodel) != "regime-model") {
-    stop("regimemodel must be an object of type (regime-model)")
+  if (class(regimemodel) != 'regime-model') {
+    stop('regimemodel must be an object of type (regime-model)')
   }
   # objetos necesarios
   Yt = t(regimemodel$data$yt)
@@ -97,15 +97,15 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
     Yp = cbind(matrix(0,nrow = k,ncol = maxj),Yt)
     Up = cbind(matrix(0,nrow = nu + 1,ncol = maxj),Ut)
     h = {max(newdata) + maxj} - Ti
-    namesYT = paste((1:h) %x% rep(1,k),rep(1,h) %x% (1:k),sep = ".")
-    namesUT = paste((1:h) %x% rep(1,nu + 1),rep(1,h) %x% (1:{nu + 1}),sep = ".")
+    namesYT = paste((1:h) %x% rep(1,k),rep(1,h) %x% (1:k),sep = '.')
+    namesUT = paste((1:h) %x% rep(1,nu + 1),rep(1,h) %x% (1:{nu + 1}),sep = '.')
   }else{
     Ti = ifelse(min(newdata$time) < ncol(Yt),min(newdata$time) - 1,ncol(Yt)) 
     h =  max(newdata) - Ti
     Yp = Yt
     Up = Ut
-    namesYT = paste(Ti + (1:h) %x% rep(1,k),rep(1,h) %x% (1:k),sep = ".")
-    namesUT = paste(Ti + (1:h) %x% rep(1,nu + 1),rep(1,h) %x% (1:{nu + 1}),sep = ".")
+    namesYT = paste(Ti + (1:h) %x% rep(1,k),rep(1,h) %x% (1:k),sep = '.')
+    namesUT = paste(Ti + (1:h) %x% rep(1,nu + 1),rep(1,h) %x% (1:{nu + 1}),sep = '.')
   }
   ### Cadenas para las estimaciones
   ChainYt = matrix(ncol = k*h,nrow = niter)
@@ -129,7 +129,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   estimYt = matrix(nrow = k*h,ncol = 4)
   estimUt = matrix(nrow = (nu + 1)*h,ncol = 4)
   colnames(estimUt) = colnames(estimYt) = 
-    c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""),"RVPD")
+    c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''),'RVPD')
   estimUt[,1] = apply(ChainUt,2,quantile,probs = (1 - level)/2)
   estimUt[,2] = apply(ChainUt,2,mean)
   estimUt[,3] = apply(ChainUt,2,quantile,probs = (1 + level)/2)
@@ -142,8 +142,8 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   row.names(estimUt) = namesUT
   ## Salidas
   if (min(newdata$time) >= maxj & length(newdata$time) != ncol(Yt)) {
-    estimUt = estimUt[paste(newdata$time %x% rep(1,k), (1:k),sep = "."),]
-    estimYt = estimYt[paste(newdata$time %x% rep(1,k), (1:k),sep = "."),] 
+    estimUt = estimUt[paste(newdata$time %x% rep(1,k), (1:k),sep = '.'),]
+    estimYt = estimYt[paste(newdata$time %x% rep(1,k), (1:k),sep = '.'),] 
   }
   Yth = ks::invvec(estimYt[,2],ncol = length(newdata$time),nrow = k)
   Uth = ks::invvec(estimUt[,2],ncol = length(newdata$time),nrow = nu + 1)

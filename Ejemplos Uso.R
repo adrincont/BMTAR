@@ -13,7 +13,7 @@ Tlen = 1000
 nu = 1
 sigmaru = matrix(c(1,0.4,0.4,2),nu + 1,nu + 1)
 Au = matrix(c(0.5,0.1,0.4,0.5),nu + 1,nu + 1,byrow = T)
-ut = tsDyn::VAR.sim(B = Au,n = Tlen,lag = 1,include = c("none"),varcov = sigmaru)
+ut = tsDyn::VAR.sim(B = Au,n = Tlen,lag = 1,include = c('none'),varcov = sigmaru)
 forecast::autoplot(ts(ut),facets = TRUE) + theme_bw()
 # Primer ejemplo Model 2 pg.26 ####
 R1 = mtaregim(orders = list(p = 2,q = 1,d = 1),
@@ -55,7 +55,7 @@ estruc = mtarstr(Yt = yt$Yt,Ut = ut,l = 2,orders = list(pjmax = c(3,3),qjmax = c
 estimKUO = mtarstr(Yt = yt$Yt,Ut = ut,l = 2,pjmax = c(2,2),qjmax = c(2,2),djmax = c(2,2),niter = 2000,method = 'KUO',chain = TRUE) 
 estimSSVS = mtarstr(Yt = yt$Yt,Ut = ut,l = 2,pjmax = c(2,2),qjmax = c(2,2),djmax = c(2,2),niter = 2000,method = 'SSVS',chain = TRUE)
 
-save.image("~/Val/Unal/MTAR/nsstr.RData")
+save.image('~/Val/Unal/MTAR/nsstr.RData')
 # Segundo ejemplo Model 3 pg.27 ####
 R1=mtaregim(orders=list(p=1,q=0,d=0),
             Phi=list(phi1=matrix(c(-0.9,0,0.2,-0.5),2,2,byrow = T)),
