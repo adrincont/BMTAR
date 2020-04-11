@@ -170,7 +170,7 @@ for (i2 in 1:niter) {
 estimYt = matrix(nrow = k*h,ncol = 4)
 estimUt = matrix(nrow = (nu + 1)*h,ncol = 4)
 colnames(estimUt) = colnames(estimYt) = 
-  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""),"RVPD")
+  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''),'RVPD')
 #rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
 estimUt[,1] = apply(ChainUt,2,quantile,probs = (1 - level)/2)
 estimUt[,2] = apply(ChainUt,2,mean)
@@ -180,8 +180,8 @@ estimYt[,1] = apply(ChainYt,2,quantile,probs = (1 - level)/2)
 estimYt[,2] = apply(ChainYt,2,mean)
 estimYt[,3] = apply(ChainYt,2,quantile,probs = (1 + level)/2)
 estimUt[,4] = apply(ChainYt,2,sd)
-row.names(estimYt) = paste(paste("t",(1:h) %x% rep(1,k) ,sep = "+"),rep(1,h) %x% (1:k),sep = ".")
-row.names(estimUt) = paste(paste("t",(1:h) %x% rep(1,nu + 1) ,sep = "+"),rep(1,h) %x% (1:{nu + 1}),sep = ".")
+row.names(estimYt) = paste(paste('t',(1:h) %x% rep(1,k) ,sep = '+'),rep(1,h) %x% (1:k),sep = '.')
+row.names(estimUt) = paste(paste('t',(1:h) %x% rep(1,nu + 1) ,sep = '+'),rep(1,h) %x% (1:{nu + 1}),sep = '.')
 Yth = ks::invvec(estimYt[,2],ncol = h,nrow = k)
 Uth = ks::invvec(estimUt[,2],ncol = h,nrow = nu + 1)
 
@@ -191,11 +191,11 @@ forecast::autoplot(ts(ChainYt),facets = TRUE)
 forecast::autoplot(ts(t(Yth)),facets = TRUE)
 forecast::autoplot(ts(t(Uth)),facets = TRUE)
 
-plot(f2[1,],type = "l")
+plot(f2[1,],type = 'l')
 abline(f3[1,])
 
-plot(f3[1,],type = "l")
-lines(f2[1,],type = "l",col = "blue")
+plot(f3[1,],type = 'l')
+lines(f2[1,],type = 'l',col = 'blue')
 
 serielab = factor(rep(1,h) %x% 1:2)
 time = ks::vec(matrix(1:h,k,h,T))
@@ -203,7 +203,7 @@ dataplot = data.frame(estim = estimYt[,2],Lw = estimYt[,3],Ul = estimYt[,1],time
 dataplot = dataplot[1:995,]
 dataplot = cbind(dataplot,t2 = ks::vec(Yt[,-c(1:5)]))
 ggplot(data = dataplot,aes(x = time,y = estim)) + geom_line() +
-  facet_grid(lab~.) + geom_ribbon(aes(ymin = Lw,ymax = Ul),fill = "gray",alpha = 0.5)
+  facet_grid(lab~.) + geom_ribbon(aes(ymin = Lw,ymax = Ul),fill = 'gray',alpha = 0.5)
   
 #Funcion con str----------------------------------------------------------------------------------####
 ## Entradas de la funcion
@@ -307,7 +307,7 @@ for (i2 in 1:niter) {
 estimYt = matrix(nrow = k*h,ncol = 4)
 estimUt = matrix(nrow = (nu + 1)*h,ncol = 4)
 colnames(estimUt) = colnames(estimYt) = 
-  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""),"RVPD")
+  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''),'RVPD')
 #rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
 estimUt[,1] = apply(ChainUt,2,quantile,probs = (1 - level)/2)
 estimUt[,2] = apply(ChainUt,2,mean)
@@ -317,8 +317,8 @@ estimYt[,1] = apply(ChainYt,2,quantile,probs = (1 - level)/2)
 estimYt[,2] = apply(ChainYt,2,mean)
 estimYt[,3] = apply(ChainYt,2,quantile,probs = (1 + level)/2)
 estimUt[,4] = apply(ChainYt,2,sd)
-row.names(estimYt) = paste(paste("t",(1:h) %x% rep(1,k) ,sep = "+"),rep(1,h) %x% (1:k),sep = ".")
-row.names(estimUt) = paste(paste("t",(1:h) %x% rep(1,nu + 1) ,sep = "+"),rep(1,h) %x% (1:{nu + 1}),sep = ".")
+row.names(estimYt) = paste(paste('t',(1:h) %x% rep(1,k) ,sep = '+'),rep(1,h) %x% (1:k),sep = '.')
+row.names(estimUt) = paste(paste('t',(1:h) %x% rep(1,nu + 1) ,sep = '+'),rep(1,h) %x% (1:{nu + 1}),sep = '.')
 Yth = ks::invvec(estimYt[,2],ncol = h,nrow = k)
 Uth = ks::invvec(estimUt[,2],ncol = h,nrow = nu + 1)
 
@@ -333,4 +333,4 @@ time = ks::vec(matrix(1:h,k,h,T))
 dataplot = data.frame(estim = estimYt[,2],Lw = estimYt[,3],Ul = estimYt[,1],time = time,lab = serielab)
 
 ggplot(data = dataplot,aes(x = time,y = estim)) + geom_line() +
-  facet_grid(lab~.) + geom_ribbon(aes(ymin = Lw,ymax = Ul),fill = "gray",alpha = 0.5)
+  facet_grid(lab~.) + geom_ribbon(aes(ymin = Lw,ymax = Ul),fill = 'gray',alpha = 0.5)
