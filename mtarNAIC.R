@@ -1,14 +1,14 @@
 # Date: 29/07/2019
 # Description:
-#-> Calculo para el criterio NAIC para un abjeti tipo "regime-model".
+#-> Calculo para el criterio NAIC para un abjeti tipo 'regime-model'.
 # Function:
 # Date: 29/07/2019
 # Description:
-#-> Calculo para el criterio NAIC para un abjeti tipo "regime-model".
+#-> Calculo para el criterio NAIC para un abjeti tipo 'regime-model'.
 # Function:
 mtarNAIC = function(regimemodel){
-  if (class(regimemodel) != "regime-model") {
-    stop("regimemodel must be an object of type (regime-model)")
+  if (class(regimemodel) != 'regime-model') {
+    stop('regimemodel must be an object of type (regime-model)')
   }
   l = length(regimemodel$regime)
   k = nrow(regimemodel$regime[[1]]$sigma)
@@ -28,7 +28,7 @@ mtarNAIC = function(regimemodel){
   logLikj = as.numeric(regimemodel$logLikj)
   AICj = as.numeric(Nj*logLikj + 2*k*etaj,nrow = 1,row.names = NULL)
   NAIC = sum(AICj)/sum(Nj)
-  cat("NAIC=",round(NAIC,4),"\n")
+  cat('NAIC=',round(NAIC,4),'\n')
   return(list(AICj = AICj,NAIC = NAIC))
 }
 # Example:
