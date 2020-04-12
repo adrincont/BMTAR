@@ -126,7 +126,7 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...){
   }else if (sum(Zt) == 0 & sum(Xt) == 0) {
     sim = tsregim(Yt = Yt)
   }
-  List_RS = list(Sim = sim, Reg = Rg)
+  List_RS = list(Sim = sim, Reg = Rg,pj = pj,qj = qj,dj = dj)
   class(List_RS) = 'mtarsim'
   return(List_RS)
 }
@@ -141,6 +141,7 @@ R_ut = list(R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = 
 Ut = mtarsim(N = Tlen,Rg = R_ut)
 Xt = Ut$Sim$Yt[,-1]
 Zt = Ut$Sim$Yt[,1]
+autoplot.tsregim(Ut$Sim)
 ## R1 regime
 Phi_R1 = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = T))
 Delta_R1 = list(delta1 = matrix(c(0.6,1),k,1))
@@ -157,4 +158,6 @@ Rg = list(R1 = R1,R2 = R2)
 r = qnorm(0.3)
 ## get the simulation
 datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Xt = Xt,Zt = Zt)
-autoplot(datasim)
+autoplot.tsregim(datasim$Sim,1)
+autoplot.tsregim(datasim$Sim,2)
+autoplot.tsregim(datasim$Sim,3)
