@@ -48,11 +48,11 @@ listm$m3$Pseudo$Sigma$cov$R3 = xpdn(estimaciones[[3-1]][[5]][[3]])
 # Hola mundo
 #------------------------------------------------------------------#
 l0 = 3
-niter_m = 6000
+niter_m = 3000
 chain = T
 level = 0.95
-burn_m = 100
-method = 'KUO'
+burn_m = 2000
+method = 'SSVS'
 kappa = 0.5
 k = nrow(Yt)
 N = ncol(Yt)
@@ -255,7 +255,8 @@ fill = function(m, iter = 500, kappa = 0.5, burn = 1000, ...){
     }
     if (method == 'SSVS') {
       cij[[lj]] = rep(25,k*etam[lj])
-      tauij[[lj]] = ifelse(m == 2,rep(1.25,k*etam[lj]),rep(1.5,k*etam[lj]))
+      if (m == 2) {tauij[[lj]] = rep(1.25,k*etam[lj])
+      }else{tauij[[lj]] = rep(1.5,k*etam[lj])}
       itauij[[lj]] = cij[[lj]]*tauij[[lj]]
       Dj[[lj]] = diag(itauij[[lj]])
       Rj[[lj]] = diag(k*etam[lj])
@@ -345,7 +346,8 @@ updatelist = function(l, ...){
       itauij[[lj]][gam_iter[[lj]][,i2] == 0] = tauij[[lj]][gam_iter[[lj]][,i2] == 0]
       itauij[[lj]][gam_iter[[lj]][,i2] == 1] = cij[[lj]][gam_iter[[lj]][,i2] == 1]*tauij[[lj]][gam_iter[[lj]][,i2] == 1]
       Dj[[lj]] = diag(itauij[[lj]])
-      theta0j = rep(0,k*etam[lj])
+      theta0j = list()
+      theta0j[[lj]] = rep(0,k*etam[lj])
     }else if (method == 'KUO') {
       Dj[[lj]] = diag(k*etam[lj])
       Rj[[lj]] = sigma0j[[lj]]}
@@ -500,8 +502,8 @@ prodA = function(thetaym, thetaymp){
 }
 # Necesaria ----#
 listm = list()
-listm[[paste0('m',2)]] = fill(m = 2,iter = 1000,burn = 2000)
-listm[[paste0('m',3)]] = fill(m = 3,iter = 1000,burn = 2000)
+listm[[paste0('m',2)]] = fill(m = 2,iter = 500,burn = 100)
+listm[[paste0('m',3)]] = fill(m = 3,iter = 500,burn = 100)
 
 m_iter = c()
 m_iter[1] = 3
