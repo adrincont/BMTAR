@@ -123,6 +123,7 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
                                                                        sum(!(names(Ri$delta) %in% names(Delta))))
   }
   Ri$sigma = Sigma
+  Ri$orders = orders
   # creation of object type regime
   class(Ri) = 'regime'
   return(Ri)
@@ -135,3 +136,4 @@ Delta = list(delta1 = matrix(c(0.6,1),2,1))
 Sigma = matrix(c(1,0.6,0.6,1.5),2,2,byrow = T)
 cs = matrix(c(1,-1),nrow = 2)
 Ri = mtaregim(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,Sigma = Sigma,cs = cs)
+
