@@ -508,10 +508,10 @@ listm[[paste0('m',3)]] = fill(m = 3,iter = 500,burn = 100)
 m_iter = c()
 m_iter[1] = 3
 acepm = 0
-prodTSM = matrix(nrow = niter + burn - 1,ncol = 23)
-pm_im = matrix(nrow = l0,ncol = niter + burn - 1)
-pb = txtProgressBar(min = 2, max = niter + burn,style = 3)
-for (im in 2:{niter + burn}) {
+prodTSM = matrix(nrow = niter_m + burn_m - 1,ncol = 23)
+pm_im = matrix(nrow = l0,ncol = niter_m + burn_m - 1)
+pb = txtProgressBar(min = 2, max = niter_m + burn_m,style = 3)
+for (im in 2:{niter_m + burn_m}) {
   m_iter[im] = rdunif(m_iter[im - 1],l0)
   # Generamos valor para Theta_m y Theta_mp
   listm[[paste0('m',m_iter[im - 1])]] = updatelist(l = m_iter[im - 1])
