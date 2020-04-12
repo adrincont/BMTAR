@@ -45,19 +45,7 @@ listm$m2$Pseudo$Sigma$cov$R2 = xpdn(estimaciones[[2-1]][[5]][[2]])
 listm$m3$Pseudo$Sigma$cov$R1 = xpdn(estimaciones[[3-1]][[5]][[1]])
 listm$m3$Pseudo$Sigma$cov$R2 = xpdn(estimaciones[[3-1]][[5]][[2]])
 listm$m3$Pseudo$Sigma$cov$R3 = xpdn(estimaciones[[3-1]][[5]][[3]])
-# SSVS
-k = 2
-nu = 1
-ordersm = list(pjmax = rep(3,2),qjmax = rep(3,2),djmax = rep(3,2))
-etam = 1 + ordersm$pjmax*k + ordersm$qjmax*nu + ordersm$djmax
-listm$m2$Priori$Gamma$tauij[[1]] = rep(0.5,k*etam[1])
-listm$m2$Priori$Gamma$tauij[[2]] = rep(0.5,k*etam[2])
-
-ordersm = list(pjmax = rep(3,3),qjmax = rep(3,3),djmax = rep(3,3))
-etam = 1 + ordersm$pjmax*k + ordersm$qjmax*nu + ordersm$djmax
-listm$m3$Priori$Gamma$tauij[[1]] = rep(0.5,k*etam[1])
-listm$m3$Priori$Gamma$tauij[[2]] = rep(0.5,k*etam[2])
-listm$m3$Priori$Gamma$tauij[[3]] = rep(0.5,k*etam[3])
+# Hola mundo
 #------------------------------------------------------------------#
 l0 = 3
 niter_m = 6000
@@ -103,7 +91,7 @@ dmnormB = function(x, mean, sigma){
   return(cte*exp(-1/2*dist))
   #return(exp(-1/2*dist))
 }
-### simular regimen propuesto en cada caso
+### simular reguimen propuesto en cada caso
 dmunif = function(r, a, b){
   l = length(r) + 1
   names(a) = names(b) = NULL
@@ -140,7 +128,7 @@ dmunif = function(r, a, b){
   if (sum(Nrg/sum(Nrg) > 0.2) == l) {prob = 1*prob}else{prob = 0*prob}
   return(prob/volume)
 }
-### simular regimen propuesto en cada caso
+### simular reguimen propuesto en cada caso
 rdunif = function(m,l0){
   sec = 2:l0
   sec = sec[sec != m]
@@ -267,11 +255,7 @@ fill = function(m, iter = 500, kappa = 0.5, burn = 1000, ...){
     }
     if (method == 'SSVS') {
       cij[[lj]] = rep(25,k*etam[lj])
-      if (m == 2) {
-        tauij[[lj]] = rep(1.25,k*etam[lj])
-      }else{
-        tauij[[lj]] = rep(1.5,k*etam[lj])
-      }
+      tauij[[lj]] = ifelse(m == 2,rep(1.25,k*etam[lj]),rep(1.5,k*etam[lj]))
       itauij[[lj]] = cij[[lj]]*tauij[[lj]]
       Dj[[lj]] = diag(itauij[[lj]])
       Rj[[lj]] = diag(k*etam[lj])
@@ -361,8 +345,7 @@ updatelist = function(l, ...){
       itauij[[lj]][gam_iter[[lj]][,i2] == 0] = tauij[[lj]][gam_iter[[lj]][,i2] == 0]
       itauij[[lj]][gam_iter[[lj]][,i2] == 1] = cij[[lj]][gam_iter[[lj]][,i2] == 1]*tauij[[lj]][gam_iter[[lj]][,i2] == 1]
       Dj[[lj]] = diag(itauij[[lj]])
-      theta0j = list()
-      theta0j[[lj]] = rep(0,k*etam[lj])
+      theta0j = rep(0,k*etam[lj])
     }else if (method == 'KUO') {
       Dj[[lj]] = diag(k*etam[lj])
       Rj[[lj]] = sigma0j[[lj]]}
@@ -523,10 +506,10 @@ listm[[paste0('m',3)]] = fill(m = 3,iter = 1000,burn = 2000)
 m_iter = c()
 m_iter[1] = 3
 acepm = 0
-prodTSM = matrix(nrow = niter_m + burn_m - 1,ncol = 23)
-pm_im = matrix(nrow = l0,ncol = niter_m + burn_m - 1)
-pb = txtProgressBar(min = 2, max = niter_m + burn_m,style = 3)
-for (im in 2:{niter_m + burn_m}) {
+prodTSM = matrix(nrow = niter + burn - 1,ncol = 23)
+pm_im = matrix(nrow = l0,ncol = niter + burn - 1)
+pb = txtProgressBar(min = 2, max = niter + burn,style = 3)
+for (im in 2:{niter + burn}) {
   m_iter[im] = rdunif(m_iter[im - 1],l0)
   # Generamos valor para Theta_m y Theta_mp
   listm[[paste0('m',m_iter[im - 1])]] = updatelist(l = m_iter[im - 1])
