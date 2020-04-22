@@ -8,7 +8,7 @@ autoplot.tsregim = function(object, type = 1 , ...) {
     if (!inherits(object, 'tsregim')) {
       stop('autoplot.tsregim requires a tsregim object')
     }}
-  if (type > 3) {stop('r should take values in c (1,2,3)')}
+  if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
   dats_Yt = as.data.frame(object$Yt)
   time = seq(1,nrow(dats_Yt))
   dat = data.frame(name = 'Series.1',time = time,value = dats_Yt[,1])
@@ -69,7 +69,7 @@ autoplot.regim_model = function(object, type = 1 , ...) {
     if (!inherits(object, 'regim_model')) {
       stop('autoplot.regim_model requires a regim_model object')
     }}
-  if (type > 4) {stop('r should take values in c (1,2,3,4)')}
+  if (!{type %in% c(1:4)}) {stop('type should take values in c (1,2,3,4)')}
   if (is.null(object$Chain)) {stop('There are no chains to graph')}
   if (type == 1) {
     if (is.null(object$Chain$r)) {stop('r unknown')}
@@ -167,7 +167,7 @@ autoplot.regime_missing = function(object, type = 1 , ...) {
       stop('autoplot.regime_missing requires a regime_missing object')
     }}
   if (is.null(object$Chain$Y)) {stop('There are no chains to graph')}
-  if (type > 3) {stop('r should take values in c (1,2,3)')}
+  if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
   if (type == 1) {
     if (is.null(object$estimates$Yt)) {stop('Yt has no missing data')}
     Chain_Yt = t(object$Chain$Yt)

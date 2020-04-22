@@ -1,3 +1,32 @@
+# Date: 14/04/2020
+# Description:
+# Function:
+lists_ind = function(r,Zt,l,...){
+  N = length(Zt)
+  rj = matrix(nrow = 2,ncol = l)
+  if (l == 1) {
+    rj[,1] = c(-Inf,Inf)
+  }else{
+    rj[,1] = c(-Inf,r[1])
+    rj[,l] = c(rev(r)[1],Inf)
+  }
+  if (l > 2) {for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}}
+  # indicator variable for the regime
+  if (any(is.na(Zt))) {
+    posZt = (1:N)[!is.na(Zt)]
+  }else{
+    posZt = 1:N
+  }
+  Ind = c()
+  for (j in 1:l) {
+    for (w in posZt) {
+      if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
+        Ind[w] = j
+      }
+    }
+  }
+  return(list(Ind = Ind))
+}
 tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
   list_result = list()
   if (!is.null(r)) {
@@ -8,10 +37,12 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
     }
     list_result$l = l
     if (is.null(Zt)) {
-      stop('Zt must be enter with threshold process')
+      stop('Zt must be enter with threshold value')
     }
   }
-  if (!is.numeric(Yt)) {stop('Yt must be a real matrix of dimension Nxk')}
+  if (!is.numeric(Yt)) {
+    stop('Yt must be a real matrix of dimension Nxk')
+  }
   if (!is.matrix(Yt)) {Yt = as.matrix(Yt)}
   if (!is.null(Zt)) {
     if (!is.numeric(Zt)) {stop('Zt must be a real matrix of dimension Nx1')}
@@ -32,6 +63,9 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
   if (!is.null(Xt)) {
     list_result$Xt = Xt 
   }
+  if (any(is.na(Yt)) | any(is.na(Zt)) | any(is.na(Xt))) {
+    cat('Yt, Zt and Xt admit NA values use mtarmissing for estimation')
+  }
   list_result$r = r
   if (!is.null(r)) {
     # Calcular regimen que pertenecen las funciones
@@ -46,46 +80,8 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
   class(list_result) = 'tsregim'
   return(list_result)
 }
-print.tsregim = function(x,...){
-  cat('Threshold time series:\n','N =',x$N,'\n')
-  dats = x
-  class(dats) = NULL
-  if (!is.null(x$r)) {
-    cat('======================','\n')
-    cat('r = ',x$r,'\n')
-    print(x$Summary_r)
-    cat('======================','\n')
-  }else{
-    if (!is.null(x$Zt)) {
-      cat('Unknown threshold values','\n')
-    }
-  }
-  str(dats)
-}
-lists_ind = function(r,Zt,l,...){
-  N = length(Zt)
-  rj = matrix(nrow = 2,ncol = l)
-  if (l == 1) {
-    rj[,1] = c(-Inf,Inf)
-  }else{
-    rj[,1] = c(-Inf,r[1])
-    rj[,l] = c(rev(r)[1],Inf)
-  }
-  if (l > 2) {for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}}
-  # indicator variable for the regime
-  Ind = c()
-  for (j in 1:l) {
-    for (w in 1:N) {
-      if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
-        Ind[w] = j
-      }
-    }
-  }
-  return(list(Ind = Ind))
-}
 # Ejemplo
-Yt = datasim$Yt
-Ut = Ut$Yt
-Zt = t(Ut)[1,]
-Xt = t(Ut)[-1,]
-datos = tsregim(Yt,Zt,Xt)
+yt = datasim$Sim
+Yt = yt$Yt
+Zt = yt$Zt
+(datos = tsregim(Yt,Zt))

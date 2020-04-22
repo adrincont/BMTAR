@@ -1,11 +1,12 @@
-# Date: 07/04/2019
+# Date: 14/04/2020
 # Description:Function to create a regime type object given non-structural and structural parameters.
 # Coments:
 #-> k was taken by default by Sigma dimensions
 # Function:
-mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...){
-  # Function to repeat matrix
-  repM = function(M,r){lapply(rep(0,r),function(x){x*M})}
+# Function to repeat matrix
+repM = function(M,r){lapply(rep(0,r),function(x){x*M})}
+mtaregim = function(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...){
+  if (is.numeric(Sigma) & !is.matrix(Sigma)) {Sigma = as.matrix(Sigma)}
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')
   }else if (sum(names(orders) %in% c('p','q','d')) != 3) {
@@ -26,8 +27,9 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
     stop('Phi must be a list of real matrix of dimension kxk')
   }else{
     for (i in 1:length(Phi)) {
-      vl = sum(is.numeric(Phi[[i]]) & {dim(Phi[[i]]) == c(k,k)})
-      if (vl != 2) {stop('Phi must be a list of real matrix of dimension kxk')}
+      if (is.numeric(Phi[[i]]) & !is.matrix(Phi[[i]])) {Phi[[i]] = as.matrix(Phi[[i]])}
+      vl = all((is.numeric(Phi[[i]]) & {dim(Phi[[i]]) == c(k,k)}))
+      if (!vl) {stop('Phi must be a list of real matrix of dimension kxk')}
       if (!is.matrix(Phi[[i]])) {stop('Phi[[i]] must be a matrix type object')}
       if (substr(names(Phi[i]),1,3) != 'phi' | !{as.numeric(substr(names(Phi[i]),4,4)) %in% c(1:p)}) {
         stop('names  in the list Phi must be \'phii\' with a integer i in 1:q')
@@ -44,9 +46,10 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
       if (is.matrix(Beta[[1]])) {nu = ncol(Beta[[1]])
       }else{stop('Beta must be a list of real matrix of dimension kxnu')}
       for (i in 1:length(Beta)) {
+        if (is.numeric(Beta[[i]]) & !is.matrix(Beta[[i]])) {Beta[[i]] = as.matrix(Beta[[i]])}
         if (!is.matrix(Beta[[i]])) {stop('Beta[[i]] must be a matrix type object')}
-        vl = sum(is.numeric(Beta[[i]]) & {dim(Beta[[i]]) == c(k,nu)})
-        if (vl != 2) {stop('Beta must be a list of real matrix of dimension kxnu')}
+        vl = all(is.numeric(Beta[[i]]) & {dim(Beta[[i]]) == c(k,nu)})
+        if (!vl) {stop('Beta must be a list of real matrix of dimension kxnu')}
         if (substr(names(Beta[i]),1,4) != 'beta' | !{as.numeric(substr(names(Beta[i]),5,5)) %in% c(1:q)}) {
           stop('names  in the list Beta must be \'betai\' with a integer i in 1:q')
         }
@@ -63,8 +66,9 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
       stop('Delta must be a list of real matrix of dimension kx1')
     } else{
       for (i in 1:length(Delta)) {
-        vl = sum(is.numeric(Delta[[i]]) & {dim(Delta[[i]]) == c(k,1)})
-        if (vl != 2) {stop('Delta must be a list of real matrix of dimension kx1')}
+        if (is.numeric(Delta[[i]]) & !is.matrix(Delta[[i]])) {Delta[[i]] = as.matrix(Delta[[i]])}
+        vl = all(is.numeric(Delta[[i]]) & {dim(Delta[[i]]) == c(k,1)})
+        if (!vl) {stop('Delta must be a list of real matrix of dimension kx1')}
         if (!is.matrix(Delta[[i]])) {stop('Delta[[i]] must be a matrix type object')}
         if (substr(names(Delta[i]),1,5) != 'delta' | !{as.numeric(substr(names(Delta[i]),6,6)) %in% c(1:d)}) {
           stop('names  in the list Delta must be \'deltai\' with a integer i in 1:q')
@@ -81,22 +85,23 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
     if (!is.matrix(cs)) {
       stop('cs must be a matrix type object')
     }else{
-      vl = sum(is.numeric(cs) & {dim(cs) == c(k,1)})
-      if (vl != 2) {stop('cs must be a real matrix of dimension kx1')}
+      vl = all(is.numeric(cs) & {dim(cs) == c(k,1)})
+      if (!vl) {stop('cs must be a real matrix of dimension kx1')}
     }
   }
   if (!is.matrix(Sigma)) {
     stop('Sigma must be a matrix type object')
   }else if (is.numeric(Sigma)) {
-    vl = sum(dim(Sigma) == c(k,k))
-    if (vl != 2) {stop('Sigma must be a real positive matrix of dimension kxk')}
-    vl = sum(eigen(Sigma)$values >= 0)
-    if (vl != k) {stop('Sigma must be a real positive matrix of dimension kxk')}
+    vl = all(dim(Sigma) == c(k,k))
+    if (!vl) {stop('Sigma must be a real positive matrix of dimension kxk')}
+    vl = all(eigen(Sigma)$values >= 0)
+    if (!vl) {stop('Sigma must be a real positive matrix of dimension kxk')}
   }else{
     stop('Sigma must be a real positive matrix of dimension kxk')
   }
   # Create a list of regimes
   Ri = list()
+  if (is.numeric(cs) & !is.matrix(cs)) {Sigma = as.matrix(cs)}
   if (!is.null(cs)) {
     cs = cs
   }else{
@@ -123,7 +128,6 @@ mtaregim = function(orders, cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...
                                                                        sum(!(names(Ri$delta) %in% names(Delta))))
   }
   Ri$sigma = Sigma
-  Ri$orders = orders
   # creation of object type regime
   class(Ri) = 'regime'
   return(Ri)
@@ -136,4 +140,3 @@ Delta = list(delta1 = matrix(c(0.6,1),2,1))
 Sigma = matrix(c(1,0.6,0.6,1.5),2,2,byrow = T)
 cs = matrix(c(1,-1),nrow = 2)
 Ri = mtaregim(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,Sigma = Sigma,cs = cs)
-

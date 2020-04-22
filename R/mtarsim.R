@@ -110,7 +110,11 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...){
     Yt[,i] = cs + At %*% yti + Bt %*% xti + Dt %*% zti + Sig %*% et[,i]
   }
   # delete burn
-  Yt = t(Yt[,-(1:{maxj + burn})])
+  if (k == 1) {
+    Yt = as.matrix(Yt[-(1:{maxj + burn})])
+  }else{
+    Yt = t(Yt[,-(1:{maxj + burn})])
+  }
   Zt = Zt[-c(1:{maxj + burn})]
   if (nu == 1) {
     Xt = as.matrix(Xt[,-c(1:{maxj + burn})])
@@ -126,35 +130,32 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...){
   }else if (sum(Zt) == 0 & sum(Xt) == 0) {
     sim = tsregim(Yt = Yt)
   }
-  List_RS = list(Sim = sim, Reg = Rg)
+  List_RS = list(Sim = sim, Reg = Rg,pj = pj,qj = qj,dj = dj)
   class(List_RS) = 'mtarsim'
   return(List_RS)
 }
 # Example:
 ## get Ut data process
-Tlen = 1000
-k = 2
-nu = 0
-Sigma_ut = matrix(c(1,0.4,0.4,2),k,k)
-Phi_ut = list(phi1 = matrix(c(0.5,0.1,0.4,0.5),k,k,byrow = T))
+Tlen = 500
+Sigma_ut = 2
+Phi_ut = list(phi1 = 0.3)
 R_ut = list(R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = Sigma_ut))
 Ut = mtarsim(N = Tlen,Rg = R_ut)
-Xt = Ut$Sim$Yt[,-1]
-Zt = Ut$Sim$Yt[,1]
+Zt = Ut$Sim$Yt
+# Yt process
+k = 2
 ## R1 regime
-Phi_R1 = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = T))
-Delta_R1 = list(delta1 = matrix(c(0.6,1),k,1))
+Phi_R1 = list(phi1 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = T))
 Sigma_R1 = matrix(c(1,0,0,1),k,k,byrow = T)
-cs_R1 = matrix(c(1,-1),nrow = 2)
-R1 = mtaregim(orders = list(p = 2,q = 0,d = 1),Phi = Phi_R1,Delta = Delta_R1,Sigma = Sigma_R1,cs = cs_R1)
+R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R1,Sigma = Sigma_R1)
 ## R2 regime
 Phi_R2 = list(phi1 = matrix(c(0.3,0.5,0.2,0.7),2,2,byrow = T))
 Sigma_R2 = matrix(c(2.5,0.5,0.5,1),2,2,byrow = T)
-cs_R2 = matrix(c(5,2),nrow = 2)
-R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2,cs = cs_R2)
+R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2)
 ## create list of regime-type objects
 Rg = list(R1 = R1,R2 = R2)
-r = qnorm(0.3)
+r = qnorm(0.6)
 ## get the simulation
-datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Xt = Xt,Zt = Zt)
-autoplot(datasim)
+datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt)
+autoplot.tsregim(datasim$Sim,1)
+autoplot.tsregim(datasim$Sim,2)
