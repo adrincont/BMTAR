@@ -1,5 +1,8 @@
-#
-auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 2,dj = 2), 
+#==================================================================================================#
+# Date:
+# Description:
+#==================================================================================================#
+auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 2,dj = 2),
                      niter = 5000, chain = FALSE, method = 'KUO') {
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   if (!is.list(maxorders) | length(maxorders) != 3) {
@@ -27,7 +30,7 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
       meanX = mean(data_temp$Xt,na.rm = T)
     }
     for (i in 1:k) {
-      data_temp$Yt[nasy[,i],i] = meanY[i] 
+      data_temp$Yt[nasy[,i],i] = meanY[i]
     }
     data_temp$Zt[is.na(data_temp$Zt)] = meanZ
     if (nu > 1) {

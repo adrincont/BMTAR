@@ -1,8 +1,10 @@
+#==================================================================================================#
 # Date: 07/04/2019
 # Description:
 #-> Comentar como iniciamos r si no es dado
 #-> Comentar que hacemos si r desconocido en este caso
 # Function:
+#==================================================================================================#
 mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL){
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   # Checking
@@ -426,21 +428,3 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }
   return(results)
 }
-# Example data(yt,zt,xt):
-data("datasim")
-data = datasim
-#r known
-parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)), r = data$Sim$r)
-initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 100)
-print.regim_model(estim1)
-autoplot.regim_model(estim1,2)
-autoplot.regim_model(estim1,3)
-#r unknown
-parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
-initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
-estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 200)
-print.regim_model(estim2)
-autoplot.regim_model(estim2,1)
-autoplot.regim_model(estim2,2)
-autoplot.regim_model(estim2,3)

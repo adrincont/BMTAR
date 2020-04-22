@@ -1,6 +1,8 @@
+#==================================================================================================#
 # Date: 14/04/2020
 # Description:
 # Function:
+#==================================================================================================#
 mtarinipars = function(tsregim_obj,
                        list_model = list(pars = list(l = NULL, orders = NULL, r = NULL, Sigma = NULL),
                                          orders = NULL,l0 = NULL),
@@ -376,29 +378,6 @@ mtarinipars = function(tsregim_obj,
   class(listf) = 'regim_inipars'
   return(listf)
 }
-#Example
-data("datasim")
-tsregim_obj = datasim$Sim
-# ns: l siempre conocido, Sigma = NULL = list(R1,R2) puede ser conocido r = NULL puede ser conocido
-# Sigma conocido y r conocido
-parameters = list(l = length(datasim$Reg),Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2), r = tsregim_obj$r,
-                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
-initpars_Sr = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
-#r conocido
-parameters = list(l = length(datasim$Reg),Sigma = NULL, r = tsregim_obj$r,
-                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
-initpars_r = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
-#r desconocido
-parameters = list(l = length(datasim$Reg),Sigma = NULL, r = NULL,
-                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
-initpars = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
-
-#str: l siempre conocido
-parameters = list(l = length(datasim$Reg))
-orders = list(pj = c(2,2),qj = c(1,1),dj = c(1,1))
-initpars_KUO = mtarinipars(tsregim_obj,list_model = list(pars = parameters,orders = orders),method = 'KUO')
-initpars_SSVS = mtarinipars(tsregim_obj,list_model = list(pars = parameters,orders = orders),method = 'SSVS')
-
 #
 # structure idea
 # r_prior = list(za = NULL, zb = NULL,val_rmh = 0.00375)

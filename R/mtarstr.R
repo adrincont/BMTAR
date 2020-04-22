@@ -1,8 +1,10 @@
+#==================================================================================================#
 # Date: 17/04/2019
 # Description:
 #-> Hablar de como dimos los iniciales
 #-> Hablar de proceso en el metropolis (primero Sig y Thet, luego gama y luego r)
 # Function:
+#==================================================================================================#
 mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL){
   # Checking
   if (!inherits(ini_obj, 'regim_inipars')) {
@@ -447,23 +449,3 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   }
   return(results)
 }
-#Examples
-data("datasim")
-data = datasim
-# Metodo KUO
-initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
-                      list_model = list(pars = list(l = 2), orders = list(pj = c(1,1),qj = c(0,0),dj = c(0,0))))
-estruc = mtarstr(ini_obj = initial,niter = 300,chain = T,burn = 200)
-autoplot.regim_model(estruc,1)
-autoplot.regim_model(estruc,2)
-autoplot.regim_model(estruc,3)
-autoplot.regim_model(estruc,4)
-# Metodo SSVS
-initial = mtarinipars(tsregim_obj = data$Sim,method = 'SSVS',
-                      list_model = list(pars = list(l = 2), orders = list(pj = c(2,2),qj = c(1,1),dj = c(1,1))))
-estruc = mtarstr(ini_obj = initial,niter = 500,chain = T,burn = 100)
-
-autoplot.regim_model(estruc,1)
-autoplot.regim_model(estruc,2)
-autoplot.regim_model(estruc,3)
-autoplot.regim_model(estruc,4)

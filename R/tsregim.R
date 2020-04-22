@@ -1,6 +1,8 @@
+#==================================================================================================#
 # Date: 14/04/2020
 # Description:
 # Function:
+#==================================================================================================#
 lists_ind = function(r,Zt,l,...){
   N = length(Zt)
   rj = matrix(nrow = 2,ncol = l)
@@ -80,9 +82,3 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
   class(list_result) = 'tsregim'
   return(list_result)
 }
-# Ejemplo
-data("datasim")
-yt = datasim$Sim
-Yt = yt$Yt
-Zt = yt$Zt
-datos = tsregim(Yt,Zt)

@@ -1,6 +1,8 @@
+#==================================================================================================#
 # Date: 14/04/2020
 # Description:
 # Function:
+#==================================================================================================#
 mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
                       iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
                       ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2)){
@@ -513,10 +515,3 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   if (l0 == 4) {results$NAIC$m4 = mtarNAIC(listm[[paste0('m',4)]]$par)}
   return(results)
 }
-# Example
-data("datasim")
-data = datasim
-initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(l0 = 3),method = 'KUO')
-estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = T,
-                   ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0))
-estim$final_m

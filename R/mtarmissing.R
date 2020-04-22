@@ -1,6 +1,8 @@
+#==================================================================================================#
 # Date: 14/04/2020
 # Description:
 # Function:
+#==================================================================================================#
 mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn = NULL, cU = 0.5, b = NULL) {
   #checking
   if (!is.logical(chain)) {stop('chain must be a logical object')}
@@ -510,25 +512,3 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     return(result)
   }
 }
-
-# Example
-data("datasim")
-yt = datasim$Sim
-# Simulacion de datos faltantes
-data_yt = yt$Yt
-data_zt = yt$Zt
-posNA = sample(c(1:500),8)
-data_yt[c(posNA),] = c(NA,NA)
-posNA = sample(c(1:500),8)
-data_zt[c(posNA)] = NA
-data_final = tsregim(data_yt,data_zt,r = yt$r)
-autoplot.tsregim(data_final,1)
-autoplot.tsregim(data_final,2)
-
-initial = mtarinipars(tsregim_obj = data_final,
-                      list_model = list(pars = list(l = 2,r = datasim$Sim$r,
-                                        orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
-missingest = mtarmissing(ini_obj = initial,chain = TRUE,niter = 1000,burn = 1000)
-print(missingest)
-autoplot.regime_missing(missingest,1)
-datasim$Sim$Yt[is.na(data_yt[,1]),]
