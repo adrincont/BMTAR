@@ -68,7 +68,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
       cov = ks::invvec(sigma_iter[[Ind]][,i2])
     }else{cov = regimemodel$regime[[Ind]]$sigma}
     if (!is.null(regimemodel$Chain$Gamma)) {
-      mean = {t(wtj) %x% diag(k)} %*% (gam_iter[[Ind]][,i2]*theta_iter[[Ind]][,i2]) 
+      mean = {t(wtj) %x% diag(k)} %*% (gam_iter[[Ind]][,i2]*theta_iter[[Ind]][,i2])
     }else{
       mean = {t(wtj) %x% diag(k)} %*% (theta_iter[[Ind]][,i2])
     }
@@ -97,7 +97,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
     namesYT = paste((1:h) %x% rep(1,k),rep(1,h) %x% (1:k),sep = '.')
     namesUT = paste((1:h) %x% rep(1,nu + 1),rep(1,h) %x% (1:{nu + 1}),sep = '.')
   }else{
-    Ti = ifelse(min(newdata$time) < ncol(Yt),min(newdata$time) - 1,ncol(Yt)) 
+    Ti = ifelse(min(newdata$time) < ncol(Yt),min(newdata$time) - 1,ncol(Yt))
     h =  max(newdata) - Ti
     Yp = Yt
     Up = Ut
@@ -125,7 +125,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   ### Calculo de estimaciones y intervalos
   estimYt = matrix(nrow = k*h,ncol = 4)
   estimUt = matrix(nrow = (nu + 1)*h,ncol = 4)
-  colnames(estimUt) = colnames(estimYt) = 
+  colnames(estimUt) = colnames(estimYt) =
     c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''),'RVPD')
   estimUt[,1] = apply(ChainUt,2,quantile,probs = (1 - level)/2)
   estimUt[,2] = apply(ChainUt,2,mean)
@@ -140,7 +140,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   ## Salidas
   if (min(newdata$time) >= maxj & length(newdata$time) != ncol(Yt)) {
     estimUt = estimUt[paste(newdata$time %x% rep(1,k), (1:k),sep = '.'),]
-    estimYt = estimYt[paste(newdata$time %x% rep(1,k), (1:k),sep = '.'),] 
+    estimYt = estimYt[paste(newdata$time %x% rep(1,k), (1:k),sep = '.'),]
   }
   Yth = ks::invvec(estimYt[,2],ncol = length(newdata$time),nrow = k)
   Uth = ks::invvec(estimUt[,2],ncol = length(newdata$time),nrow = nu + 1)
@@ -160,15 +160,15 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
 }
 
 # Example data(yt,ut):
-yt = datasim
-estimyt = mtarns(Yt = yt$Yt,Ut = Ut,l = 2,orders = list(pj = yt$pj,dj = yt$dj,qj = yt$qj)
-                 ,r = qnorm(0.4),niter = 1000,chain = TRUE)
+#yt = datasim
+#estimyt = mtarns(Yt = yt$Yt,Ut = Ut,l = 2,orders = list(pj = yt$pj,dj = yt$dj,qj = yt$qj)
+#                 ,r = qnorm(0.4),niter = 1000,chain = TRUE)
 
-estimyt = mtarstr(Yt = yt$Yt,Ut = Ut,l = 2,orders = list(pjmax = c(2,2),
-                 qjmax = c(1,1),djmax = c(1,1)),niter = 1000,method = 'KUO',chain = T)
+#estimyt = mtarstr(Yt = yt$Yt,Ut = Ut,l = 2,orders = list(pjmax = c(2,2),
+ #                qjmax = c(1,1),djmax = c(1,1)),niter = 1000,method = 'KUO',chain = T)
 
-Ut = Ut
-estimut = mtarns(Yt = Ut,orders = list(pj = 1,qj = 0,dj = 0),niter = 1000)
+#Ut = Ut
+#estimut = mtarns(Yt = Ut,orders = list(pj = 1,qj = 0,dj = 0),niter = 1000)
 
-newdata = data.frame(time = 1:1000)
-pred1 = mtarforecast(regimemodel = estimyt,niter = 500,newdata = newdata,modelU = estimut)
+#newdata = data.frame(time = 1:1000)
+#pred1 = mtarforecast(regimemodel = estimyt,niter = 500,newdata = newdata,modelU = estimut)

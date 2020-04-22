@@ -127,7 +127,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     cs = modelU$cs
     At = as.matrix(as.data.frame(modelU$phi))
     Sig = as.matrix(modelU$sigma)
-    EU = solve(diag(nu + 1) - At) %*% cs 
+    EU = solve(diag(nu + 1) - At) %*% cs
     vecVU = solve(diag(2*(nu + 1)) - At %x% At) %*% c(Sig %*% Sig)
     VU = ks::invvec(vecVU,ncol = nu + 1, nrow = nu + 1)
     val = dmnormB(Ut[,t], EU, VU)
@@ -168,7 +168,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     hphi = cbind(diag(k*(pmax - 1)),matrix(0,nrow = k*(pmax - 1), ncol = k + qmax*nu + dmax))
     hbeta = cbind(matrix(0,nrow = nu*(qmax - 1), ncol = k*pmax),diag(nu*(qmax - 1)),matrix(0,nrow = nu*(qmax - 1),ncol = nu + dmax))
     hdelta = cbind(matrix(0,nrow = dmax - 1, ncol = k*pmax + qmax*nu),diag(dmax - 1),matrix(0,ncol = 1,nrow = dmax - 1))
-    H_zt = rbind(Aj[,-1], 
+    H_zt = rbind(Aj[,-1],
                  hphi,
                  matrix(0,nrow = nu, ncol = ncol(Aj) - 1),
                  hbeta,
@@ -247,7 +247,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   Utr = Ut #Yt que vamos a cambiar en el proceso
   #Ytr[PosNAMat[[1]]] = 0
   Yt_iter[,1] = Ytr[PosNAMat[[1]]]
-  Ut_iter[,1] = Utr[PosNAMat[[2]]] 
+  Ut_iter[,1] = Utr[PosNAMat[[2]]]
   #set initial values for each regime in each chain
   #creacion de cadenas para sigma y theta
   for (lj in 1:l) {
@@ -270,10 +270,10 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   for (lj in 1:l) {
     listmatrix = state_space(lj, 1, theta_iter,sigma_iter)
     R_zt[[lj]] = listmatrix$R
-    L_zt[[lj]] = listmatrix$L  
+    L_zt[[lj]] = listmatrix$L
     H_zt[[lj]] = listmatrix$H
     K_zt[[lj]] = listmatrix$K
-    M_zt[[lj]] = listmatrix$M  
+    M_zt[[lj]] = listmatrix$M
   }
   listj = lists(r, Ytr, Ut)
   for (ij in 1:N) {
@@ -318,7 +318,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     PT = AlphaT = vector('list',N + 1)
     AlphaT[[N + 1]] = Alphat[[N + 1]]
     PT[[N + 1]] = Pt[[N + 1]]
-    
+
     for (i1 in rev(1:{N})) {
       Eig = eigen(Pt[[i1 + 1]])$values
       Eig = any(Mod(Eig) > exp(-6))
@@ -398,7 +398,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       L_zt[[lj]] = listmatrix$L
       H_zt[[lj]] = listmatrix$H
       K_zt[[lj]] = listmatrix$K
-      M_zt[[lj]] = listmatrix$M  
+      M_zt[[lj]] = listmatrix$M
     }
     setTxtProgressBar(pb,i)
   }
@@ -426,7 +426,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   Yt_chains = Yt_iter[,-c(1:burn)]
   if (nu == 0) {Ut_chains = t(as.matrix(Ut_iter[,-c(1:burn)]))
   }else{Ut_chains = Ut_iter[,-c(1:burn)]}
-  
+
   Test_Yt = matrix(nrow = nrow(Yt_iter),ncol = 3)
   Test_Ut = matrix(nrow = nrow(Ut_iter),ncol = 3)
   colnames(Test_Yt) = colnames(Test_Ut) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
@@ -435,31 +435,31 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   est_Yt = apply(Yt_chains,1,mean)
   Test_Yt[,2] = est_Yt
   rownames(Test_Yt) = Names_Yt[PosNAMat[[1]]]
-  
+
   Test_Ut[,1] = apply(Ut_chains,1,quantile,probs = (1 - level)/2)
   Test_Ut[,3] = apply(Ut_chains,1,quantile,probs = (1 + level)/2)
   est_Ut = apply(Ut_chains,1,mean)
   Test_Ut[,2] = est_Ut
   rownames(Test_Ut) = Names_Ut[PosNAMat[[2]]]
-  
+
   Test_Zt = matrix(nrow = length(Names_Zt[PosNAMat[[2]][1,]]),ncol = 3)
   colnames(Test_Zt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
   Test_Zt[,1] = matrix(Test_Ut[,1],ncol = nu + 1,byrow = T)[,1]
   Test_Zt[,2] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
   Test_Zt[,3] = matrix(Test_Ut[,3],ncol = nu + 1,byrow = T)[,1]
   rownames(Test_Zt) = Names_Zt[PosNAMat[[2]][1,]]
-  
+
   Test_Xt = matrix(nrow = length(Names_Xt[PosNAMat[[2]][-1,]]),ncol = 3)
   colnames(Test_Xt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
   Test_Xt[,1] = matrix(Test_Ut[,1],ncol = nu + 1,byrow = T)[,-1]
   Test_Xt[,2] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
   Test_Xt[,3] = matrix(Test_Ut[,3],ncol = nu + 1,byrow = T)[,-1]
   rownames(Test_Xt) = Names_Xt[PosNAMat[[2]][-1,]]
-  
+
   ini_obj$tsregim_obj$Yt[PosNAvec[[1]],] = matrix(Test_Yt[,2],ncol = k,byrow = T)
   ini_obj$tsregim_obj$Zt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
   ini_obj$tsregim_obj$Xt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
-  
+
   if (chain) {Chain = vector('list')}
   if (any(is.na(Yt)) & any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Zt = Test_Zt, Xt = Test_Xt)
@@ -512,6 +512,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
 }
 
 # Example
+data("datasim")
 yt = datasim$Sim
 # Simulacion de datos faltantes
 data_yt = yt$Yt

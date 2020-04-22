@@ -108,7 +108,7 @@ autoplot.regim_model = function(object, type = 1 , ...) {
         }
       }
       p3[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = value)) +
-        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
+        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') + 
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Sigma chains',j))
       }
@@ -152,7 +152,7 @@ autoplot.regim_model = function(object, type = 1 , ...) {
         }
       }
       p5[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = value)) +
-        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
+        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') + 
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Gamma chains',j))
     }

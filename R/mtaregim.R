@@ -1,11 +1,18 @@
+#==================================================================================================#
 # Date: 14/04/2020
 # Description:Function to create a regime type object given non-structural and structural parameters.
 # Coments:
 #-> k was taken by default by Sigma dimensions
 # Function:
 # Function to repeat matrix
+#==================================================================================================#
+mtaregim = function(x, ...) {
+  UseMethod("mtaregim")
+}
 repM = function(M,r){lapply(rep(0,r),function(x){x*M})}
-mtaregim = function(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma,...){
+
+mtaregim.default = function(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL,
+                            Delta = NULL, Sigma,...){
   if (is.numeric(Sigma) & !is.matrix(Sigma)) {Sigma = as.matrix(Sigma)}
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')
@@ -50,7 +57,8 @@ mtaregim = function(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NUL
         if (!is.matrix(Beta[[i]])) {stop('Beta[[i]] must be a matrix type object')}
         vl = all(is.numeric(Beta[[i]]) & {dim(Beta[[i]]) == c(k,nu)})
         if (!vl) {stop('Beta must be a list of real matrix of dimension kxnu')}
-        if (substr(names(Beta[i]),1,4) != 'beta' | !{as.numeric(substr(names(Beta[i]),5,5)) %in% c(1:q)}) {
+        if (substr(names(Beta[i]),1,4) != 'beta' | !{
+          as.numeric(substr(names(Beta[i]),5,5)) %in% c(1:q)}) {
           stop('names  in the list Beta must be \'betai\' with a integer i in 1:q')
         }
       }
@@ -70,7 +78,8 @@ mtaregim = function(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NUL
         vl = all(is.numeric(Delta[[i]]) & {dim(Delta[[i]]) == c(k,1)})
         if (!vl) {stop('Delta must be a list of real matrix of dimension kx1')}
         if (!is.matrix(Delta[[i]])) {stop('Delta[[i]] must be a matrix type object')}
-        if (substr(names(Delta[i]),1,5) != 'delta' | !{as.numeric(substr(names(Delta[i]),6,6)) %in% c(1:d)}) {
+        if (substr(names(Delta[i]),1,5) != 'delta' | !{
+          as.numeric(substr(names(Delta[i]),6,6)) %in% c(1:d)}) {
           stop('names  in the list Delta must be \'deltai\' with a integer i in 1:q')
         }
       }
@@ -117,26 +126,20 @@ mtaregim = function(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NUL
     Ri$beta = vector('list', q)
     names(Ri$beta) = paste0('beta',1:q)
     Ri$beta[names(Beta)] = Beta
-    Ri$beta[names(Ri$beta)[!(names(Ri$beta) %in% names(Beta))]] = repM(matrix(0,k,nu),
-                                                                   sum(!(names(Ri$beta) %in% names(Beta))))
+    Ri$beta[names(Ri$beta)[!(names(Ri$beta) %in%
+                               names(Beta))]] = repM(matrix(0,k,nu),
+                                                     sum(!(names(Ri$beta) %in% names(Beta))))
   }
   if (d != 0) {
     Ri$delta = vector('list', d)
     names(Ri$delta) = paste0('delta',1:d)
     Ri$delta[names(Delta)] = Delta
-    Ri$delta[names(Ri$delta)[!(names(Ri$delta) %in% names(Delta))]] = repM(matrix(0,k,1),
-                                                                       sum(!(names(Ri$delta) %in% names(Delta))))
+    Ri$delta[names(Ri$delta)[!(names(Ri$delta) %in%
+                                 names(Delta))]] = repM(matrix(0,k,1),
+                                                        sum(!(names(Ri$delta) %in% names(Delta))))
   }
   Ri$sigma = Sigma
   # creation of object type regime
   class(Ri) = 'regime'
   return(Ri)
 }
-# Example:
-orders = list(p = 2,q = 1,d = 1)
-Phi = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),2,2, byrow = T))
-Beta = list(beta1 = matrix(c(0.3,-0.4),2, 1))
-Delta = list(delta1 = matrix(c(0.6,1),2,1))
-Sigma = matrix(c(1,0.6,0.6,1.5),2,2,byrow = T)
-cs = matrix(c(1,-1),nrow = 2)
-Ri = mtaregim(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,Sigma = Sigma,cs = cs)

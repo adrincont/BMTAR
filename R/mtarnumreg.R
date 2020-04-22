@@ -1,12 +1,12 @@
 # Date: 14/04/2020
 # Description:
 # Function:
-mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000, 
+mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
                       iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
                       ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2)){
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
   if (!is.logical(NAIC)) {stop('NAIC must be a logical object')}
-  # Checking 
+  # Checking
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
   }
@@ -143,8 +143,8 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     for (lj in 1:l) {
       yj = c(listar$listaY[[lj]])
       Xj = listar$listaX[[lj]]
-      acum = acum + t(yj - Xj %*% diag(gamma[[lj]][,ir]) %*% theta[[lj]][,ir]) %*% 
-        {diag(Nrg[lj]) %x% solve(sigma[[lj]][[ir]])} %*% 
+      acum = acum + t(yj - Xj %*% diag(gamma[[lj]][,ir]) %*% theta[[lj]][,ir]) %*%
+        {diag(Nrg[lj]) %x% solve(sigma[[lj]][[ir]])} %*%
         (yj - Xj %*% diag(gamma[[lj]][,ir]) %*% theta[[lj]][,ir])
     }
     sigmareg = lapply(sigma,function(x){x[[ir]]})
@@ -497,7 +497,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   vecm[1:length(vecm)] = ls[1:length(vecm)]
   if (chain_m & list_m) {
     results = list(tsregim = ini_obj$tsregim_obj,list_m = listm ,m_chain = m_iter,estimates = vecm,final_m = vecm[[1]])
-    class(results) = 'regim_number' 
+    class(results) = 'regim_number'
   }else if (chain_m & !list_m) {
     results = list(tsregim = ini_obj$tsregim_obj,m_chain = m_iter, estimates = vecm,final_m = vecm[1])
     class(results) = 'regim_number'
@@ -514,6 +514,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   return(results)
 }
 # Example
+data("datasim")
 data = datasim
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(l0 = 3),method = 'KUO')
 estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = T,

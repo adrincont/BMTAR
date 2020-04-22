@@ -11,7 +11,7 @@ mtarNAIC = function(regimemodel){
   for (lj in 1:l) {
     nuaux[lj] = length(regimemodel$regime[[lj]]$beta[[1]][1,])
   }
-  nu = max(nuaux) 
+  nu = max(nuaux)
   pj = qj = dj = vector(length = l)
   for (lj in 1:l) {
     pj[lj] = length(regimemodel$regime[[lj]]$phi)
@@ -27,6 +27,7 @@ mtarNAIC = function(regimemodel){
   return(list(AICj = AICj,NAIC = NAIC))
 }
 # Example:
+data("datasim")
 yt = datasim$Sim
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),r = yt$r)
 initial = mtarinipars(tsregim_obj = yt,list_model = list(pars = parameters))
@@ -46,7 +47,7 @@ rprop = function(r){
 rprop = Vectorize(rprop)
 r = seq(-1,1,length.out = 50)
 rnaic = rprop(r)
-ggplot2::ggplot(data = NULL, ggplot2::aes(x = r,y = rnaic)) + ggplot2::geom_point() + 
+ggplot2::ggplot(data = NULL, ggplot2::aes(x = r,y = rnaic)) + ggplot2::geom_point() +
   ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::geom_vline(xintercept = yt$r, color = 2)
 
 

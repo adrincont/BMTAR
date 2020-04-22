@@ -1,7 +1,7 @@
 # Date: 14/04/2020
 # Description:
 # Function:
-mtarinipars = function(tsregim_obj, 
+mtarinipars = function(tsregim_obj,
                        list_model = list(pars = list(l = NULL, orders = NULL, r = NULL, Sigma = NULL),
                                          orders = NULL,l0 = NULL),
                        theta_prior = NULL, sigma_prior = NULL, gamma_prior = NULL,
@@ -175,7 +175,7 @@ mtarinipars = function(tsregim_obj,
             }
           }else{stop('r_prior$zb must be a real number between 0 and 1')}
         }else{r_prior$zb = NULL}
-        
+
         if (!is.null(r_prior$val_rmh)) {
           if (is.numeric(r_prior$val_rmh) & length(r_prior$val_rmh) == 1 & abs(r_prior$val_rmh) > 0 & abs(r_prior$val_rmh) < 1) {
           }else{stop('abs(r_prior$val_rmh) must be a real number between 0 and 1')}
@@ -303,7 +303,7 @@ mtarinipars = function(tsregim_obj,
                       if (vl != k) {stop(paste0('sigma_prior$R',lj,'$S0j must be a real positive matrix of dimension ',k,' x ',k))}
                     }else{stop(paste0('sigma_prior$R',lj,'$S0j must be a real positive matrix of dimension ',k,' x ',k))}
                   }else{
-                    sigma_prior[[paste0('R',lj)]]$S0j = diag(k)  
+                    sigma_prior[[paste0('R',lj)]]$S0j = diag(k)
                   }
                   if (!is.null(sigma_prior[[paste0('R',lj)]]$nu0j)) {
                     if (is.numeric(sigma_prior[[paste0('R',lj)]]$nu0j) & length(sigma_prior[[paste0('R',lj)]]$nu0j) == 1) {
@@ -350,7 +350,7 @@ mtarinipars = function(tsregim_obj,
         }else{
           stop(paste('gamma_prior must be a list type object of length l or less with any name',paste0('R',1:l,collapse = ', ')))
         }
-      }  
+      }
     }else{
       gamma_prior = vector('list')
       for (lj in 1:l) {
@@ -377,18 +377,19 @@ mtarinipars = function(tsregim_obj,
   return(listf)
 }
 #Example
+data("datasim")
 tsregim_obj = datasim$Sim
 # ns: l siempre conocido, Sigma = NULL = list(R1,R2) puede ser conocido r = NULL puede ser conocido
 # Sigma conocido y r conocido
-parameters = list(l = length(datasim$Reg),Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2), r = tsregim_obj$r, 
+parameters = list(l = length(datasim$Reg),Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2), r = tsregim_obj$r,
                   orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars_Sr = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 #r conocido
-parameters = list(l = length(datasim$Reg),Sigma = NULL, r = tsregim_obj$r, 
+parameters = list(l = length(datasim$Reg),Sigma = NULL, r = tsregim_obj$r,
                   orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars_r = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 #r desconocido
-parameters = list(l = length(datasim$Reg),Sigma = NULL, r = NULL, 
+parameters = list(l = length(datasim$Reg),Sigma = NULL, r = NULL,
                   orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 
@@ -402,7 +403,7 @@ initpars_SSVS = mtarinipars(tsregim_obj,list_model = list(pars = parameters,orde
 # structure idea
 # r_prior = list(za = NULL, zb = NULL,val_rmh = 0.00375)
 # theta_prior = list(R1 = list(theta0j,cov0j),R2 = list(theta0j,cov0j))
-# #method ssvs 
+# #method ssvs
 # theta_prior = list(R1 = list(theta0j,cov0j,Cij,Tauij,R),R2 = list(theta0j,cov0j,Cij,Tauij,R))
 # #
 # sigma_prior = list(R1 = list(S0j,nu0j), R2 = list(S0j,nu0j))

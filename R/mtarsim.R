@@ -2,9 +2,9 @@
 # Description:
 # Coments:
 #-> dependent function of mvtnorm library.
-#-> In the simulation the first values of Ut are considered zeros and the first values 
+#-> In the simulation the first values of Ut are considered zeros and the first values
 #-  of Yt as normal noises. Additionally a burn of 100.
-#-> hacer comentario respecto a los casos donde explota y aclarar que no se evalua 'estabilidad' 
+#-> hacer comentario respecto a los casos donde explota y aclarar que no se evalua 'estabilidad'
 # No evaluamos que Ut cumpla las propiedades de ser proceso markov
 # Function:
 mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...){
@@ -103,7 +103,7 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...){
     if (l == 1 & nrow(Ut) != 1) {
       xti = c(xti,Xt[,i])
     }else{
-      for (w in 1:ifelse(q == 0,1,q)) {xti = c(xti,Xt[,i - w])} 
+      for (w in 1:ifelse(q == 0,1,q)) {xti = c(xti,Xt[,i - w])}
     }
     zti = c()
     for (w in 1:ifelse(d == 0,1,d)) {zti = c(zti,Zt[i - w])}
@@ -154,8 +154,9 @@ Sigma_R2 = matrix(c(2.5,0.5,0.5,1),2,2,byrow = T)
 R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2)
 ## create list of regime-type objects
 Rg = list(R1 = R1,R2 = R2)
-r = qnorm(0.6)
+r = 0.20
 ## get the simulation
 datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt)
 autoplot.tsregim(datasim$Sim,1)
 autoplot.tsregim(datasim$Sim,2)
+#save(datasim, file = "datasim.rda")

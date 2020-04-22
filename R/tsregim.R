@@ -61,7 +61,7 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
   list_result$Yt = Yt
   list_result$Zt = Zt
   if (!is.null(Xt)) {
-    list_result$Xt = Xt 
+    list_result$Xt = Xt
   }
   if (any(is.na(Yt)) | any(is.na(Zt)) | any(is.na(Xt))) {
     cat('Yt, Zt and Xt admit NA values use mtarmissing for estimation')
@@ -81,7 +81,8 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
   return(list_result)
 }
 # Ejemplo
+data("datasim")
 yt = datasim$Sim
 Yt = yt$Yt
 Zt = yt$Zt
-(datos = tsregim(Yt,Zt))
+datos = tsregim(Yt,Zt)

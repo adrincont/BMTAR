@@ -5,7 +5,7 @@
 # Function:
 mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL){
   if (!is.logical(chain)) {stop('chain must be a logical object')}
-  # Checking 
+  # Checking
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
   }
@@ -16,7 +16,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   N = ini_obj$tsregim_obj$N
   nu = ini_obj$tsregim_obj$nu
   if (is.null(nu)) {nu = 0}
-  # parameters 
+  # parameters
   r = ini_obj$pars$r
   l = ini_obj$pars$l
   orders = ini_obj$pars$orders
@@ -81,7 +81,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   rini = ini_obj$init$r
   if (is.null(r)) {
     a = ifelse(is.null(rini$za),min(Zt),quantile(Zt,probs = rini$za))
-    b = ifelse(is.null(rini$zb),max(Zt),quantile(Zt,probs = rini$zb)) 
+    b = ifelse(is.null(rini$zb),max(Zt),quantile(Zt,probs = rini$zb))
   }
   # function for product of Brobdingnag numbers
   lists = function(r,...){
@@ -183,7 +183,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       sigmaini = ini_obj$init$Sigma
       iS0j[[lj]] = sigmaini[[paste0('R',lj)]]$S0j
       inu0j[[lj]] = sigmaini[[paste0('R',lj)]]$nu0j
-      sigma_iter[[lj]][[1]] = MCMCpack::riwish(v = inu0j[[lj]],S = iS0j[[lj]]) 
+      sigma_iter[[lj]][[1]] = MCMCpack::riwish(v = inu0j[[lj]],S = iS0j[[lj]])
     }else{
       sigma[[lj]] = Sigma[[paste0('R',lj)]]
     }
@@ -215,7 +215,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     for (i in 2:{niter + burn}) {
       listj = lists(r_iter[,i - 1])
       for (lj in 1:l) {
-        Wj = listj$listaW[[lj]] 
+        Wj = listj$listaW[[lj]]
         Yj = listj$listaY[[lj]]
         Nj = listj$Nrg[lj]
         yj = c(Yj)
@@ -240,7 +240,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       #if (i < 70) {
       #  ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
       #}else{
-      #  ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh)) 
+      #  ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       #}
       ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       rk = r_iter[,i - 1] + ek
@@ -262,7 +262,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }else{#r known
     listj = lists(r)
     for (lj in 1:l) {
-      Wj = listj$listaW[[lj]] 
+      Wj = listj$listaW[[lj]]
       Yj = listj$listaY[[lj]]
       Nj = listj$Nrg[lj]
       yj = c(Yj)
@@ -311,16 +311,16 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     vectheta[,2] = apply(thetachain[[lj]],1,mean)
     thetaest[[lj]] = vectheta
     if (nu != 0 & qj[lj] != 0 & dj[lj] != 0) {
-      rownames(vectheta) = 
+      rownames(vectheta) =
         rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),rep(paste0('beta',1:qj[lj]),each = nu),paste0('delta',1:dj[lj])),k)
     }else if (nu != 0 & qj[lj] != 0 & dj[lj] == 0) {
-      rownames(vectheta) = 
+      rownames(vectheta) =
         rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),rep(paste0('beta',1:qj[lj]),each = nu)),k)
     }else if (qj[lj] == 0 & dj[lj] != 0) {
-      rownames(vectheta) = 
+      rownames(vectheta) =
         rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),paste0('delta',1:dj[lj])),k)
     }else if (qj[lj] == 0 & dj[lj] == 0) {
-      rownames(vectheta) = 
+      rownames(vectheta) =
         rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k)),k)
     }
     if (is.null(Sigma)) {
@@ -380,7 +380,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }
   if (is.null(r)) {
     rest = matrix(nrow = l - 1,ncol = 3)
-    colnames(rest) = colnames(rest) = 
+    colnames(rest) = colnames(rest) =
       c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
     rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
@@ -427,6 +427,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   return(results)
 }
 # Example data(yt,zt,xt):
+data("datasim")
 data = datasim
 #r known
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)), r = data$Sim$r)

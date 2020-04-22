@@ -4,7 +4,7 @@
 #-> Hablar de proceso en el metropolis (primero Sig y Thet, luego gama y luego r)
 # Function:
 mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL){
-  # Checking 
+  # Checking
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
   }
@@ -15,7 +15,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   N = ini_obj$tsregim_obj$N
   nu = ini_obj$tsregim_obj$nu
   if (is.null(nu)) {nu = 0}
-  # parameters 
+  # parameters
   l = ini_obj$pars$l
   # unknown
   method = ini_obj$method
@@ -76,9 +76,9 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   }
   #
   #objects for save regimes, chains and credibility intervals
-  Rest = thetaest = thetachain = 
+  Rest = thetaest = thetachain =
     gamest = gamchain = sigmaest = sigmachain = vector('list', l)
-  names(Rest) = names(thetaest) = names(thetachain) = names(gamest) = names(gamchain) = 
+  names(Rest) = names(thetaest) = names(thetachain) = names(gamest) = names(gamchain) =
     names(sigmaest) = names(sigmachain) = paste0('R',1:l)
   #
   #necesary functions
@@ -178,8 +178,8 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     for (lj in 1:l) {
       yj = c(listr$listaY[[lj]])
       Xj = listr$listaX[[lj]]
-      acum = acum + t(yj - Xj %*% diag(gamma[[lj]][,i2]) %*% theta_iter[[lj]][,i2]) %*% 
-        {diag(Nrg[lj]) %x% solve(sigma_iter[[lj]][[i2]])} %*% 
+      acum = acum + t(yj - Xj %*% diag(gamma[[lj]][,i2]) %*% theta_iter[[lj]][,i2]) %*%
+        {diag(Nrg[lj]) %x% solve(sigma_iter[[lj]][[i2]])} %*%
         (yj - Xj %*% diag(gamma[[lj]][,i2]) %*% theta_iter[[lj]][,i2])
     }
     sigmareg = lapply(sigma_iter,function(x){x[[i2]]})
@@ -200,14 +200,14 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     }else if (method == 'SSVS') {
       gam_j[[reg]][pos,i] = 1
       itauij[[reg]][gam_j[[reg]][,i] == 0] = tauij[[reg]][gam_j[[reg]][,i] == 0]
-      itauij[[reg]][gam_j[[reg]][,i] == 1] = 
+      itauij[[reg]][gam_j[[reg]][,i] == 1] =
         cij[[reg]][gam_j[[reg]][,i] == 1]*tauij[[reg]][gam_j[[reg]][,i] == 1]
       Dj[[reg]] = diag(itauij[[reg]])
       pthetacond1 = dmnormB(x = theta_iter[[reg]][,i],mean = rep(0,k*eta[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
       aij = pycond1*pthetacond1*pij[[reg]][pos]
       gam_j[[reg]][pos,i] = 0
       itauij[[reg]][gam_j[[reg]][,i] == 0] = tauij[[reg]][gam_j[[reg]][,i] == 0]
-      itauij[[reg]][gam_j[[reg]][,i] == 1] = 
+      itauij[[reg]][gam_j[[reg]][,i] == 1] =
         cij[[reg]][gam_j[[reg]][,i] == 1]*tauij[[reg]][gam_j[[reg]][,i] == 1]
       Dj[[reg]] = diag(itauij[[reg]])
       pthetacond0 = dmnormB(x = theta_iter[[reg]][,i],mean = rep(0,k*eta[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
@@ -281,7 +281,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       if (i < 70) {
         ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
       }else{
-        ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh)) 
+        ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       }
       #ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       rk = r_iter[,i - 1] + ek
@@ -301,10 +301,10 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   }
   close(pb)
   cat('Saving results ... \n')
-  #exits 
+  #exits
   if (l != 1) {
     rest = matrix(nrow = l - 1,ncol = 3)
-    colnames(rest) = colnames(rest) = 
+    colnames(rest) = colnames(rest) =
       c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
     rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
@@ -324,22 +324,22 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     #credibility intervals
     vecgamma = vectheta = matrix(nrow = k*eta[lj],ncol = 3)
     vecsigma = matrix(nrow = k*k,ncol = 3)
-    colnames(vectheta) = colnames(vecsigma) = 
+    colnames(vectheta) = colnames(vecsigma) =
       c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
     a = paste0(1:k,1)
     for (i3 in 2:k) {a = c(a,paste0(1:k,i3))}
     rownames(vecsigma) = a
     if (nu != 0 & qjmax[lj] != 0 & djmax[lj] != 0) {
-      rownames(vectheta) = rownames(vecgamma) = 
+      rownames(vectheta) = rownames(vecgamma) =
         rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),rep(paste0('beta',1:qjmax[lj]),each = nu),paste0('delta',1:djmax[lj])),k)
     }else if (nu != 0 & qjmax[lj] != 0 & djmax[lj] == 0) {
-      rownames(vectheta) = rownames(vecgamma) = 
+      rownames(vectheta) = rownames(vecgamma) =
         rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),rep(paste0('beta',1:qjmax[lj]),each = nu)),k)
     }else if (qjmax[lj] == 0 & djmax[lj] != 0) {
-      rownames(vectheta) = rownames(vecgamma) = 
+      rownames(vectheta) = rownames(vecgamma) =
         rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),paste0('delta',1:djmax[lj])),k)
     }else if (qjmax[lj] == 0 & djmax[lj] == 0) {
-      rownames(vectheta) = rownames(vecgamma) = 
+      rownames(vectheta) = rownames(vecgamma) =
         rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k)),k)
     }
     vectheta[,1] = apply(thetachain[[lj]],1,quantile,probs = (1 - level)/2)
@@ -440,7 +440,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   if (l != 1) {estimates$r = rest}
   if (chain) {
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rmean,orders = orders)
-    class(results) = 'regim_model' 
+    class(results) = 'regim_model'
   }else{
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = rmean,orders = orders)
     class(results) = 'regim_model'
@@ -448,6 +448,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   return(results)
 }
 #Examples
+data("datasim")
 data = datasim
 # Metodo KUO
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
