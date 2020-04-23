@@ -1,49 +1,49 @@
-\name{hSol}
-\alias{hSol}
+\name{tsregim}
+\alias{tsregim}
 
-\title{Calculo anchos de banda}
+\title{Creation of class ``tsregim'' for some data}
 \description{
-Calcular mediante diferentes metodos anchos de banda para usar en el kernel
+Creation and organization of data
 }
 \usage{
-hSol(data,kernel="gaus",plot=FALSE,method="sirverman",...)
+tsregim(Yt, Zt = NULL, Xt = NULL, r = NULL, ...)
 }
 
 \arguments{
-  \item{data}{Observaciones de la variable con las que se estima la densidad kernel}
-  \item{kernel}{Tipo de kernel para usar en la estimacion ("gaus","unif","Epkov","Triang","Bwgt","Trgt")}
-  \item{plot}{Grafico para metodos "CV.MV" y "CV.LSCV"}
-  \item{method}{Metodo para calcular el ancho de banda ("sirverman","Ref.Normal","SobreSuav","CV.LSCV",
-  "CV.MV")}
+  \item{Yt}{matrix type object, observed process (admit NA values). Not NULL}
+  \item{Zt}{matrix type object, threshold process (admit NA values). Default NULL}
+  \item{Xt}{matrix type object, covariate process (admit NA values). Default NULL}
+  \item{r}{numeric type, threshold value if known. Default NULL}
 }
 
 \details{
   Detalles de los metodos usados en la funcion corespondiente
 }
 \value{
-  Valores que retorna la funcion
+  Return a list type object of class ``tsregim''
+  $Yt observed process
+  $Zt if enter
+  $Xt if enter
+  $N number of observations
+  $k number of variables
+
+  If r known
+  $r threshold value
+  $Ind numeric type, number of the regime each observation belongs
+  $Summary_r data.frame type, number and proportion of observations in each regime
+
 }
 \references{
   Fox, J. (2016)
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
-
-  Fox, J. and Weisberg, S. (2019)
-  \emph{An R Companion to Applied Regression}, Third Edition, Sage.
-
-  Atkinson, A. C. (1985)
-  \emph{Plots, Transformations, and Regression.} Oxford.
 }
-\author{John Fox \email{jfox@mcmaster.ca}}
-
-\seealso{\code{\link[stats]{qqplot}}, \code{\link[stats]{qqnorm}},
-  \code{\link[stats]{qqline}}, \code{\link{showLabels}}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
+\author{Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
   poner ejemplo de uso de funcion con datos reales
 }
 
-\keyword{distribution}
-\keyword{univar}
-\keyword{regression}
+\keyword{Observed process}
 

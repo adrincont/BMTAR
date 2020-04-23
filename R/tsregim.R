@@ -68,8 +68,8 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
   if (any(is.na(Yt)) | any(is.na(Zt)) | any(is.na(Xt))) {
     cat('Yt, Zt and Xt admit NA values use mtarmissing for estimation')
   }
-  list_result$r = r
   if (!is.null(r)) {
+    list_result$r = r
     # Calcular regimen que pertenecen las funciones
     list_result$Ind = lists_ind(r,Zt,l)
     Table_r = data.frame('N_reg' = c(table(list_result$Ind)),

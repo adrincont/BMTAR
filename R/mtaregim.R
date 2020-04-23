@@ -7,7 +7,7 @@
 # Function to repeat matrix
 #==================================================================================================#
 repM = function(M,r){lapply(rep(0,r),function(x){x*M})}
-mtaregim = function(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma, ...){
+mtaregim = function(orders = list(p = 1,q = 0,d = 0), cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma, ...){
   if (is.numeric(Sigma) & !is.matrix(Sigma)) {Sigma = as.matrix(Sigma)}
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')

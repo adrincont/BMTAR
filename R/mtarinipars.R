@@ -4,10 +4,11 @@
 # Function:
 #==================================================================================================#
 mtarinipars = function(tsregim_obj,
-                       list_model = list(pars = list(l = NULL, orders = NULL, r = NULL, Sigma = NULL),
+                       list_model = list(pars = list(l = 2, orders = list(pj = c(1,1), qj = c(0,0), dj = c(0,0)),
+                                                     r = NULL, Sigma = NULL),
                                          orders = NULL,l0 = NULL),
-                       theta_prior = NULL, sigma_prior = NULL, gamma_prior = NULL,
-                       r_prior = NULL, method = NULL){
+                       method = NULL, theta_prior = NULL, sigma_prior = NULL, gamma_prior = NULL,
+                       r_prior = NULL){
   if (!inherits(tsregim_obj, 'tsregim')) {
     stop('tsregim_obj must be a tsregim object')
   }
@@ -378,15 +379,5 @@ mtarinipars = function(tsregim_obj,
   class(listf) = 'regim_inipars'
   return(listf)
 }
-#
-# structure idea
-# r_prior = list(za = NULL, zb = NULL,val_rmh = 0.00375)
-# theta_prior = list(R1 = list(theta0j,cov0j),R2 = list(theta0j,cov0j))
-# #method ssvs
-# theta_prior = list(R1 = list(theta0j,cov0j,Cij,Tauij,R),R2 = list(theta0j,cov0j,Cij,Tauij,R))
-# #
-# sigma_prior = list(R1 = list(S0j,nu0j), R2 = list(S0j,nu0j))
-# gamma_prior = list(R1 = p0ij1, R2 = p0ij2)
-
 
 
