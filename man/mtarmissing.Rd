@@ -1,49 +1,44 @@
-\name{hSol}
-\alias{hSol}
+\name{mtarmissing}
+\alias{mtarmissing}
 
-\title{Calculo anchos de banda}
+\title{Estimation of missing values of observed, covariate and threshold processes}
 \description{
-Calcular mediante diferentes metodos anchos de banda para usar en el kernel
+Estimation using Bayesian methology of missing values in observed, covariate and threshold processes
 }
 \usage{
-hSol(data,kernel="gaus",plot=FALSE,method="sirverman",...)
+mtarmissing(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn = NULL, cU = 0.5, b = NULL)
 }
 
 \arguments{
-  \item{data}{Observaciones de la variable con las que se estima la densidad kernel}
-  \item{kernel}{Tipo de kernel para usar en la estimacion ("gaus","unif","Epkov","Triang","Bwgt","Trgt")}
-  \item{plot}{Grafico para metodos "CV.MV" y "CV.LSCV"}
-  \item{method}{Metodo para calcular el ancho de banda ("sirverman","Ref.Normal","SobreSuav","CV.LSCV",
-  "CV.MV")}
+  \item{ini_obj}{class ``regime_inipars'' object, here specificate in pars: l, orders and r known. Not NULL}
+  \item{niter}{numeric type, number of runs of MCMC. Default 1000}
+  \item{chain}{logical type, if return chains of parameters. Default FALSE}
+  \item{level}{numeric type, confident interval for estimations. Default 0.95}
+  \item{burn}{numeric type, number of initial runs. Default NULL (10\% of niter)}
+  \item{cU}{numeric type, coeficient of the diagonal covariance matrix of process Ut = (Zt,Xt). Default 0.5}
+  \item{b}{numeric type greater or equal 1, autoregressive order of Ut = (Zt,Xt). Default NULL meaning 1}
 }
 
 \details{
   Detalles de los metodos usados en la funcion corespondiente
 }
 \value{
-  Valores que retorna la funcion
+  Return list type object of class ``regime_missing''
+  $tsregim = ini_obj$tsregim_obj
+  $estimates confident interval and mean of estimated missing values
+  $Chain if chain TRUE, chains of the estimated missing values
 }
 \references{
   Fox, J. (2016)
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
-
-  Fox, J. and Weisberg, S. (2019)
-  \emph{An R Companion to Applied Regression}, Third Edition, Sage.
-
-  Atkinson, A. C. (1985)
-  \emph{Plots, Transformations, and Regression.} Oxford.
 }
-\author{John Fox \email{jfox@mcmaster.ca}}
-
-\seealso{\code{\link[stats]{qqplot}}, \code{\link[stats]{qqnorm}},
-  \code{\link[stats]{qqline}}, \code{\link{showLabels}}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
+\author{Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
   poner ejemplo de uso de funcion con datos reales
 }
 
-\keyword{distribution}
-\keyword{univar}
-\keyword{regression}
-
+\keyword{Bayesian estimation}
+\keyword{State Space Form}

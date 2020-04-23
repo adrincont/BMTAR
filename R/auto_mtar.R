@@ -2,7 +2,7 @@
 # Date:
 # Description:
 #==================================================================================================#
-auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 2,dj = 2),
+auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),
                      niter = 5000, chain = FALSE, method = 'KUO') {
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   if (!is.list(maxorders) | length(maxorders) != 3) {

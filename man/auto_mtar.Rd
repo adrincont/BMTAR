@@ -1,49 +1,45 @@
-\name{hSol}
-\alias{hSol}
+\name{auto_mtar}
+\alias{auto_mtar}
 
-\title{Calculo anchos de banda}
+\title{Estimation of a MTAR model for some data}
 \description{
-Calcular mediante diferentes metodos anchos de banda para usar en el kernel
+Compute by Bayesian methodoly a MTAR model for some data
 }
 \usage{
-hSol(data,kernel="gaus",plot=FALSE,method="sirverman",...)
+auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),niter = 5000, chain = FALSE, method = 'KUO')
 }
 
 \arguments{
-  \item{data}{Observaciones de la variable con las que se estima la densidad kernel}
-  \item{kernel}{Tipo de kernel para usar en la estimacion ("gaus","unif","Epkov","Triang","Bwgt","Trgt")}
-  \item{plot}{Grafico para metodos "CV.MV" y "CV.LSCV"}
-  \item{method}{Metodo para calcular el ancho de banda ("sirverman","Ref.Normal","SobreSuav","CV.LSCV",
-  "CV.MV")}
+  \item{Yt}{matrix type object, observed process. Not NULL}
+  \item{Zt}{matrix type object, threshold process. Default NULL}
+  \item{Xt}{matrix type object, covariate process. Default NULL}
+  \item{l0}{numeric type between 2 and 4, number of regimes to consider. Default 3}
+  \item{maxorders}{list type object with names (pj,qj,dj), maximum lags consider for the processes in each regime. Default pj = 2, qj = 0,dj = 0}
+  \item{niter}{numeric type, number of runs for every estimation. Default 5000}
+  \item{chain}{logical type, if return chains of estimations parameters and values (if missing)}
+  \item{method}{character type, must be one ``KUO'' or ``SSVS''}
 }
 
 \details{
   Detalles de los metodos usados en la funcion corespondiente
 }
 \value{
-  Valores que retorna la funcion
+  Return list type object
+
+  $tsregim class ``tsregime'' object, if missing values completed with estimations
+  $numreg numeric type, number of regimes estimated
+  $pars class ``regime_model'' object with final estimations of parameters
 }
 \references{
   Fox, J. (2016)
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
-
-  Fox, J. and Weisberg, S. (2019)
-  \emph{An R Companion to Applied Regression}, Third Edition, Sage.
-
-  Atkinson, A. C. (1985)
-  \emph{Plots, Transformations, and Regression.} Oxford.
 }
-\author{John Fox \email{jfox@mcmaster.ca}}
-
-\seealso{\code{\link[stats]{qqplot}}, \code{\link[stats]{qqnorm}},
-  \code{\link[stats]{qqline}}, \code{\link{showLabels}}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
+\author{Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
   poner ejemplo de uso de funcion con datos reales
 }
 
-\keyword{distribution}
-\keyword{univar}
-\keyword{regression}
-
+\keyword{Bayesian estimation}

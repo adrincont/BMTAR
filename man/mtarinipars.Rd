@@ -1,9 +1,9 @@
-\name{hSol}
-\alias{hSol}
+\name{mtarinipars}
+\alias{mtarinipars}
 
-\title{Calculo anchos de banda}
+\title{Organization and check model specification}
 \description{
-Calcular mediante diferentes metodos anchos de banda para usar en el kernel
+Model specification of data, known or unknown parameters and its prior distributions
 }
 \usage{
 mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2, orders = list(pj = c(1,1), qj = c(0,0), dj = c(0,0)), r = NULL, Sigma = NULL),orders = NULL,l0 = NULL), method = NULL, theta_prior = NULL, sigma_prior = NULL, gamma_prior = NULL, r_prior = NULL)

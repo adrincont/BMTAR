@@ -5,7 +5,7 @@
 #==================================================================================================#
 mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
                       iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
-                      ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2)){
+                      ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0)){
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
   if (!is.logical(NAIC)) {stop('NAIC must be a logical object')}
   # Checking

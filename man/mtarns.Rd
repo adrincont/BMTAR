@@ -1,49 +1,49 @@
-\name{hSol}
-\alias{hSol}
+\name{mtarns}
+\alias{mtarns}
 
-\title{Calculo anchos de banda}
+\title{Estimation of non-structural parameters for MTAR model}
 \description{
-Calcular mediante diferentes metodos anchos de banda para usar en el kernel
+Bayesian method for estimate non-structural parameters of a MTAR model
 }
 \usage{
-hSol(data,kernel="gaus",plot=FALSE,method="sirverman",...)
+mtarns(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL)
 }
 
 \arguments{
-  \item{data}{Observaciones de la variable con las que se estima la densidad kernel}
-  \item{kernel}{Tipo de kernel para usar en la estimacion ("gaus","unif","Epkov","Triang","Bwgt","Trgt")}
-  \item{plot}{Grafico para metodos "CV.MV" y "CV.LSCV"}
-  \item{method}{Metodo para calcular el ancho de banda ("sirverman","Ref.Normal","SobreSuav","CV.LSCV",
-  "CV.MV")}
+  \item{ini_obj}{class ``regime_inipars'' object, here specificate l and orders known, might know r or Sigma. Not NULL}
+  \item{level}{numeric type, confident interval for estimations. Default 0.95}
+  \item{burn}{numeric type, number of initial runs. Default NULL (10\% of niter)}
+  \item{niter}{numeric type, number of runs of MCMC. Default 1000}
+  \item{chain}{logical type, if return chains of parameters. Default FALSE}
+  \item{r_init}{numeric type of length l - 1. If r not known, starting value of the chain. Default NULL}
 }
 
 \details{
   Detalles de los metodos usados en la funcion corespondiente
 }
 \value{
-  Valores que retorna la funcion
+  Return a list type object of class ``regime_model''
+  $Nj number of observations in each regime
+  $estimates list for each regime with confident interval and mean value of the parameters
+  $regime ``regime'' class objects with final estimations
+  $Chain  if chain TRUE list type object with parameters chains
+  $logLikj log-likelihood of each regime with final estimations
+  $data list type object $Yt and $Ut = (Zt,Xt)
+  $r final threshold value or r if known
+  $orders list type object with names (pj,qj,dj) known
 }
 \references{
   Fox, J. (2016)
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
-
-  Fox, J. and Weisberg, S. (2019)
-  \emph{An R Companion to Applied Regression}, Third Edition, Sage.
-
-  Atkinson, A. C. (1985)
-  \emph{Plots, Transformations, and Regression.} Oxford.
 }
-\author{John Fox \email{jfox@mcmaster.ca}}
-
-\seealso{\code{\link[stats]{qqplot}}, \code{\link[stats]{qqnorm}},
-  \code{\link[stats]{qqline}}, \code{\link{showLabels}}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
+\author{Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
   poner ejemplo de uso de funcion con datos reales
 }
 
-\keyword{distribution}
-\keyword{univar}
-\keyword{regression}
+\keyword{Bayesian estimation}
+\keyword{MCMC}
 
