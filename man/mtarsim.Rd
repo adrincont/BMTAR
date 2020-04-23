@@ -34,8 +34,7 @@ mtarsim(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...)
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
-\author{Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 
 \examples{

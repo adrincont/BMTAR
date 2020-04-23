@@ -29,8 +29,7 @@ mtaregim(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL, Delta = 
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
-\author{Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \seealso{\code{\link[MTAR]{mtaregim}}, \code{\link[MTAR]{mtarns}},
   \code{\link[MTAR]{mtaregim}}, \code{\link{showLabels}}}

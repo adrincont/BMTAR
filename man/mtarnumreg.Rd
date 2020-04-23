@@ -44,8 +44,7 @@ mtarnumreg(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,i
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
-\author{Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
   poner ejemplo de uso de funcion con datos reales

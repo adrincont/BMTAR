@@ -21,9 +21,9 @@ mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2, orders = list(pj =
   l0 numeric type, number maximum of regimes to consider for the model if not known. Default NULL
   }
   \item{method}{character type object, if orders not known or enter l0 it must be one ``KUO'' or ``SSVS'', when known it is not necesary. Default NULL}
-  \item{theta_prior}{list type object with names (R1, ..., Rl), each one a list type object with at least one of the names (theta0j,cov0j)(if method ``SSVS'' (theta0j,cov0j,Cij,Tauij,R)),specification of mean and covariate matrix of the prior distribution for \theta parameter. Default NULL}
-  \item{sigma_prior}{list type object with names (R1, ..., Rl), each one a list type object with at least one of the names (S0j,nu0j) specification of matrix and degrees of freedom of the prior distribution for \Sigma parameter. Default NULL}
-  \item{gamma_prior}{list type object with names (R1, ..., Rl), each one a vector of prior probabilities for \gamma parameter. Default NULL}
+  \item{theta_prior}{list type object with names (R1, ..., Rl), each one a list type object with at least one of the names (theta0j,cov0j)(if method ``SSVS'' (theta0j,cov0j,Cij,Tauij,R)),specification of mean and covariate matrix of the prior distribution for $\theta$ parameter. Default NULL}
+  \item{sigma_prior}{list type object with names (R1, ..., Rl), each one a list type object with at least one of the names (S0j,nu0j) specification of matrix and degrees of freedom of the prior distribution for $\Sigma$ parameter. Default NULL}
+  \item{gamma_prior}{list type object with names (R1, ..., Rl), each one a vector of prior probabilities for $\gamma$ parameter. Default NULL}
   \item{r_prior}{list type object with at least one name (za, zb, val_rmh), each one a numeric type object with the minimum, maximum value for r and its parameter for Metropolis-Hasting respectively. Default NULL}
 }
 
@@ -46,8 +46,7 @@ mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2, orders = list(pj =
   \emph{Applied Regression Analysis and Generalized Linear Models},
   Third Edition. Sage.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}}
-\author{Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 
 \examples{
