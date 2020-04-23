@@ -7,6 +7,8 @@ Creation and organization of data
 }
 \usage{
 tsregim(Yt, Zt = NULL, Xt = NULL, r = NULL, ...)
+autoplot(tsregim)
+print(tsregim)
 }
 
 \arguments{

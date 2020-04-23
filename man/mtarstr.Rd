@@ -7,6 +7,8 @@ Estimate structural and non-structural parameters of a MTAR model
 }
 \usage{
 mtarstr(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL)
+autoplot(regime_model)
+print(regime_model)
 }
 
 \arguments{

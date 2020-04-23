@@ -7,6 +7,8 @@ Bayesian method for estimate non-structural parameters of a MTAR model
 }
 \usage{
 mtarns(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL)
+autoplot(regime_model)
+print(regime_model)
 }
 
 \arguments{
