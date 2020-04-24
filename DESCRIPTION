@@ -3,8 +3,10 @@ Type: Package
 Date: 2020-04-22
 Title: Titulo de el paquete
 Version: 0.1.0
-Author: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>, 
-        Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
+Author: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
+                Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
+Maintainer: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
+            Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
 Depends: R (>= 3.5.0)
 Description: Poner .
 License: GPL (>= 2)

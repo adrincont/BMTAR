@@ -435,7 +435,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   Names_Ut = rbind(Names_Zt,Names_Xt)
   # Table of estimations
   Yt_chains = Yt_iter[,-c(1:burn)]
-  if (nu == 0) {Ut_chains = t(as.matrix(Ut_iter[,-c(1:burn)]))
+  if (nu == 0) {Ut_chains = as.matrix(Ut_iter[,-c(1:burn)])
   }else{Ut_chains = Ut_iter[,-c(1:burn)]}
 
   Test_Yt = matrix(nrow = nrow(Yt_iter),ncol = 3)
@@ -453,19 +453,29 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   Test_Ut[,2] = est_Ut
   rownames(Test_Ut) = Names_Ut[PosNAMat[[2]]]
 
-  Test_Zt = matrix(nrow = length(Names_Zt[PosNAMat[[2]][1,]]),ncol = 3)
+  if (nu == 0) {
+    Test_Zt = matrix(nrow = length(Names_Zt[PosNAMat[[2]]]),ncol = 3)
+  }else{
+    Test_Zt = matrix(nrow = length(Names_Zt[PosNAMat[[2]][1,]]),ncol = 3)
+  }
   colnames(Test_Zt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
   Test_Zt[,1] = matrix(Test_Ut[,1],ncol = nu + 1,byrow = T)[,1]
   Test_Zt[,2] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
   Test_Zt[,3] = matrix(Test_Ut[,3],ncol = nu + 1,byrow = T)[,1]
-  rownames(Test_Zt) = Names_Zt[PosNAMat[[2]][1,]]
+  if (nu == 0) {
+    rownames(Test_Zt) = Names_Zt[PosNAMat[[2]]]
+  }else{
+    rownames(Test_Zt) = Names_Zt[PosNAMat[[2]][1,]]
+  }
 
-  Test_Xt = matrix(nrow = length(Names_Xt[PosNAMat[[2]][-1,]]),ncol = 3)
-  colnames(Test_Xt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-  Test_Xt[,1] = matrix(Test_Ut[,1],ncol = nu + 1,byrow = T)[,-1]
-  Test_Xt[,2] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
-  Test_Xt[,3] = matrix(Test_Ut[,3],ncol = nu + 1,byrow = T)[,-1]
-  rownames(Test_Xt) = Names_Xt[PosNAMat[[2]][-1,]]
+  if (nu != 0) {
+    Test_Xt = matrix(nrow = length(Names_Xt[PosNAMat[[2]][-1,]]),ncol = 3)
+    colnames(Test_Xt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
+    Test_Xt[,1] = matrix(Test_Ut[,1],ncol = nu + 1,byrow = T)[,-1]
+    Test_Xt[,2] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
+    Test_Xt[,3] = matrix(Test_Ut[,3],ncol = nu + 1,byrow = T)[,-1]
+    rownames(Test_Xt) = Names_Xt[PosNAMat[[2]][-1,]]
+  }
 
   ini_obj$tsregim_obj$Yt[PosNAvec[[1]],] = matrix(Test_Yt[,2],ncol = k,byrow = T)
   ini_obj$tsregim_obj$Zt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
