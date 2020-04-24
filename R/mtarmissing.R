@@ -48,8 +48,13 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   PosNAMat[[1]] = apply(Yt,2,is.na)
   PosNAvec[[1]] = c(1:ncol(Yt))[apply(PosNAMat[[1]],2,any)]
   PosNAvecT[[1]] = matrix(rep(c(1:N),k),nrow = k,ncol = N,byrow = T)[PosNAMat[[1]]]
-  PosNAMat[[2]] = apply(Ut,2,is.na)
-  PosNAvec[[2]] = c(1:ncol(Ut))[apply(PosNAMat[[2]],2,any)]
+  if (nu == 0) {
+    PosNAMat[[2]] = t(as.matrix(apply(Ut,2,is.na)))
+    PosNAvec[[2]] = c(1:ncol(Ut))[PosNAMat[[2]]]
+  }else{
+    PosNAMat[[2]] = apply(Ut,2,is.na)
+    PosNAvec[[2]] = c(1:ncol(Ut))[apply(PosNAMat[[2]],2,any)]
+  }
   PosNAvecT[[2]] = matrix(rep(c(1:N),nu + 1),nrow = nu + 1,ncol = N,byrow = T)[PosNAMat[[2]]]
   #Completamos Ut faltantes con promedios Ut
   if (length(PosNAvec[[2]]) != 0) {
@@ -332,7 +337,11 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       R2 = R_zt[[Indi[i1]]][1:k,] %*% diag(k) %*% t(R_zt[[Indi[i1]]][1:k,])
       Qt = MASS::ginv(H_zt[[Indi[i1]]][1:k,] %*%  Pt[[i1]] %*% t(H_zt[[Indi[i1]]][1:k,]) + R2)
       Bt = Pt[[i1]] %*% t(H_zt[[Indi[i1]]][1:k,]) %*% Qt
-      Gt = estUp[1:k] - M_zt[[Indi[i1]]][1:k,] %*% Ut[,i1] - L_zt[[Indi[i1]]][1:k] - H_zt[[Indi[i1]]][1:k,] %*% Alphat[[i1]]
+      if (nu == 0) {
+        Gt = estUp[1:k] - M_zt[[Indi[i1]]][1:k,]*Ut[,i1] - L_zt[[Indi[i1]]][1:k] - H_zt[[Indi[i1]]][1:k,] %*% Alphat[[i1]]
+      }else{
+        Gt = estUp[1:k] - M_zt[[Indi[i1]]][1:k,] %*% Ut[,i1] - L_zt[[Indi[i1]]][1:k] - H_zt[[Indi[i1]]][1:k,] %*% Alphat[[i1]]
+      }
       AlphaT[[i1]] = Alphat[[i1]] + Bt %*% Gt
       PT[[i1]] = Pt[[i1]] - Bt %*% H_zt[[Indi[i1]]][1:k,] %*% Pt[[i1]]
       PT[[i1]] = symm(PT[[i1]])
@@ -422,7 +431,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
         Names_Xt = rbind(Names_Xt,paste0("(",1:N,",",k,")"))
       }
     }
-  }
+  }else{Names_Xt = NULL}
   Names_Ut = rbind(Names_Zt,Names_Xt)
   # Table of estimations
   Yt_chains = Yt_iter[,-c(1:burn)]

@@ -76,7 +76,7 @@ autoplot.regim_model(estim1,3)
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
-estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 200)
+estim2 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE,burn = 500)
 print.regim_model(estim2)
 autoplot.regim_model(estim2,1)
 autoplot.regim_model(estim2,2)
@@ -162,7 +162,7 @@ autoplot.tsregim(data_final,2)
 initial = mtarinipars(tsregim_obj = data_final,
                       list_model = list(pars = list(l = 2,r = datasim$Sim$r,
                                                     orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
-missingest = mtarmissing(ini_obj = initial,chain = TRUE,niter = 1000,burn = 1000)
+missingest = mtarmissing(ini_obj = initial,chain = TRUE,niter = 500,burn = 500)
 print(missingest)
 autoplot.regime_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]

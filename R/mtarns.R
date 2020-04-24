@@ -334,7 +334,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       vecsigma = matrix(nrow = k*k,ncol = 3)
       colnames(vecsigma) = c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
       a = paste0(1:k,1)
-      for (i3 in 2:k) {a = c(a,paste0(1:k,i3))}
+      if (k > 1) {for (i3 in 2:k) {a = c(a,paste0(1:k,i3))}}
       rownames(vecsigma) = a
       vecsigma[,1] = apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2)
       vecsigma[,3] = apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2)
