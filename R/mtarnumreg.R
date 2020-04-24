@@ -459,7 +459,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     if (l0 == 4) {
       results$NAIC$m4 = mtarNAIC(listm[[paste0('m',4)]]$par)
     }
-    x_NAIC = sapply(results$NAIC,as.vector)
+    x_NAIC = unlist(sapply(results$NAIC,as.vector))
     results$NAIC_final_m = as.numeric(gsub('m','',names(x_NAIC[which.min(x_NAIC)])))
     return(results)
   }
