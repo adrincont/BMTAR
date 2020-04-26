@@ -42,7 +42,7 @@ numregest_SSVS = mtarnumreg(ini_obj = initial,NAIC = T, iterprev = 500,
                             ordersprev = list(maxpj = 2, maxqj = 0,maxdj = 0))
 numregest_SSVS$NAIC_final_m
 initial = mtarinipars(tsregim_obj = data_cm,method = 'SSVS',
-                      list_model = list(pars = list(l = numregest_SSVS$final_m),
+                      list_model = list(pars = list(l = numregest_SSVS$NAIC_final_m),
                                         orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
 est_final_SSVS = mtarstr(ini_obj = initial,niter = 2000,chain = T)
 print(est_final_SSVS)
