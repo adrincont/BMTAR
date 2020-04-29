@@ -20,7 +20,6 @@ datasim = mtarsim(N = Tlen,Rg = list(R1 = R1,R2 = R2),r = qnorm(0.4), Xt = NULL,
 data_cm = datasim$Sim
 autoplot(data_cm,1)
 autoplot(data_cm,2)
-autoplot(data_cm,3)
 
 initial = mtarinipars(tsregim_obj = data_cm,list_model = list(l0 = 3),method = 'KUO')
 numregest_KUO = mtarnumreg(ini_obj = initial,niter_m = 500,chain_m = T,list_m = T,iterprev = 500,

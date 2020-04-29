@@ -239,12 +239,12 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
         }
       }
       # Use of metropolis with random walk
-      #if (i < 70) {
-      #  ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
-      #}else{
-      #  ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
-      #}
-      ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+      if (i < 70) {
+        ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
+      }else{
+        ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+      }
+      #ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       rk = r_iter[,i - 1] + ek
       listrk = lists(rk)
       pr = dmunif(rk,a,b)*fycond(i,listrk)
