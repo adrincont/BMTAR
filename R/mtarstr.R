@@ -129,16 +129,30 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     }
     if (l > 2) {for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}}
     # indicator variable for the regime
-    Ind = c()
+    Ind = vector(mode = 'numeric',length = N)
     for (j in 1:l) {
-      for (w in 1:N) {
-        if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
-          Ind[w] = j
-        }
-      }
+      Ind[Zt > rj[1,j] & Zt <= rj[2,j]] = j
     }
-    Nrg = c()
-    listaXj = listaYj = listaWj = vector('list', l)
+    Nrg = vector(mode = 'numeric')
+    listaXj = listaYj = vector('list', l)
+    Inj_X = function(ti,Yt,Zt,Xt,p,q,d){
+      yti = vector(mode = "numeric")
+      for (w in 1:p) {yti = c(yti,Yt[,ti - w])}
+      xti = vector(mode = "numeric")
+      for (w in 1:q) {xti = c(xti,Xt[,ti - w])}
+      zti = vector(mode = "numeric")
+      for (w in 1:d) {zti = c(zti,Zt[ti - w])}
+      if (q == 0 & d != 0) {
+        wtj = c(1,yti,zti)
+      }else if (d == 0 & q != 0) {
+        wtj = c(1,yti,xti)
+      }else if (d == 0 & q == 0) {
+        wtj = c(1,yti)
+      }else{
+        wtj = c(1,yti,xti,zti)}
+      return(wtj)
+    }
+    Inj_X = Vectorize(Inj_X,vectorize.args = "ti")
     for (lj in 1:l) {
       p = pjmax[lj]
       q = qjmax[lj]
@@ -149,26 +163,9 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       Nrg[lj] = length(Inj)
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
       yj = c(Yj)
-      Xj = matrix(1,nrow = k*Nrg[lj],ncol = k*eta[lj])
-      count = 1
-      for (ti in Inj) {
-        yti = c()
-        for (w in 1:p) {yti = c(yti,Yt[,ti - w])}
-        xti = c()
-        for (w in 1:q) {xti = c(xti,Xt[,ti - w])}
-        zti = c()
-        for (w in 1:d) {zti = c(zti,Zt[ti - w])}
-        if (q == 0 & d != 0) {
-          wtj = c(1,yti,zti)
-        }else if (d == 0 & q != 0) {
-          wtj = c(1,yti,xti)
-        }else if (d == 0 & q == 0) {
-          wtj = c(1,yti)
-        }else{
-          wtj = c(1,yti,xti,zti)}
-        Xj[count:{count + {k - 1}},] = diag(k) %x% t(wtj)
-        count = count + k
-      }
+      Wj = sapply(Inj,Inj_X,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
+      Xj = t(Wj) %x% diag(k)[1,]
+      for (s in 2:k) {Xj = cbind(Xj,t(Wj) %x% diag(k)[s,])}
       listaXj[[lj]] = Xj
       listaYj[[lj]] = Yj
     }

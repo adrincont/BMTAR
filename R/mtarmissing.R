@@ -85,17 +85,30 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     }
     if (l > 2) {for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}}
     # indicator variable for the regime
-    Ind = c()
+    Ind = vector(mode = 'numeric',length = N)
     for (j in 1:l) {
-      for (w in 1:N) {
-        if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
-          Ind[w] = j
-        }
-      }
+      Ind[Zt > rj[1,j] & Zt <= rj[2,j]] = j
     }
-    Nrg = c()
-    listaWj = listaYj = list()
-    length(listaWj) = length(listaYj) = l
+    Nrg = vector(mode = 'numeric')
+    listaWj = listaYj = vector('list', l)
+    Inj_W = function(ti,Yt,Zt,Xt,p,q,d){
+      yti = vector(mode = "numeric")
+      for (w in 1:p) {yti = c(yti,Yt[,ti - w])}
+      xti = vector(mode = "numeric")
+      for (w in 1:q) {xti = c(xti,Xt[,ti - w])}
+      zti = vector(mode = "numeric")
+      for (w in 1:d) {zti = c(zti,Zt[ti - w])}
+      if (q == 0 & d != 0) {
+        wtj = c(1,yti,zti)
+      }else if (d == 0 & q != 0) {
+        wtj = c(1,yti,xti)
+      }else if (d == 0 & q == 0) {
+        wtj = c(1,yti)
+      }else{
+        wtj = c(1,yti,xti,zti)}
+      return(wtj)
+    }
+    Inj_W = Vectorize(Inj_W,vectorize.args = "ti")
     for (lj in 1:l) {
       p = pj[lj]
       q = qj[lj]
@@ -105,26 +118,8 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       Inj = Inj[Inj > maxj]
       Nrg[lj] = length(Inj)
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
-      Wj = matrix(0,nrow = etaj[lj],ncol = Nrg[lj])
-      count = 1
-      for (ti in Inj) {
-        yti = c()
-        for (w in 1:p) {yti = c(yti,Yt[,ti - w])}
-        xti = c()
-        for (w in 1:q) {xti = c(xti,Xt[,ti - w])}
-        zti = c()
-        for (w in 1:d) {zti = c(zti,Zt[ti - w])}
-        if (q == 0 & d != 0) {
-          wtj = c(1,yti,zti)
-        }else if (d == 0 & q != 0) {
-          wtj = c(1,yti,xti)
-        }else if (d == 0 & q == 0) {
-          wtj = c(1,yti)
-        }else{
-          wtj = c(1,yti,xti,zti)}
-        Wj[,count] = wtj
-        count = count + 1
-      }
+      # matrix Wj =(1,lagY,lagX,lagZ)
+      Wj = sapply(Inj,Inj_W,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
       listaWj[[lj]] = Wj
       listaYj[[lj]] = Yj
     }
