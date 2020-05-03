@@ -69,14 +69,14 @@ data = datasim
 #r known
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)), r = data$Sim$r)
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
+estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
 print.regim_model(estim1)
 autoplot.regim_model(estim1,2)
 autoplot.regim_model(estim1,3)
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
-estim2 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE,burn = 1000)
+estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
 print.regim_model(estim2)
 autoplot.regim_model(estim2,1)
 autoplot.regim_model(estim2,2)
@@ -87,16 +87,16 @@ data("datasim")
 data = datasim
 # Metodo KUO
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
-                      list_model = list(pars = list(l = 2), orders = list(pj = c(1,1),qj = c(0,0),dj = c(0,0))))
-estruc = mtarstr(ini_obj = initial,niter = 500,chain = T,burn = 500)
+                      list_model = list(pars = list(l = 2), orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
+estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)
 autoplot.regim_model(estruc,1)
 autoplot.regim_model(estruc,2)
 autoplot.regim_model(estruc,3)
 autoplot.regim_model(estruc,4)
 # Metodo SSVS
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'SSVS',
-                      list_model = list(pars = list(l = 2), orders = list(pj = c(2,2),qj = c(1,1),dj = c(1,1))))
-estruc = mtarstr(ini_obj = initial,niter = 500,chain = T,burn = 100)
+                      list_model = list(pars = list(l = 2), orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
+estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)
 
 autoplot.regim_model(estruc,1)
 autoplot.regim_model(estruc,2)
