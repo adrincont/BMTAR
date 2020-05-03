@@ -254,6 +254,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       }
       return(rbinom(1,size = 1,prob = as.numeric((aij)/(aij + bij))))
     }
+    rgamber = Vectorize(rgamber,"pos")
     listPr = listm[[paste0('m',l)]]
     Dj = list()
     Rj = list()
@@ -304,9 +305,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     }
     #gamma
     for (jj in 1:l) {
-      for (ii in 1:{k*etam[jj]}) {
-        gam_iter[[jj]][ii,i2 + 1] = rgamber(pos = ii,reg = jj,ig = i2 + 1)
-      }
+      gam_iter[[jj]][,i2 + 1] = rgamber(pos = 1:{k*etam[jj]},reg = jj,ig = i2 + 1)
     }
     #r
     if (i2 < 70) {

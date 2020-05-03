@@ -217,6 +217,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     }
     return(rbinom(1,size = 1,prob = as.numeric((aij)/(aij + bij))))
   }
+  rgamber = Vectorize(rgamber,"pos")
   #
   #edges for rmunif
   rini = ini_obj$init$r
@@ -275,9 +276,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       gam_iter[[lj]][,i] = gam_iter[[lj]][,i - 1]
     }
     for (jj in 1:l) {
-      for (ii in 1:{k*eta[jj]}) {
-        gam_iter[[jj]][ii,i] = rgamber(pos = ii,reg = jj,i = i)
-      }
+      gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i)
     }
     if (l != 1) {
       if (i < 70) {
@@ -315,22 +314,20 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     rest[,2] = rmean
   }
   #save chains
+  # logLik
+  listj = lists(rest[,2])
+  SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
+  logLikj = vector(mode = "numeric")
   for (lj in 1:l) {
     thetachain[[lj]] = theta_iter[[lj]][,-c(1:burn)]
     gamchain[[lj]] = gam_iter[[lj]][,-c(1:burn)]
-    sigchain = matrix(nrow = k*k,ncol = (niter + burn))
-    for (o in 1:(niter + burn)) {sigchain[,o] = c(expm::sqrtm(sigma_iter[[lj]][[o]]))}
-    sigmachain[[lj]] = matrix(sigchain[,-c(1:burn)],ncol = niter,nrow = k*k)
-  }
-  for (lj in 1:l) {
+    sigmachain[[lj]] = sapply(sigma_iter[[lj]][-c(1:burn)], ks::vec)
     #credibility intervals
     vecgamma = vectheta = matrix(nrow = k*eta[lj],ncol = 3)
     vecsigma = matrix(nrow = k*k,ncol = 3)
     colnames(vectheta) = colnames(vecsigma) =
       c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
-    a = paste0(1:k,1)
-    for (i3 in 2:k) {a = c(a,paste0(1:k,i3))}
-    rownames(vecsigma) = a
+    rownames(vecsigma) = c(sapply(1:k, function(x){paste0(1:k,x)}))
     if (nu != 0 & qjmax[lj] != 0 & djmax[lj] != 0) {
       rownames(vectheta) = rownames(vecgamma) =
         rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),rep(paste0('beta',1:qjmax[lj]),each = nu),paste0('delta',1:djmax[lj])),k)
@@ -348,9 +345,9 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     vectheta[,3] = apply(thetachain[[lj]],1,quantile,probs = (1 + level)/2)
     vectheta[,2] = apply(thetachain[[lj]],1,mean)
     thetaest[[lj]] = vectheta
-    vecsigma[,1] = apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2)
-    vecsigma[,3] = apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2)
-    vecsigma[,2] = apply(sigmachain[[lj]],1,mean)
+    vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2))
+    vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2))
+    vecsigma[,2] = SigmaPrep(apply(sigmachain[[lj]],1,mean))
     sigmaest[[lj]] = vecsigma
     vec = apply(gamchain[[lj]],2,paste,collapse = '')
     vecs = sort(table(vec), decreasing = TRUE)[1:3]
@@ -406,11 +403,6 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     Ri$sigma = ks::invvec(sigmaest[[lj]][,2],ncol = k,nrow = k)
     class(Ri) = 'regime'
     Rest[[lj]] = Ri
-  }
-  # logLik
-  listj = lists(rest[,2])
-  logLikj = c()
-  for (lj in 1:l) {
     Xj = listj$listaX[[lj]]
     Yj = listj$listaY[[lj]]
     Nj = listj$Nrg[lj]

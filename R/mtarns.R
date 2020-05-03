@@ -302,6 +302,20 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     names(sigmaest) = names(sigmachain) = paste0('R',1:l)
   }
   # save chains and creation of the 'regime' type object
+  if (is.null(r)) {
+    rest = matrix(nrow = l - 1,ncol = 3)
+    colnames(rest) = colnames(rest) =
+      c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
+    rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
+    rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
+    rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
+    rmean = apply(rchain,1,mean)
+    rest[,2] = rmean
+  }else{rmean = r}
+  # logLik
+  if (is.null(r)) {rt = rest[,2]}else {rt = r}
+  listj = lists(rt)
+  logLikj = vector(mode = "numeric")
   for (lj in 1:l) {
     # save chains of theta
     thetachain[[lj]] = theta_iter[[lj]][,-c(1:burn)]
@@ -326,19 +340,16 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
         rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k)),k)
     }
     if (is.null(Sigma)) {
+      SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
       # save chains of sigma^1/2
-      sigchain = matrix(nrow = k*k,ncol = (niter + burn))
-      for (o in 1:(niter + burn)) {sigchain[,o] = c(expm::sqrtm(sigma_iter[[lj]][[o]]))}
-      sigmachain[[lj]] = matrix(sigchain[,-c(1:burn)],ncol = niter,nrow = k*k)
+      sigmachain[[lj]] = sapply(sigma_iter[[lj]][-c(1:burn)], ks::vec)
       # credibility intervals for sigma^1/2
       vecsigma = matrix(nrow = k*k,ncol = 3)
       colnames(vecsigma) = c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
-      a = paste0(1:k,1)
-      if (k > 1) {for (i3 in 2:k) {a = c(a,paste0(1:k,i3))}}
-      rownames(vecsigma) = a
-      vecsigma[,1] = apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2)
-      vecsigma[,3] = apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2)
-      vecsigma[,2] = apply(sigmachain[[lj]],1,mean)
+      rownames(vecsigma) = c(sapply(1:k, function(x){paste0(1:k,x)}))
+      vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2))
+      vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2))
+      vecsigma[,2] = SigmaPrep(apply(sigmachain[[lj]],1,mean))
       sigmaest[[lj]] = vecsigma
     }
     # creation of the 'regime' type object
@@ -379,22 +390,6 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     }
     class(Ri) = 'regime'
     Rest[[lj]] = Ri
-  }
-  if (is.null(r)) {
-    rest = matrix(nrow = l - 1,ncol = 3)
-    colnames(rest) = colnames(rest) =
-      c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-    rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
-    rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
-    rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
-    rmean = apply(rchain,1,mean)
-    rest[,2] = rmean
-  }else{rmean = r}
-  # logLik
-  if (is.null(r)) {rt = rest[,2]}else {rt = r}
-  listj = lists(rt)
-  logLikj = c()
-  for (lj in 1:l) {
     Wj = listj$listaW[[lj]]
     Yj = listj$listaY[[lj]]
     Nj = listj$Nrg[lj]
