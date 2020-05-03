@@ -1,3 +1,4 @@
+#=======================================================================================#
 # Example mtaregim:
 orders = list(p = 2,q = 1,d = 1)
 Phi = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),2,2, byrow = T))
@@ -6,7 +7,7 @@ Delta = list(delta1 = matrix(c(0.6,1),2,1))
 Sigma = matrix(c(1,0.6,0.6,1.5),2,2,byrow = T)
 cs = matrix(c(1,-1),nrow = 2)
 Ri = mtaregim(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,Sigma = Sigma,cs = cs)
-
+#=======================================================================================#
 # Example mtarsim
 ## get Ut data process
 Tlen = 500
@@ -32,20 +33,23 @@ r = 0.20
 simul = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt)
 autoplot.tsregim(simul$Sim,1)
 autoplot.tsregim(simul$Sim,2)
-
+#=======================================================================================#
 # Example tsregim
 data("datasim")
 yt = datasim$Sim
 Yt = yt$Yt
 Zt = yt$Zt
 datos = tsregim(Yt,Zt)
-
+#=======================================================================================#
 # Example mtarinipars
 data("datasim")
 tsregim_obj = datasim$Sim
-# ns: l siempre conocido, Sigma = NULL = list(R1,R2) puede ser conocido r = NULL puede ser conocido
+# ns: l siempre conocido, Sigma = NULL = list(R1,R2) puede ser
+# conocido r = NULL puede ser conocido
 # Sigma conocido y r conocido
-parameters = list(l = length(datasim$Reg),Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2), r = tsregim_obj$r,
+parameters = list(l = length(datasim$Reg),
+                  Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2),
+                  r = tsregim_obj$r,
                   orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars_Sr = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 #r conocido
@@ -56,19 +60,25 @@ initpars_r = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 parameters = list(l = length(datasim$Reg),Sigma = NULL, r = NULL,
                   orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
-
 #str: l siempre conocido
 parameters = list(l = length(datasim$Reg))
 orders = list(pj = c(2,2),qj = c(1,1),dj = c(1,1))
-initpars_KUO = mtarinipars(tsregim_obj,list_model = list(pars = parameters,orders = orders),method = 'KUO')
-initpars_SSVS = mtarinipars(tsregim_obj,list_model = list(pars = parameters,orders = orders),method = 'SSVS')
-
+initpars_KUO = mtarinipars(tsregim_obj,
+                           list_model = list(
+                             pars = parameters,orders = orders),method = 'KUO')
+initpars_SSVS = mtarinipars(tsregim_obj,
+                            list_model = list(
+                              pars = parameters,orders = orders),method = 'SSVS')
+#========================================================================================#
 # Example mtarns
 data("datasim")
 data = datasim
 #r known
-parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)), r = data$Sim$r)
-initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
+parameters = list(l = 2,
+                  orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),
+                  r = data$Sim$r)
+initial = mtarinipars(tsregim_obj = data$Sim,
+                      list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
 print.regim_model(estim1)
 autoplot.regim_model(estim1,2)
@@ -81,11 +91,12 @@ print.regim_model(estim2)
 autoplot.regim_model(estim2,1)
 autoplot.regim_model(estim2,2)
 autoplot.regim_model(estim2,3)
-
+#========================================================================================#
 # Example mtarstr
 data("datasim")
 data = datasim
 # Metodo KUO
+library(compiler)
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
                       list_model = list(pars = list(l = 2), orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
 estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)

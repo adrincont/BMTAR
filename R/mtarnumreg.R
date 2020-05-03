@@ -442,10 +442,10 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   # Corridas previas
   cat('Running previous chains ... \n')
   listm = vector('list')
-  listm[[paste0('m',2)]] = fill(m = 2,iter = iterprev, burn = round(0.2*iterprev))
-  listm[[paste0('m',3)]] = fill(m = 3,iter = iterprev, burn = round(0.2*iterprev))
+  listm[[paste0('m',2)]] = fill(m = 2,iter = iterprev, burn = round(0.3*iterprev))
+  listm[[paste0('m',3)]] = fill(m = 3,iter = iterprev, burn = round(0.3*iterprev))
   if (l0 == 4) {
-    listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.2*iterprev))
+    listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.3*iterprev))
   }
   if (NAIC) {
     results = list(tsregim = ini_obj$tsregim_obj,list_m = listm)
