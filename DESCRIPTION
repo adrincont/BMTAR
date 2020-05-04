@@ -11,7 +11,7 @@ Depends: R (>= 3.5.0)
 Description: Poner .
 License: GPL (>= 2)
 Encoding: UTF-8
-Imports: Brobdingnag,MASS,MCMCpack,expm,ks,mvtnorm
+Imports: Brobdingnag,MASS,MCMCpack,expm,ks,mvtnorm,compiler
 Suggests: ggplot2
 LazyData: true
 RoxygenNote: 7.1.0

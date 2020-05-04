@@ -85,6 +85,23 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   names(Rest) = names(thetaest) = names(thetachain) = names(gamest) = names(gamchain) =
     names(sigmaest) = names(sigmachain) = paste0('R',1:l)
   #necesary functions
+  fycond = function(i2,listr,gamma,theta_iter,sigma_iter,l){
+    acum = 0
+    Nrg = listr$Nrg
+    for (lj in 1:l) {
+      yj = c(listr$listaY[[lj]])
+      Xj = listr$listaX[[lj]]
+      acum = acum + t(yj - Xj %*% diag(gamma[[lj]][,i2]) %*% theta_iter[[lj]][,i2]) %*%
+        {diag(Nrg[lj]) %x% solve(sigma_iter[[lj]][[i2]])} %*%
+        (yj - Xj %*% diag(gamma[[lj]][,i2]) %*% theta_iter[[lj]][,i2])
+    }
+    sigmareg = lapply(sigma_iter,function(x){x[[i2]]})
+    cte = prodB(Brobdingnag::as.brob(sapply(sigmareg,function(x){
+      return(c(determinant(x,logarithm = FALSE)$modulus))}))^{-Nrg/2})
+    val = cte*exp(-1/2*Brobdingnag::as.brob(acum))
+    return(val)
+  }
+  fycond = compiler::cmpfun(fycond)
   dmunif = function(r,a,b){
     names(a) = names(b) = NULL
     volume = ((b - a)^{l - 1})/(factorial(l - 1))
@@ -174,29 +191,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     return(list(Nrg = Nrg,listaX = listaXj,listaY = listaYj))
   }
   lists = compiler::cmpfun(lists)
-  fycond = function(i2,listr,gamma,...){
-    acum = 0
-    Nrg = listr$Nrg
-    for (lj in 1:l) {
-      yj = c(listr$listaY[[lj]])
-      Xj = listr$listaX[[lj]]
-      acum = acum + t(yj - Xj %*% diag(gamma[[lj]][,i2]) %*% theta_iter[[lj]][,i2]) %*%
-        {diag(Nrg[lj]) %x% solve(sigma_iter[[lj]][[i2]])} %*%
-        (yj - Xj %*% diag(gamma[[lj]][,i2]) %*% theta_iter[[lj]][,i2])
-    }
-    sigmareg = lapply(sigma_iter,function(x){x[[i2]]})
-    cte = prodB(Brobdingnag::as.brob(sapply(sigmareg,function(x){
-      return(c(determinant(x,logarithm = FALSE)$modulus))}))^{-Nrg/2})
-    val = cte*exp(-1/2*Brobdingnag::as.brob(acum))
-    return(val)
-  }
-  fycond = compiler::cmpfun(fycond)
-  rgamber = function(pos,reg,i,...){
+  rgamber = function(pos,reg,i,listj,theta_iter,sigma_iter,gam_iter,...){
     gam_j = gam_iter
     gam_j[[reg]][pos,i] = 1
-    pycond1 = fycond(i,listj,gam_j)
+    pycond1 = fycond(i,listj,gam_j,theta_iter,sigma_iter,l)
     gam_j[[reg]][pos,i] = 0
-    pycond0 = fycond(i,listj,gam_j)
+    pycond0 = fycond(i,listj,gam_j,theta_iter,sigma_iter,l)
     if (method == 'KUO') {
       aij = pycond1*pij[[reg]][pos]
       bij = pycond0*(1 - pij[[reg]][pos])
@@ -239,11 +239,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       r_iter[,1] = r_init
     }
   }
-  #iterations: gibbs and metropolis sampling
-  acep = 0
-  cat('Estimating threshold(s), structural and non-structural parameters ...','\n')
-  pb = txtProgressBar(min = 2, max = niter + burn,style = 3)
-  for (i in 2:{niter + burn}) {
+  list_m = list(r_iter = r_iter,theta_iter = theta_iter,sigma_iter = sigma_iter,gam_iter = gam_iter)
+  iter_str = function(i, list_m, ...){
+    r_iter = list_m$r_iter
+    theta_iter = list_m$theta_iter
+    sigma_iter = list_m$sigma_iter
+    gam_iter = list_m$gam_iter
     if (l != 1) {
       listj = lists(r_iter[,i - 1])
     }else{
@@ -276,7 +277,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       gam_iter[[lj]][,i] = gam_iter[[lj]][,i - 1]
     }
     for (jj in 1:l) {
-      gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i)
+      gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i,listj = listj,theta_iter,sigma_iter,gam_iter)
     }
     if (l != 1) {
       if (i < 70) {
@@ -287,8 +288,8 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       #ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       rk = r_iter[,i - 1] + ek
       listrk = lists(rk)
-      pr = dmunif(rk,a,b)*fycond(i,listrk,gam_iter)
-      px = dmunif(r_iter[,i - 1],a,b)*fycond(i,listj,gam_iter)
+      pr = dmunif(rk,a,b)*fycond(i,listrk,gam_iter,theta_iter,sigma_iter,l)
+      px = dmunif(r_iter[,i - 1],a,b)*fycond(i,listj,gam_iter,theta_iter,sigma_iter,l)
       alpha = min(1,as.numeric(pr/px))
       if (alpha >= runif(1)) {
         r_iter[,i] = rk
@@ -298,10 +299,27 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
         acep = acep
       }
     }
+    list_m$r_iter = r_iter
+    list_m$theta_iter = theta_iter
+    list_m$sigma_iter = sigma_iter
+    list_m$gam_iter = gam_iter
+    return(list_m)
+  }
+  iter_str = compiler::cmpfun(iter_str)
+  #iterations: gibbs and metropolis sampling
+  acep = 0
+  cat('Estimating threshold(s), structural and non-structural parameters ...','\n')
+  pb = txtProgressBar(min = 2, max = niter + burn,style = 3)
+  for (i in 2:{niter + burn}) {
+    list_m = iter_str(i,list_m)
     setTxtProgressBar(pb,i)
   }
   close(pb)
   cat('Saving results ... \n')
+  r_iter = list_m$r_iter
+  theta_iter = list_m$theta_iter
+  sigma_iter = list_m$sigma_iter
+  gam_iter = list_m$gam_iter
   #exits
   if (l != 1) {
     rest = matrix(nrow = l - 1,ncol = 3)

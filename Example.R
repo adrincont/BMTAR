@@ -14,7 +14,7 @@ Tlen = 500
 Sigma_ut = 2
 Phi_ut = list(phi1 = 0.3)
 R_ut = list(R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = Sigma_ut))
-Ut = mtarsim(N = Tlen,Rg = R_ut)
+Ut = mtarsim(N = Tlen,Rg = R_ut,seed = 123)
 Zt = Ut$Sim$Yt
 # Yt process
 k = 2
@@ -30,7 +30,7 @@ R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2)
 Rg = list(R1 = R1,R2 = R2)
 r = 0.20
 ## get the simulation
-simul = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt)
+simul = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt,seed = 123)
 autoplot.tsregim(simul$Sim,1)
 autoplot.tsregim(simul$Sim,2)
 #=======================================================================================#
