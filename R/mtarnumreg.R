@@ -5,7 +5,7 @@
 #==================================================================================================#
 mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
                       iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
-                      ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0)){
+                      ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = FALSE){
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
   if (!is.logical(NAIC)) {stop('NAIC must be a logical object')}
   # Checking
@@ -442,8 +442,17 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   # Corridas previas
   cat('Running previous chains ... \n')
   listm = vector('list')
-  listm[[paste0('m',2)]] = fill(m = 2,iter = iterprev, burn = round(0.3*iterprev))
-  listm[[paste0('m',3)]] = fill(m = 3,iter = iterprev, burn = round(0.3*iterprev))
+  if (parallel) {
+    micluster = parallel::makeCluster(2)
+    doParallel::registerDoParallel(micluster)
+    funcParallel = function(i,listm){return(listm[[paste0('m',i)]])}
+    s = parallel::parApply(micluster,list(2,3),funcParallel,listm = listm)
+    listm[[paste0('m',2)]] = s[[1]]
+    listm[[paste0('m',3)]] = s[[3]]
+  }else{
+    listm[[paste0('m',2)]] = fill(m = 2,iter = iterprev, burn = round(0.3*iterprev))
+    listm[[paste0('m',3)]] = fill(m = 3,iter = iterprev, burn = round(0.3*iterprev))
+  }
   if (l0 == 4) {
     listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.3*iterprev))
   }
