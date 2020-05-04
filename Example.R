@@ -14,7 +14,7 @@ Tlen = 500
 Sigma_ut = 2
 Phi_ut = list(phi1 = 0.3)
 R_ut = list(R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = Sigma_ut))
-Ut = mtarsim(N = Tlen,Rg = R_ut,seed = 123)
+Ut = mtarsim(N = Tlen,Rg = R_ut,seed = 124)
 Zt = Ut$Sim$Yt
 # Yt process
 k = 2
@@ -28,9 +28,9 @@ Sigma_R2 = matrix(c(2.5,0.5,0.5,1),2,2,byrow = T)
 R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2)
 ## create list of regime-type objects
 Rg = list(R1 = R1,R2 = R2)
-r = 0.20
+r = 0.3
 ## get the simulation
-simul = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt,seed = 123)
+simul = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt,seed = 124)
 autoplot.tsregim(simul$Sim,1)
 autoplot.tsregim(simul$Sim,2)
 #=======================================================================================#
@@ -183,7 +183,7 @@ data("datasim")
 data = datasim
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(l0 = 3),method = 'KUO')
 estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = T,
-                   ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0))
+                   ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0),parallel = TRUE)
 estim$final_m
 
 # Example auto_mtar
