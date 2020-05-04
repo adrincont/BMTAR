@@ -8,7 +8,7 @@
 mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL){
   # Just-In-Time (JIT)
   compiler::enableJIT(3)
-  # Checking
+  # checking
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
   }
@@ -21,11 +21,13 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   if (is.null(nu)) {nu = 0}
   # parameters
   l = ini_obj$pars$l
-  # unknown
+  # method
   method = ini_obj$method
+  # unknown
   orders = ini_obj$orders
-  # Code
-  burn = ifelse(is.null(burn),round(0.1*niter),burn)
+  # code
+  burn = ifelse(is.null(burn),round(0.3*niter),burn)
+  other = 100
   pjmax = orders$pj
   qjmax = orders$qj
   djmax = orders$dj
@@ -45,20 +47,20 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     Xt = t(ini_obj$tsregim_obj$Xt)
   }
   eta = 1 + pjmax*k + qjmax*nu + djmax
-  #objects for each regimen and iterations
+  # objects for each regimen and iterations
   theta_iter = sigma_iter = gam_iter = pij =  Dj = Rj = vector('list', l)
   if (method == 'SSVS') {
     tauij = itauij = cij = vector('list', l)
   }
-  if (l != 1) {r_iter = matrix(ncol = niter + burn,nrow = l - 1)}
+  if (l != 1) {r_iter = matrix(ncol = niter + burn + other,nrow = l - 1)}
   #set initial values for each regime in each chain
   itheta0j = isigma0j = iS0j = inu0j = vector('list',l)
   thetaini = ini_obj$init$Theta
   sigmaini = ini_obj$init$Sigma
   gammaini = ini_obj$init$Gamma
   for (lj in 1:l) {
-    theta_iter[[lj]] = gam_iter[[lj]] = matrix(ncol = niter + burn,nrow = k*eta[lj])
-    sigma_iter[[lj]] = vector('list',length = niter + burn)
+    theta_iter[[lj]] = gam_iter[[lj]] = matrix(ncol = niter + burn + other,nrow = k*eta[lj])
+    sigma_iter[[lj]] = vector('list',length = niter + burn + other)
     itheta0j[[lj]] = thetaini[[paste0('R',lj)]]$theta0j
     isigma0j[[lj]] = thetaini[[paste0('R',lj)]]$cov0j
     iS0j[[lj]] = sigmaini[[paste0('R',lj)]]$S0j
@@ -79,12 +81,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     sigma_iter[[lj]][[1]] = MCMCpack::riwish(v = inu0j[[lj]],S = iS0j[[lj]])
   }
   #
-  #objects for save regimes, chains and credibility intervals
+  # objects for save regimes, chains and credibility intervals
   Rest = thetaest = thetachain =
     gamest = gamchain = sigmaest = sigmachain = vector('list', l)
   names(Rest) = names(thetaest) = names(thetachain) = names(gamest) = names(gamchain) =
     names(sigmaest) = names(sigmachain) = paste0('R',1:l)
-  #necesary functions
+  # necesary functions
   fycond = function(i2,listr,gamma,theta_iter,sigma_iter,l){
     acum = 0
     Nrg = listr$Nrg
@@ -219,12 +221,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     return(rbinom(1,size = 1,prob = as.numeric((aij)/(aij + bij))))
   }
   rgamber = compiler::cmpfun(Vectorize(rgamber,"pos"))
-  #edges for rmunif
+  # edges for rmunif
   rini = ini_obj$init$r
   a = ifelse(is.null(rini$za),min(Zt),quantile(Zt,probs = rini$za))
   b = ifelse(is.null(rini$zb),max(Zt),quantile(Zt,probs = rini$zb))
   #
-  #last check
+  # last check
   if (!is.null(r_init)) {
     if (is.numeric(r_init) & length(r_init) == {l - 1}) {
       if (dmunif(r_init,a,b) == 0) {
@@ -240,6 +242,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     }
   }
   list_m = list(r_iter = r_iter,theta_iter = theta_iter,sigma_iter = sigma_iter,gam_iter = gam_iter)
+  # iterations function
   iter_str = function(i, list_m, ...){
     r_iter = list_m$r_iter
     theta_iter = list_m$theta_iter
@@ -280,12 +283,11 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i,listj = listj,theta_iter,sigma_iter,gam_iter)
     }
     if (l != 1) {
-      if (i < 70) {
+      if (i < other) {
         ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
       }else{
         ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       }
-      #ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       rk = r_iter[,i - 1] + ek
       listrk = lists(rk)
       pr = dmunif(rk,a,b)*fycond(i,listrk,gam_iter,theta_iter,sigma_iter,l)
@@ -306,21 +308,21 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     return(list_m)
   }
   iter_str = compiler::cmpfun(iter_str)
-  #iterations: gibbs and metropolis sampling
+  # iterations: gibbs and metropolis sampling
   acep = 0
   cat('Estimating threshold(s), structural and non-structural parameters ...','\n')
-  pb = txtProgressBar(min = 2, max = niter + burn,style = 3)
-  for (i in 2:{niter + burn}) {
+  pb = txtProgressBar(min = 2, max = niter + burn + other,style = 3)
+  for (i in 2:{niter + burn + other}) {
     list_m = iter_str(i,list_m)
     setTxtProgressBar(pb,i)
   }
   close(pb)
   cat('Saving results ... \n')
-  r_iter = list_m$r_iter
+  r_iter = list_m$r_iter[-c(1:other)]
   theta_iter = list_m$theta_iter
   sigma_iter = list_m$sigma_iter
   gam_iter = list_m$gam_iter
-  #exits
+  # exits
   if (l != 1) {
     rest = matrix(nrow = l - 1,ncol = 3)
     colnames(rest) = colnames(rest) =
@@ -328,19 +330,23 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
-    rmean = apply(rchain,1,mean)
-    rest[,2] = rmean
+    rest[,2] = apply(rchain,1,mean)
+    rvec = c('mean' = rest[,2],'prop %' = acep/niter*100)
   }
-  #save chains
+  # save chains
   # logLik
   listj = lists(rest[,2])
   SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
   logLikj = vector(mode = "numeric")
   for (lj in 1:l) {
+    theta_iter[[lj]] = theta_iter[[lj]][,-c(1:other)]
+    gam_iter[[lj]] = gam_iter[[lj]][,-c(1:other)]
+    sigma_iter[[lj]] = sigma_iter[[lj]][-c(1:other)]
+    #
     thetachain[[lj]] = theta_iter[[lj]][,-c(1:burn)]
     gamchain[[lj]] = gam_iter[[lj]][,-c(1:burn)]
     sigmachain[[lj]] = sapply(sigma_iter[[lj]][-c(1:burn)], ks::vec)
-    #credibility intervals
+    # credibility intervals
     vecgamma = vectheta = matrix(nrow = k*eta[lj],ncol = 3)
     vecsigma = matrix(nrow = k*k,ncol = 3)
     colnames(vectheta) = colnames(vecsigma) =
@@ -359,13 +365,20 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       rownames(vectheta) = rownames(vecgamma) =
         rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k)),k)
     }
+    rownames(vecsigma) = c(sapply(1:k, function(x){paste0(1:k,x)}))
     vectheta[,1] = apply(thetachain[[lj]],1,quantile,probs = (1 - level)/2)
     vectheta[,3] = apply(thetachain[[lj]],1,quantile,probs = (1 + level)/2)
     vectheta[,2] = apply(thetachain[[lj]],1,mean)
     thetaest[[lj]] = vectheta
-    vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2))
-    vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2))
-    vecsigma[,2] = SigmaPrep(apply(sigmachain[[lj]],1,mean))
+    if (k == 1) {
+      vecsigma[,1] = sqrt(quantile(sigmachain[[lj]],probs = (1 - level)/2))
+      vecsigma[,3] = sqrt(quantile(sigmachain[[lj]],probs = (1 + level)/2))
+      vecsigma[,2] = sqrt(mean(sigmachain[[lj]]))
+    }else{
+      vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2))
+      vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2))
+      vecsigma[,2] = SigmaPrep(apply(sigmachain[[lj]],1,mean))
+    }
     sigmaest[[lj]] = vecsigma
     vec = apply(gamchain[[lj]],2,paste,collapse = '')
     vecs = sort(table(vec), decreasing = TRUE)[1:3]
@@ -376,7 +389,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     vecgamma[,2] = gamchain[[lj]][,which(vec == names(vecs[2]))[1]]
     vecgamma[,3] = gamchain[[lj]][,which(vec == names(vecs[3]))[1]]
     gamest[[lj]] = vecgamma
-    #creation of the 'regime' type object
+    # creation of the 'regime' type object
     p = pjmax[lj]
     q = qjmax[lj]
     d = djmax[lj]
@@ -419,8 +432,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       }
     }
     Ri$sigma = ks::invvec(sigmaest[[lj]][,2],ncol = k,nrow = k)
-    class(Ri) = 'regime'
-    Rest[[lj]] = Ri
+    pf = sapply(Rest,function(x){length(x$phi)})
+    qf = sapply(Rest,function(x){length(x$beta)})
+    df = sapply(Rest,function(x){length(x$delta)})
+    Rest[[lj]] = mtaregim(orders = list(p = pf,q = qf,d = df),cs = Ri$cs,
+                          Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
+                          Sigma = Ri$sigma)
     Xj = listj$listaX[[lj]]
     Yj = listj$listaY[[lj]]
     Nj = listj$Nrg[lj]
@@ -429,7 +446,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     logLikj[lj] = log(det(Sj/Nj))
   }
   # exits
-  ## Chain
+  ## chain
   if (chain) {
     Chain = NULL
     Chain$Theta = thetachain
@@ -446,15 +463,15 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   data$yt = t(Yt)
   data$Ut = t(Ut)
   orders = NULL
-  orders$pj = sapply(Rest,function(x){length(x$phi)})
-  orders$qj = sapply(Rest,function(x){length(x$beta)})
-  orders$dj = sapply(Rest,function(x){length(x$delta)})
+  orders$pj = pf
+  orders$qj = qf
+  orders$dj = df
   if (l != 1) {estimates$r = rest}
   if (chain) {
-    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rmean,orders = orders)
+    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rvec,orders = orders)
     class(results) = 'regim_model'
   }else{
-    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = rmean,orders = orders)
+    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = rvec,orders = orders)
     class(results) = 'regim_model'
   }
   compiler::enableJIT(0)

@@ -1,13 +1,13 @@
 #==================================================================================================#
 # Date: 07/04/2019
 # Description:
-#-> Comentar como iniciamos r si no es dado
-#-> Comentar que hacemos si r desconocido en este caso
+#-> When r_init is NULL default is the proportion that separate the observations in l equal parts
+#-> When r is unknown, a metropolis-hasting algorithm is used for its posteriori with an uniform proposal
 # Function:
 #==================================================================================================#
 mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL){
   if (!is.logical(chain)) {stop('chain must be a logical object')}
-  # Checking
+  # checking
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
   }
@@ -22,8 +22,9 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   r = ini_obj$pars$r
   l = ini_obj$pars$l
   orders = ini_obj$pars$orders
-  #Code
+  # code
   burn = ifelse(is.null(burn),round(0.1*niter),burn)
+  other = 100
   pj = orders$pj
   qj = orders$qj
   dj = orders$dj
@@ -159,7 +160,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }
   return(val)
 }
-  #objects for each regimen and iterations
+  # objects for each regimen and iterations
   Sigma = ini_obj$pars$Sigma
   theta_iter = itheta0j = icov0j = vector('list')
   if (is.null(Sigma)) {
@@ -167,15 +168,15 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }else{
     sigma = vector('list')
   }
-  #set initial values for each regime in each chain
+  # set initial values for each regime in each chain
   thetaini = ini_obj$init$Theta
   for (lj in 1:l) {
-    theta_iter[[lj]] = matrix(ncol = niter + burn,nrow = k*eta[lj])
+    theta_iter[[lj]] = matrix(ncol = niter + burn + other,nrow = k*eta[lj])
     itheta0j[[lj]] = thetaini[[paste0('R',lj)]]$theta0j
     icov0j[[lj]] = thetaini[[paste0('R',lj)]]$cov0j
     theta_iter[[lj]][,1] = mvtnorm::rmvnorm(1,mean = itheta0j[[lj]],sigma = icov0j[[lj]])
     if (is.null(Sigma)) {
-      sigma_iter[[lj]] = vector('list',length = niter + burn)
+      sigma_iter[[lj]] = vector('list',length = niter + burn + other)
       sigmaini = ini_obj$init$Sigma
       iS0j[[lj]] = sigmaini[[paste0('R',lj)]]$S0j
       inu0j[[lj]] = sigmaini[[paste0('R',lj)]]$nu0j
@@ -184,10 +185,10 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       sigma[[lj]] = Sigma[[paste0('R',lj)]]
     }
   }
-  #last check
+  # last check
   if (is.null(r) & l == 1) {r = 0
   }else if (is.null(r) & l != 1) {
-    r_iter = matrix(ncol = niter + burn,nrow = l - 1)
+    r_iter = matrix(ncol = niter + burn + other,nrow = l - 1)
     if (!is.null(r_init)) {
       if (is.numeric(r_init) & length(r_init) == {l - 1}) {
         if (dmunif(r_init,a,b) == 0) {
@@ -206,9 +207,9 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   # iterations gibbs and metropolis for r unknown
   if (is.null(r)) {
     cat('Estimating non-structural parameters and threshold(s) ...','\n')
-    pb = txtProgressBar(min = 2, max = niter + burn, style = 3)
+    pb = txtProgressBar(min = 2, max = niter + burn + other, style = 3)
     acep = 0
-    for (i in 2:{niter + burn}) {
+    for (i in 2:{niter + burn + other}) {
       listj = lists(r_iter[,i - 1])
       for (lj in 1:l) {
         Wj = listj$listaW[[lj]]
@@ -232,13 +233,12 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
           sigma_iter[[lj]][[i]] = MCMCpack::riwish(v = Nj + nu0j,S = Sj + S0j)
         }
       }
-      # Use of metropolis with random walk
-      if (i < 70) {
+      # use of metropolis with random walk
+      if (i <= other) {
         ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
       }else{
         ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       }
-      #ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       rk = r_iter[,i - 1] + ek
       listrk = lists(rk)
       pr = dmunif(rk,a,b)*fycond(i,listrk)
@@ -265,8 +265,8 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       theta0j = itheta0j[[lj]]
       sigma0j = icov0j[[lj]]
       cat('Estimating non-structural parameters with threshold(s) known ...',paste0('Reg_',lj),'\n')
-      pb = txtProgressBar(min = 2, max = niter + burn, style = 3)
-      for (i in 2:{niter + burn}) {
+      pb = txtProgressBar(min = 2, max = niter + burn + other, style = 3)
+      for (i in 2:{niter + burn + other}) {
         if (!is.null(Sigma)) {
           Vj = solve(Wj %*% t(Wj) %x% solve(sigma[[lj]] %*% sigma[[lj]]) + solve(sigma0j))
           thetaj = Vj %*% {(Wj %x% solve(sigma[[lj]] %*% sigma[[lj]])) %*% yj + solve(sigma0j) %*% theta0j}
@@ -297,20 +297,23 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }
   # save chains and creation of the 'regime' type object
   if (is.null(r)) {
+    r_iter = r_iter[-c(1:other)]
     rest = matrix(nrow = l - 1,ncol = 3)
     colnames(rest) = colnames(rest) =
       c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-    rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
+    rchain = matrix(r_iter[-c(1:burn)],ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
-    rmean = apply(rchain,1,mean)
-    rest[,2] = rmean
-  }else{rmean = r}
+    rest[,2] = apply(rchain,1,mean)
+    rvec = c('mean' = rest[,2],'prop %' = acep/niter*100)
+  }else{
+    rvec = c('mean' = r)
+  }
   # logLik
-  if (is.null(r)) {rt = rest[,2]}else {rt = r}
-  listj = lists(rt)
+  listj = lists(rvec[1])
   logLikj = vector(mode = "numeric")
   for (lj in 1:l) {
+    theta_iter[[lj]] = theta_iter[[lj]][,-c(1:other)]
     # save chains of theta
     thetachain[[lj]] = theta_iter[[lj]][,-c(1:burn)]
     # credibility intervals for theta
@@ -334,6 +337,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
         rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k)),k)
     }
     if (is.null(Sigma)) {
+      sigma_iter[[lj]] = sigma_iter[[lj]][-c(1:other)]
       SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
       # save chains of sigma^1/2
       sigmachain[[lj]] = sapply(sigma_iter[[lj]][-c(1:burn)], ks::vec)
@@ -341,9 +345,15 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       vecsigma = matrix(nrow = k*k,ncol = 3)
       colnames(vecsigma) = c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
       rownames(vecsigma) = c(sapply(1:k, function(x){paste0(1:k,x)}))
-      vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2))
-      vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2))
-      vecsigma[,2] = SigmaPrep(apply(sigmachain[[lj]],1,mean))
+      if (k == 1) {
+        vecsigma[,1] = sqrt(quantile(sigmachain[[lj]],probs = (1 - level)/2))
+        vecsigma[,3] = sqrt(quantile(sigmachain[[lj]],probs = (1 + level)/2))
+        vecsigma[,2] = sqrt(mean(sigmachain[[lj]]))
+      }else{
+        vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2))
+        vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2))
+        vecsigma[,2] = SigmaPrep(apply(sigmachain[[lj]],1,mean))
+      }
       sigmaest[[lj]] = vecsigma
     }
     # creation of the 'regime' type object
@@ -360,7 +370,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       thetaind = c(0,(10 + (1:p)) %x% rep(1,k),(20 + (1:q)) %x% rep(1,nu),30 + (1:d))
     }
     Thetaj = ks::invvec(thetaest[[lj]][,2],ncol = eta[lj],nrow = k)
-    Ri = NULL
+    Ri = vector('list')
     Ri$cs = matrix(Thetaj[,thetaind == 0],nrow = k,ncol = 1)
     Ri$phi = vector('list', p)
     names(Ri$phi) = paste0('phi',1:p)
@@ -382,8 +392,9 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     }else{
       Ri$sigma = sigma[[lj]]
     }
-    class(Ri) = 'regime'
-    Rest[[lj]] = Ri
+    Rest[[lj]] = mtaregim(orders = list(p = p,q = q,d = d),cs = Ri$cs,
+                          Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
+                          Sigma = Ri$sigma)
     Wj = listj$listaW[[lj]]
     Yj = listj$listaY[[lj]]
     Nj = listj$Nrg[lj]
@@ -393,26 +404,26 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     logLikj[lj] = log(det(Sj/Nj))
   }
   # exits
-  ## Chain
+  ## chain
   if (chain) {
-    Chain = NULL
+    Chain = vector('list')
     Chain$Theta = thetachain
     if (is.null(r) & l != 1) {Chain$r = rchain}
     if (is.null(Sigma)) {Chain$Sigma = sigmachain}
   }
   ## estimates and credibility interval
-  estimates = NULL
+  estimates = vector('list')
   estimates$Theta = thetaest
   if (is.null(r) & l != 1) {estimates$r = rest}
   if (is.null(Sigma)) {estimates$Sigma = sigmaest}
-  data = NULL
+  data = vector('list')
   data$yt = t(Yt)
   data$Ut = t(Ut)
   if (chain) {
-    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rmean,orders = list(pj = pj,qj = qj,dj = dj))
+    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rvec,orders = list(pj = pj,qj = qj,dj = dj))
     class(results) = 'regim_model'
   }else{
-    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = rmean,orders = list(pj = pj,qj = qj,dj = dj))
+    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = rvec,orders = list(pj = pj,qj = qj,dj = dj))
     class(results) = 'regim_model'
   }
   return(results)
