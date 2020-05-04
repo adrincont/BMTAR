@@ -30,9 +30,9 @@ R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2)
 Rg = list(R1 = R1,R2 = R2)
 r = 0.3
 ## get the simulation
-simul = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt,seed = 124)
-autoplot.tsregim(simul$Sim,1)
-autoplot.tsregim(simul$Sim,2)
+datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt,seed = 124)
+autoplot.tsregim(datasim$Sim,1)
+autoplot.tsregim(datasim$Sim,2)
 #=======================================================================================#
 # Example tsregim
 data("datasim")
