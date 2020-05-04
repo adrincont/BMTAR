@@ -21,6 +21,9 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   # parameters
   r = ini_obj$pars$r
   l = ini_obj$pars$l
+  if (!is.null{ini_obj$orders}) {
+    stop('orders must be known (pars) to use mtarns')
+  }
   orders = ini_obj$pars$orders
   # code
   burn = ifelse(is.null(burn),round(0.3*niter),burn)
