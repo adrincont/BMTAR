@@ -433,10 +433,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       }
     }
     Ri$sigma = ks::invvec(sigmaest[[lj]][,2],ncol = k,nrow = k)
-    pf = sapply(Rest,function(x){length(x$phi)})
-    qf = sapply(Rest,function(x){length(x$beta)})
-    df = sapply(Rest,function(x){length(x$delta)})
-    Rest[[lj]] = mtaregim(orders = list(p = pf,q = qf,d = df),cs = Ri$cs,
+    Rest[[lj]] = mtaregim(orders = list(p = length(Ri$phi),q = length(Ri$beta),d = length(Ri$delta)),cs = Ri$cs,
                           Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
                           Sigma = Ri$sigma)
     Xj = listj$listaX[[lj]]
@@ -449,24 +446,24 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   # exits
   ## chain
   if (chain) {
-    Chain = NULL
+    Chain = vector('list')
     Chain$Theta = thetachain
     Chain$Gamma = gamchain
     Chain$Sigma = sigmachain
     if (l != 1) {Chain$r = rchain}
   }
   ## estimates
-  estimates = NULL
+  estimates = vector('list')
   estimates$Theta = thetaest
   estimates$Gamma = gamest
   estimates$Sigma = sigmaest
-  data = NULL
+  data = vector('list')
   data$yt = t(Yt)
   data$Ut = t(Ut)
-  orders = NULL
-  orders$pj = pf
-  orders$qj = qf
-  orders$dj = df
+  orders = vector('list')
+  orders$pj = sapply(Rest,function(x){length(x$phi)})
+  orders$qj = sapply(Rest,function(x){length(x$beta)})
+  orders$dj = sapply(Rest,function(x){length(x$delta)})
   if (l != 1) {estimates$r = rest}
   if (chain) {
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rvec,orders = orders)
