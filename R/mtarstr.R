@@ -284,7 +284,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i,listj = listj,theta_iter,sigma_iter,gam_iter)
     }
     if (l != 1) {
-      if (i < other) {
+      if (i <= other) {
         ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
       }else{
         ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
