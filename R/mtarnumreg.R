@@ -6,6 +6,7 @@
 mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
                       iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
                       ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = FALSE){
+  compiler::enableJIT(3)
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
   if (!is.logical(NAIC)) {stop('NAIC must be a logical object')}
   # Checking
@@ -74,6 +75,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     if (sum(Nrg/sum(Nrg) > 0.2) == l) {prob = 1*prob}else{prob = 0*prob}
     return(prob/volume)
   }
+  dmunif = compiler::cmpfun(dmunif)
   rdunif = function(m,l0){
     sec = 2:l0
     sec = sec[sec != m]
@@ -84,6 +86,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     }
     return(muestra)
   }
+  rdunif = compiler::cmpfun(rdunif)
   ### Funcion para crear las listas
   lists = function(l, r, pjmax, qjmax, djmax, ...){
     rj = matrix(nrow = 2,ncol = l)
@@ -133,6 +136,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     }
     return(list(Nrg = Nrg,listaX = listaXj,listaY = listaYj))
   }
+  lists = compiler::cmpfun(lists)
   ### Funcion verosimilitud para y
   fycond = function(ir, listar, gamma, theta, sigma){
     acum = 0
@@ -151,6 +155,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     val = cte*exp(-1/2*Brobdingnag::as.brob(acum))
     return(val)
   }
+  fycond = compiler::cmpfun(fycond)
   ### Crear iteraciones previas
   fill = function(m, iter = 500, burn = 1000, ...){
     i = 1
@@ -219,6 +224,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     listr = lists(l = m,r = r_iter[,1],pjmax = ordersm$pj,qjmax = ordersm$qj,djmax = ordersm$dj)
     return(list(i = i,orders = ordersm,Priori = iniP,Pseudo = iniS,Chain = listchain,listr = listr,par = par))
   }
+  fill = compiler::cmpfun(fill)
   ### Funcion para actualizar listas
   updatelist = function(l, ...){
     rgamber = function(pos, reg, ig, ...){
@@ -327,6 +333,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     listPr$i = i2 + 1
     return(listPr)
   }
+  updatelist = compiler::cmpfun(updatelist)
   rpseudo = function(l,...){
     listPr = listm[[paste0('m',l)]]
     i2 = listPr$i + 1
@@ -359,6 +366,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     listPr$i = i2
     return(listPr)
   }
+  rpseudo = compiler::cmpfun(rpseudo)
   ### Funcion calculo verosimilitudes
   prodA = function(thetaym, thetaymp){
     pgammaPn = pthetaPn = psigmaPn = Brobdingnag::as.brob(1)
@@ -439,6 +447,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     )
     return(list(val = val,prodTS = prodTS))
   }
+  prodA = compiler::cmpfun(prodA)
   # Corridas previas
   cat('Running previous chains ... \n')
   listm = vector('list')
@@ -517,5 +526,6 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   results$NAIC$m2 = mtarNAIC(listm[[paste0('m',2)]]$par)
   results$NAIC$m3 = mtarNAIC(listm[[paste0('m',3)]]$par)
   if (l0 == 4) {results$NAIC$m4 = mtarNAIC(listm[[paste0('m',4)]]$par)}
+  compiler::enableJIT(0)
   return(results)
 }
