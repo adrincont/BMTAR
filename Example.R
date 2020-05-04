@@ -176,6 +176,7 @@ missingest = mtarmissing(ini_obj = initial,chain = TRUE,niter = 500,burn = 500)
 print(missingest)
 autoplot.regime_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]
+missingest$tsregim$Yt[is.na(data_yt[,1]),]
 
 # Example mtarnumreg
 data("datasim")
