@@ -1,8 +1,9 @@
 #==================================================================================================#
 # Date: 17/04/2019
 # Description:
-#-> Hablar de como dimos los iniciales
-#-> Hablar de proceso en el metropolis (primero Sig y Thet, luego gama y luego r)
+#-> When r_init is NULL default is the proportion that separate the observations in l equal parts
+#-> Bayesia estimation with MCMC in order: theta gibbs sampling, sigma gibbs sampling, gamma gibs samplind and
+# finally thershold metropolis-hasting with uniform proposal
 # Function:
 #==================================================================================================#
 mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL){
@@ -53,7 +54,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     tauij = itauij = cij = vector('list', l)
   }
   if (l != 1) {r_iter = matrix(ncol = niter + burn + other,nrow = l - 1)}
-  #set initial values for each regime in each chain
+  # set initial values for each regime in each chain
   itheta0j = isigma0j = iS0j = inu0j = vector('list',l)
   thetaini = ini_obj$init$Theta
   sigmaini = ini_obj$init$Sigma

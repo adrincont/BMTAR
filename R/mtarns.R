@@ -23,7 +23,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   l = ini_obj$pars$l
   orders = ini_obj$pars$orders
   # code
-  burn = ifelse(is.null(burn),round(0.1*niter),burn)
+  burn = ifelse(is.null(burn),round(0.3*niter),burn)
   other = 100
   pj = orders$pj
   qj = orders$qj
