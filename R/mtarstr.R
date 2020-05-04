@@ -328,7 +328,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     rest = matrix(nrow = l - 1,ncol = 3)
     colnames(rest) = colnames(rest) =
       c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-    rchain = matrix(r_iter[,-c(1:burn)],ncol = niter,nrow = l - 1)
+    rchain = matrix(r_iter[-c(1:burn)],ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
     rest[,2] = apply(rchain,1,mean)
