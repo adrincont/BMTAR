@@ -1,6 +1,5 @@
 #==================================================================================================#
 # Date: 14/04/2020
-# Description:Function to create a regime type object given non-structural and structural parameters.
 # Coments:
 #-> k was taken by default by Sigma dimensions
 # Function:
