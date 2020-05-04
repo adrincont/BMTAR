@@ -5,6 +5,7 @@
 #==================================================================================================#
 mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn = NULL, cU = 0.5, b = NULL) {
   #checking
+  compiler::enableJIT(3)
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
@@ -125,6 +126,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     }
     return(list(Nrg = Nrg,listaW = listaWj,listaY = listaYj,Ind = Ind))
   }
+  lists = compiler::cmpfun(lists)
   ker = function(t, Ut, ...){
     cs = modelU$cs
     At = as.matrix(as.data.frame(modelU$phi))
@@ -147,8 +149,8 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     val = dmnormB(Ut[,t], cs + At %*% uti, Sig %*% Sig)
     return(c(val))
   }
-  kernU = Vectorize(ker,vectorize.args = 't')
-  transkernU = Vectorize(transker,vectorize.args = 't')
+  kernU = compiler::cmpfun(Vectorize(ker,vectorize.args = 't'))
+  transkernU = compiler::cmpfun(Vectorize(transker,vectorize.args = 't'))
   state_space = function(reg, iSS, theta, sigma, ...) {
     p = pj[reg]
     q = qj[reg]
@@ -186,6 +188,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     colnames(M_zt) = colnames(K_zt) = colnames(L_zt) = colnames(H_zt) = colnames(R_zt) = NULL
     return(list(K = K_zt, L = L_zt, H = H_zt, M = M_zt, R = R_zt))
   }
+  state_space = compiler::cmpfun(state_space)
   alphacond = function(t, iA, Ut, Yt, theta, sigma, ...) {
     Zt = Ut[1,]
     if (nu == 0) {
@@ -234,7 +237,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     val = dmnormB(Yt[,t], {Hj %*% Wj}, sigma[[lj]][[iA]])
     return(val)
   }
-  alphacond = Vectorize(alphacond,vectorize.args = 't')
+  alphacond = compiler::cmpfun(Vectorize(alphacond,vectorize.args = 't'))
   #objects for each regimen and iterations
   theta_iter = sigma_iter = list()
   length(theta_iter) = length(sigma_iter) = l
@@ -242,7 +245,6 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   length(itheta0j) = length(isigma0j) = l
   iS0j = inu0j = list()
   length(iS0j) = length(inu0j) = l
-
   Yt_iter = matrix(ncol = niter + burn,nrow = sum(ks::vec(PosNAMat[[1]])))
   Ut_iter = matrix(ncol = niter + burn,nrow = sum(ks::vec(PosNAMat[[2]])))
   Ytr = Yt #Yt que vamos a cambiar en el proceso
@@ -320,7 +322,6 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     PT = AlphaT = vector('list',N + 1)
     AlphaT[[N + 1]] = Alphat[[N + 1]]
     PT[[N + 1]] = Pt[[N + 1]]
-
     for (i1 in rev(1:{N})) {
       Eig = eigen(Pt[[i1 + 1]])$values
       Eig = any(Mod(Eig) > exp(-6))
@@ -516,6 +517,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       Chain$Ut = Ut_chains
     }
   }
+  compiler::enableJIT(0)
   if (chain) {
     result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates, Chain = Chain)
     class(result) = 'regime_missing'
