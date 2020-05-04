@@ -84,7 +84,6 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     gamest = gamchain = sigmaest = sigmachain = vector('list', l)
   names(Rest) = names(thetaest) = names(thetachain) = names(gamest) = names(gamchain) =
     names(sigmaest) = names(sigmachain) = paste0('R',1:l)
-  #
   #necesary functions
   dmunif = function(r,a,b){
     names(a) = names(b) = NULL
@@ -220,7 +219,6 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     return(rbinom(1,size = 1,prob = as.numeric((aij)/(aij + bij))))
   }
   rgamber = compiler::cmpfun(Vectorize(rgamber,"pos"))
-  #
   #edges for rmunif
   rini = ini_obj$init$r
   a = ifelse(is.null(rini$za),min(Zt),quantile(Zt,probs = rini$za))
@@ -245,11 +243,61 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   acep = 0
   cat('Estimating threshold(s), structural and non-structural parameters ...','\n')
   pb = txtProgressBar(min = 2, max = niter + burn,style = 3)
-  iteri_str = function(){
-
-  }
   for (i in 2:{niter + burn}) {
-    iteri_str()
+    if (l != 1) {
+      listj = lists(r_iter[,i - 1])
+    }else{
+      listj = lists(0)
+    }
+    for (lj in 1:l) {
+      Xj = listj$listaX[[lj]]
+      Yj = listj$listaY[[lj]]
+      yj = c(Yj)
+      Nj = listj$Nrg[lj]
+      theta0j = itheta0j[[lj]]
+      sigma0j = isigma0j[[lj]]
+      S0j = iS0j[[lj]]
+      nu0j = inu0j[[lj]]
+      if (method == 'SSVS') {
+        itauij[[lj]][gam_iter[[lj]][,i - 1] == 0] = tauij[[lj]][gam_iter[[lj]][,i - 1] == 0]
+        itauij[[lj]][gam_iter[[lj]][,i - 1] == 1] = cij[[lj]][gam_iter[[lj]][,i - 1] == 1]*tauij[[lj]][gam_iter[[lj]][,i - 1] == 1]
+        Dj[[lj]] = diag(itauij[[lj]])
+        theta0j = rep(0,k*eta[lj])
+      }else if (method == 'KUO') {
+        Dj[[lj]] = diag(k*eta[lj])
+        Rj[[lj]] = sigma0j
+      }
+      Vj = solve(t(diag(gam_iter[[lj]][,i - 1])) %*% t(Xj) %*% {diag(Nj) %x% solve(sigma_iter[[lj]][[i - 1]])} %*% Xj %*% diag(gam_iter[[lj]][,i - 1]) + solve(Dj[[lj]] %*% Rj[[lj]] %*% Dj[[lj]]))
+      thetaj = Vj %*% {t(diag(gam_iter[[lj]][,i - 1])) %*% t(Xj) %*% {diag(Nj) %x% solve(sigma_iter[[lj]][[i - 1]])} %*% yj + solve(sigma0j) %*% theta0j}
+      theta_iter[[lj]][,i] = mvtnorm::rmvnorm(1,mean = thetaj,sigma = Vj)
+      Hj = ks::invvec({Xj %*% diag(gam_iter[[lj]][,i - 1]) %*% theta_iter[[lj]][,i]},nrow = k,ncol = Nj)
+      Sj = (Yj - Hj) %*% t(Yj - Hj)
+      sigma_iter[[lj]][[i]] = MCMCpack::riwish(v = Nj + nu0j,S = Sj + S0j)
+      gam_iter[[lj]][,i] = gam_iter[[lj]][,i - 1]
+    }
+    for (jj in 1:l) {
+      gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i)
+    }
+    if (l != 1) {
+      if (i < 70) {
+        ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
+      }else{
+        ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+      }
+      #ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+      rk = r_iter[,i - 1] + ek
+      listrk = lists(rk)
+      pr = dmunif(rk,a,b)*fycond(i,listrk,gam_iter)
+      px = dmunif(r_iter[,i - 1],a,b)*fycond(i,listj,gam_iter)
+      alpha = min(1,as.numeric(pr/px))
+      if (alpha >= runif(1)) {
+        r_iter[,i] = rk
+        acep = acep + 1
+      }else{
+        r_iter[,i] = r_iter[,i - 1]
+        acep = acep
+      }
+    }
     setTxtProgressBar(pb,i)
   }
   close(pb)
