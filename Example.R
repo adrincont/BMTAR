@@ -183,7 +183,7 @@ data("datasim")
 data = datasim
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(l0 = 3),method = 'KUO')
 estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = T,
-                   ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0),parallel = TRUE)
+                   ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0))
 estim$final_m
 
 # Example auto_mtar
