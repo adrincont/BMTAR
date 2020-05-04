@@ -39,7 +39,7 @@ data("datasim")
 yt = datasim$Sim
 Yt = yt$Yt
 Zt = yt$Zt
-datos = tsregim(Yt,Zt)
+(datos = tsregim(Yt,Zt))
 #=======================================================================================#
 # Example mtarinipars
 data("datasim")
@@ -96,7 +96,6 @@ autoplot.regim_model(estim2,3)
 data("datasim")
 data = datasim
 # Metodo KUO
-library(compiler)
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
                       list_model = list(pars = list(l = 2), orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
 estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)
