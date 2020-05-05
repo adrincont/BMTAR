@@ -186,8 +186,8 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
       yj = c(Yj)
       Wj = sapply(Inj,Inj_X,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
-      Xj = t(Wj) %x% diag(k)[1,]
-      for (s in 2:k) {Xj = cbind(Xj,t(Wj) %x% diag(k)[s,])}
+      Xj = t(Wj) %x% diag(l)[1,]
+      for (s in 2:l) {Xj = cbind(Xj,t(Wj) %x% diag(l)[s,])}
       listaXj[[lj]] = Xj
       listaYj[[lj]] = Yj
     }
