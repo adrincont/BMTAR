@@ -225,7 +225,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
                 Gamma = list(prob = pij0Sm), r = list(mean = rmean0Sm, cov = rcov0Sm))
     listchain = list(Theta = theta_iter, Sigma = sigma_iter,
                      Gamma = gam_iter, r = r_iter)
-    listr = lists(l = m,r = r_iter[,1],pjmax = ordersm$pj,qjmax = ordersm$qj,djmax = ordersm$dj)
+    listr = lists(l = m,r = r_iter[,1],pjmax = ordersm$pj,qjmax = ordersm$qj,djmax = ordersm$dj, etam)
     return(list(i = i,orders = ordersm,Priori = iniP,Pseudo = iniS,Chain = listchain,listr = listr,par = par))
   }
   fill = compiler::cmpfun(fill)
@@ -321,7 +321,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
         }
    # ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
     rk = r_iter[,i2] + ek
-    listark = lists(l,rk,pjmax,qjmax,djmax)
+    listark = lists(l,rk,pjmax,qjmax,djmax,etam)
     pr = dmunif(rk,a,b)*fycond(i2 + 1,listark,gam_iter,theta_iter,sigma_iter)
     px = dmunif(r_iter[,i2],a,b)*fycond(i2 + 1,listaj,gam_iter,theta_iter,sigma_iter)
     alpha = min(1,as.numeric(pr/px))
@@ -366,7 +366,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     }
     r_iter[,i2] = mvtnorm::rmvnorm(1,mean = rmeanS, sigma = as.matrix(rcovS))
     listPr$Chain = list(Theta = theta_iter, Sigma = sigma_iter,Gamma = gam_iter, r = r_iter)
-    listPr$listr = lists(l,r_iter[,i2],pjmax,qjmax,djmax)
+    listPr$listr = lists(l,r_iter[,i2],pjmax,qjmax,djmax,etam)
     listPr$i = i2
     return(listPr)
   }
