@@ -88,7 +88,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   }
   rdunif = compiler::cmpfun(rdunif)
   ### Funcion para crear las listas
-  lists = function(l, r, pjmax, qjmax, djmax, ...){
+  lists = function(l, r, pjmax, qjmax, djmax, etam, ...){
     rj = matrix(nrow = 2,ncol = l)
     rj[,1] = c(-Inf,r[1])
     rj[,l] = c(rev(r)[1],Inf)
@@ -286,7 +286,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       Rj = listPr$Priori$Gamma$Rj
     }
     #iterations update
-    listaj = lists(l,r_iter[,i2],pjmax,qjmax,djmax)
+    listaj = lists(l,r_iter[,i2],pjmax,qjmax,djmax,etam)
     for (lj in 1:l) {
       Xj = listaj$listaX[[lj]]
       Yj = listaj$listaY[[lj]]
