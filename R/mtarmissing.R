@@ -120,7 +120,11 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       Nrg[lj] = length(Inj)
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
       # matrix Wj =(1,lagY,lagX,lagZ)
-      Wj = sapply(Inj,Inj_W,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
+      if (identical(Inj,integer(0))) {
+        Wj = matrix(nrow = eta[lj],ncol = 0)
+      }else{
+        Wj = sapply(Inj,Inj_W,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
+      }
       listaWj[[lj]] = Wj
       listaYj[[lj]] = Yj
     }

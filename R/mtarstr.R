@@ -185,9 +185,13 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       Nrg[lj] = length(Inj)
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
       yj = c(Yj)
-      Wj = sapply(Inj,Inj_X,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
-      Xj = t(Wj) %x% diag(k)[1,]
-      if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(Wj) %x% diag(k)[s,])}}
+      if (identical(Inj,integer(0))) {
+        Xj = matrix(nrow = 0,ncol = eta[lj]*k)
+      }else{
+        Wj = sapply(Inj,Inj_X,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
+        Xj = t(Wj) %x% diag(k)[1,]
+        if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(Wj) %x% diag(k)[s,])}}
+      }
       listaXj[[lj]] = Xj
       listaYj[[lj]] = Yj
     }
@@ -314,12 +318,17 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   cat('Estimating threshold(s), structural and non-structural parameters ...','\n')
   pb = txtProgressBar(min = 2, max = niter + burn + other,style = 3)
   for (i in 2:{niter + burn + other}) {
-    list_m = iter_str(i,list_m)
+    iter_i = iter_str(i,list_m)
+    list_m = iter_i
     setTxtProgressBar(pb,i)
   }
   close(pb)
   cat('Saving results ... \n')
-  r_iter = list_m$r_iter[-c(1:other)]
+  if (l > 2){
+    r_iter = list_m$r_iter[,-c(1:{other + burn})]
+  }else{
+    r_iter = list_m$r_iter[-c(1:{other + burn})]
+  }
   theta_iter = list_m$theta_iter
   sigma_iter = list_m$sigma_iter
   gam_iter = list_m$gam_iter
@@ -328,7 +337,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     rest = matrix(nrow = l - 1,ncol = 3)
     colnames(rest) = colnames(rest) =
       c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-    rchain = matrix(r_iter[-c(1:burn)],ncol = niter,nrow = l - 1)
+    rchain = matrix(r_iter,ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
     rest[,2] = apply(rchain,1,mean)

@@ -133,7 +133,11 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       Nrg[lj] = length(Inj)
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
       # matrix Wj =(1,lagY,lagX,lagZ)
-      Wj = sapply(Inj,Inj_W,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
+      if (identical(Inj,integer(0))) {
+        Wj = matrix(nrow = eta[lj],ncol = 0)
+      }else{
+        Wj = sapply(Inj,Inj_W,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
+      }
       listaWj[[lj]] = Wj
       listaYj[[lj]] = Yj
     }
@@ -300,11 +304,15 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }
   # save chains and creation of the 'regime' type object
   if (is.null(r)) {
-    r_iter = r_iter[-c(1:other)]
+    if (l > 2){
+      r_iter = r_iter[,-c(1:{other + burn})]
+    }else{
+      r_iter = r_iter[-c(1:{other + burn})]
+    }
     rest = matrix(nrow = l - 1,ncol = 3)
     colnames(rest) = colnames(rest) =
       c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-    rchain = matrix(r_iter[-c(1:burn)],ncol = niter,nrow = l - 1)
+    rchain = matrix(r_iter,ncol = niter,nrow = l - 1)
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
     rest[,2] = apply(rchain,1,mean)

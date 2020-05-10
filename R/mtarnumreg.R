@@ -128,9 +128,13 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       Inj = Inj[Inj > maxj]
       Nrg[lj] = length(Inj)
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
-      Wj = sapply(Inj,Inj_X,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
-      Xj = t(Wj) %x% diag(k)[1,]
-      for (s in 2:k) {Xj = cbind(Xj,t(Wj) %x% diag(k)[s,])}
+      if (identical(Inj,integer(0))) {
+        Xj = matrix(nrow = 0,ncol = eta[lj]*k)
+      }else{
+        Wj = sapply(Inj,Inj_X,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
+        Xj = t(Wj) %x% diag(k)[1,]
+        if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(Wj) %x% diag(k)[s,])}}
+      }
       listaXj[[lj]] = Xj
       listaYj[[lj]] = Yj
     }
