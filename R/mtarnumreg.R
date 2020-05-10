@@ -129,7 +129,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       Nrg[lj] = length(Inj)
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
       if (identical(Inj,integer(0))) {
-        Xj = matrix(nrow = 0,ncol = eta[lj]*k)
+        Xj = matrix(nrow = 0,ncol = etam[lj]*k)
       }else{
         Wj = sapply(Inj,Inj_X,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
         Xj = t(Wj) %x% diag(k)[1,]
@@ -262,8 +262,8 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     }
     rgamber = Vectorize(rgamber,"pos")
     listPr = listm[[paste0('m',l)]]
-    Dj = list()
-    Rj = list()
+    Dj = vector('list')
+    Rj = vector('list')
     i2 = listPr$i
     #creando temporales
     pjmax = listPr$orders$pj
