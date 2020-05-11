@@ -464,16 +464,25 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
               'ordersprev','k','N','nu','method','fill','maxpj','maxqj','maxdj',
               'Zt','Yt','Xt','Ut','lists','fycond','rdunif','dmunif')
     parallel::clusterExport(micluster,obj_S)
-    s = parallel::parLapply(micluster,list(2,3), funcParallel, iterprev = iterprev)
+    if (l0 == 3) {
+      s = parallel::parLapply(micluster,list(2,3), funcParallel, iterprev = iterprev)
       parallel::stopCluster(micluster)
-    listm[[paste0('m',2)]] = s[[1]]
-    listm[[paste0('m',3)]] = s[[2]]
+      listm[[paste0('m',2)]] = s[[1]]
+      listm[[paste0('m',3)]] = s[[2]]
+    }
+    if (l0 == 4) {
+      s = parallel::parLapply(micluster,list(2,3,4), funcParallel, iterprev = iterprev)
+      parallel::stopCluster(micluster)
+      listm[[paste0('m',2)]] = s[[1]]
+      listm[[paste0('m',3)]] = s[[2]]
+      listm[[paste0('m',4)]] = s[[3]]
+    }
   }else{
     listm[[paste0('m',2)]] = fill(m = 2,iter = iterprev, burn = round(0.3*iterprev))
     listm[[paste0('m',3)]] = fill(m = 3,iter = iterprev, burn = round(0.3*iterprev))
-  }
-  if (l0 == 4) {
-    listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.3*iterprev))
+    if (l0 == 4) {
+      listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.3*iterprev))
+    }
   }
   if (NAIC) {
     results = list(tsregim = ini_obj$tsregim_obj,list_m = listm)
