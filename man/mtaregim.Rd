@@ -11,10 +11,10 @@ mtaregim(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL, Delta = 
 \arguments{
   \item{orders}{list type object with names (p,q,d), number of lags of Yt, Xt and Zt, respectively. Default p = 1, q = 0, d = 0}
   \item{cs}{matrix type object, the constant term of the regime specification. Default NULL}
-  \item{Phi}{list type object with names (phi1, ..., phip), each one a matrix (kxk) type object autoregressive specification. Not NULL}
-  \item{Beta}{list type object with names (beta1, ..., betaq), each one a matrix (kxnu) type object covariate parameters specification Default NULL}
-  \item{Delta}{list type object with names (delta1, ..., deltad), each one a matrix (kx1) type object parameter specification of Threshold process. Default NULL}
-  \item{Sigma}{a positive-definite symmetric matrix (kxk), specfication of errors covariate matrix. Not NULL}
+  \item{Phi}{list type object with names (phi1, ..., phip), each one a matrix \eqn{(kxk)} type object autoregressive specification. Not NULL}
+  \item{Beta}{list type object with names (beta1, ..., betaq), each one a matrix \eqn{(kx\nu)} type object covariate parameters specification Default NULL}
+  \item{Delta}{list type object with names (delta1, ..., deltad), each one a matrix \eqn{(kx1)} type object parameter specification of Threshold process. Default NULL}
+  \item{Sigma}{a positive-definite symmetric matrix \eqn{(kxk)}, specfication of errors covariate matrix. Not NULL}
 }
 \details{
   Causes creation of the object class ``regime''. Sigma matrix corresponds to \eqn{\Sigma} (root of the covariance matrix). When cs is not specified or only matrices are delivered for some lags, the function assumes unspecified 0 (matrix). Rows number in the Phi, Beta and Delta matrix should be the same (k dimension of variables in Yt).
@@ -28,7 +28,7 @@ mtaregim(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL, Delta = 
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \seealso{\code{\link[MTAR]{mtaregim}}, \code{\link[MTAR]{mtarns}},
-  \code{\link[MTAR]{mtaregim}}, \code{\link{showLabels}}}
+  \code{\link[MTAR]{mtaregim}}}
 
 \examples{
 # Creation of parameters for regimen with orders = c(2,1,1), nu = 1 y k = 2.
