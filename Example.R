@@ -187,6 +187,10 @@ estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, 
                    ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0))
 # user   system  elapsed
 # 1774.940   16.947 1795.283
+# user   system  elapsed
+# 1037.644   14.539 1794.726
+
+
 estim$final_m
 
 # Example auto_mtar
