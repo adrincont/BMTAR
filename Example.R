@@ -1,4 +1,5 @@
 #=======================================================================================#
+devtools::install_github("adrincont/libreria-MTAR")
 # Example mtaregim:
 orders = list(p = 2,q = 1,d = 1)
 Phi = list(phi2 = matrix(c(0.1,0.6,-0.4,0.5),2,2, byrow = T))
@@ -184,6 +185,8 @@ data = datasim
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(l0 = 3),method = 'KUO')
 estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = T,
                    ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0))
+# user   system  elapsed
+# 1774.940   16.947 1795.283
 estim$final_m
 
 # Example auto_mtar
