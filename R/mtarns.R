@@ -428,7 +428,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   if (is.null(r) & l != 1) {estimates$r = rest}
   if (is.null(Sigma)) {estimates$Sigma = sigmaest}
   data = vector('list')
-  data$yt = t(Yt)
+  data$Yt = t(Yt)
   data$Ut = t(Ut)
   # fitted.values and residuals
   Yt_fit = Yt_res = matrix(ncol = N,nrow = k)
