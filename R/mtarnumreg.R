@@ -456,23 +456,21 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   cat('Running previous chains ... \n')
   listm = vector('list')
   if (parallel) {
-    micluster = parallel::makeCluster(4)
+    micluster = parallel::makeCluster(2)
     doParallel::registerDoParallel(micluster)
     funcParallel = function(i,iterprev){return(fill(m = i,iter = iterprev, burn = round(0.3*iterprev)))}
     parallel::clusterEvalQ(micluster, library(MTAR))
-    obj_S = c('ini_obj','r_init','burn_m','niter_m','chain_m','list_m',
+    obj_S = list('ini_obj','r_init','burn_m','niter_m','chain_m','list_m',
               'ordersprev','k','N','nu','method','fill','maxpj','maxqj','maxdj',
               'Zt','Yt','Xt','Ut','lists','fycond','rdunif','dmunif')
-    parallel::clusterExport(micluster,obj_S)
+    parallel::clusterExport(cl = micluster,varlist = obj_S,envir = environment())
     if (l0 == 3) {
       s = parallel::parLapply(micluster,list(2,3), funcParallel, iterprev = iterprev)
-      parallel::stopCluster(micluster)
       listm[[paste0('m',2)]] = s[[1]]
       listm[[paste0('m',3)]] = s[[2]]
     }
     if (l0 == 4) {
       s = parallel::parLapply(micluster,list(2,3,4), funcParallel, iterprev = iterprev)
-      parallel::stopCluster(micluster)
       listm[[paste0('m',2)]] = s[[1]]
       listm[[paste0('m',3)]] = s[[2]]
       listm[[paste0('m',4)]] = s[[3]]
@@ -484,6 +482,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.3*iterprev))
     }
   }
+  parallel::stopCluster(micluster)
   if (NAIC) {
     results = list(tsregim = ini_obj$tsregim_obj,list_m = listm)
     results$NAIC$m2 = mtarNAIC(listm[[paste0('m',2)]]$par)

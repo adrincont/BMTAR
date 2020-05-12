@@ -6,7 +6,8 @@
 # finally thershold metropolis-hasting with uniform proposal
 # Function:
 #==================================================================================================#
-mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL){
+mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL,
+                   parallel = FALSE){
   # Just-In-Time (JIT)
   compiler::enableJIT(3)
   # checking
@@ -248,6 +249,18 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   }
   list_m = list(r_iter = r_iter,theta_iter = theta_iter,sigma_iter = sigma_iter,gam_iter = gam_iter)
   # iterations function
+  if (parallel) {
+    nclus = parallel::detectCores()
+    micluster = parallel::makeCluster(nclus)
+    doParallel::registerDoParallel(micluster)
+    funcParallel = function(ik,iterprev,reg,i,listj,theta_iter,sigma_iter,gam_iter){
+      return(rgamber(pos = ik,reg = jj,i = i,listj = listj,theta_iter,sigma_iter,gam_iter))
+    }
+    parallel::clusterEvalQ(micluster, library(MTAR))
+    obj_S = list('method','dmnormB','k','eta','Rj','rgamber','fycond','lists','l','N','eta',
+                 'pij')
+    parallel::clusterExport(cl = micluster,varlist = obj_S,envir = environment())
+  }
   iter_str = function(i, list_m, ...){
     r_iter = list_m$r_iter
     theta_iter = list_m$theta_iter
@@ -285,7 +298,27 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       gam_iter[[lj]][,i] = gam_iter[[lj]][,i - 1]
     }
     for (jj in 1:l) {
-      gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i,listj = listj,theta_iter,sigma_iter,gam_iter)
+      if (parallel) {
+        count = 0
+        list_parallel = vector(mode = 'list',length = nclus)
+        range_clus = round(k*eta[jj]/nclus) + 1
+        for (ih in 1:length(list_parallel)) {
+          if ({1 + count} > k*eta[jj]) {break()}
+          if ({range_clus + count} > k*eta[jj]) {
+            list_parallel[[ih]] = c({1 + count}:{k*eta[jj]})
+          }else{
+            list_parallel[[ih]] = c({1 + count}:{range_clus + count})
+          }
+          count = count + range_clus
+        }
+        list_parallel = list_parallel[!unlist(lapply(list_parallel,is.null))]
+        parallel::clusterExport(cl = micluster,varlist = list('jj'),envir = environment())
+        s = parallel::parLapply(micluster,list_parallel, funcParallel,
+                                reg = jj,i = i,listj = listj,theta_iter = theta_iter,sigma_iter = sigma_iter,gam_iter = gam_iter)
+        gam_iter[[jj]][,i] = unlist(s)
+      }else{
+        gam_iter[[jj]][,i] = rgamber(pos = 1:{k*eta[jj]},reg = jj,i = i,listj = listj,theta_iter,sigma_iter,gam_iter)
+      }
     }
     if (l != 1) {
       if (i <= other) {
@@ -322,9 +355,10 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     list_m = iter_i
     setTxtProgressBar(pb,i)
   }
+  if (parallel) {parallel::stopCluster(micluster)}
   close(pb)
   cat('Saving results ... \n')
-  if (l > 2){
+  if (l > 2) {
     r_iter = list_m$r_iter[,-c(1:{other + burn})]
   }else{
     r_iter = list_m$r_iter[-c(1:{other + burn})]
