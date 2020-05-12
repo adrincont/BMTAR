@@ -3,10 +3,10 @@
 
 \title{Estimation of a MTAR model for some data}
 \description{
-Compute by Bayesian methodoly a MTAR model for some data
+Compute by Bayesian methodology a MTAR model for some data
 }
 \usage{
-auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),niter = 5000, chain = FALSE, method = 'KUO')
+auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),niter = 5000, chain = FALSE, method = 'KUO',parallel = FALSE)
 }
 
 \arguments{
@@ -18,27 +18,30 @@ auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 
   \item{niter}{numeric type, number of runs for every estimation. Default 5000}
   \item{chain}{logical type, if return chains of estimations parameters and values (if missing)}
   \item{method}{character type, must be one ``KUO'' or ``SSVS''}
+  \item{parallel}{logical, if \code{parallel} package should be used. Default FALSE}                                                                                 
 }
 
 \details{
-  Detalles de los metodos usados en la funcion corespondiente
+  The default arguments are designed for rapid estimation of models for any data (Yt, Zt and Xt). Returns the fit of MTAR model. 
+  The function conducts Bayesian estimation with ``niter'' chains of the number of regimes with maximum ``l0'' and within the maximum lags orders provided ``maxorders''.
+  It can be a little be faster when used ``parallel'' for \code{parallel} package.
 }
 \value{
   Return list type object
 
-  $tsregim class ``tsregime'' object, if missing values completed with estimations
-  $numreg numeric type, number of regimes estimated
-  $pars class ``regime_model'' object with final estimations of parameters
+  \item{tsregim}{class ``tsregime'' object, if missing values completed with estimations}
+  \item{numreg}{numeric type, number of regimes estimated}
+  \item{pars}{class ``regime_model'' object with final estimations of parameters}
 }
 \references{
-  Fox, J. (2016)
-  \emph{Applied Regression Analysis and Generalized Linear Models},
-  Third Edition. Sage.
+  Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate threshold autoregressive models with missing data}. Communications in Statistics-Theory and Methods, 46(1), 296-318.
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
-  poner ejemplo de uso de funcion con datos reales
+  data('datasim')
+  data = datasim$Sim
+  auto_mtar(Yt = data$Yt, Zt = data$Zt)
 }
 
 \keyword{Bayesian estimation}
