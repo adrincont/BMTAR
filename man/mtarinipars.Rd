@@ -11,13 +11,14 @@ mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2, orders = list(pj =
 \arguments{
   \item{tsregim_obj}{class ``tsregim'' object. Not NULL}
   \item{list_model}{list type object with at least one of the names (pars, orders, l0).
-  pars list type object with one of the names (l, orders, r, Sigma) for parameters of the model known
-    l number of regimes of the model (not known use l0). Default 2
-    orders list type object with names (pj,qj,dj) each a vector of length l, specificate lags orders in each regime. Default list(pj = c(1,1), qj = c(0,0), dj = c(0,0))
-    r threshold value. Default NULL
-    Sigma list type object with names (R1, ..., Rl) each a matrix type object, specification of error covariate matrix. Default NULL
-  orders list type object with names (pj,qj,dj) each a vector of length l,specificate maximum lags orders in each regime if not known. Default NULL
-  l0 numeric type, number maximum of regimes to consider for the model if not known. Default NULL
+
+  pars: list type object with one of the names (l, orders, r, Sigma) for parameters of the model known
+  {l: number of regimes of the model (not known use l0). Default 2
+    orders:list type object with names (pj,qj,dj) each a vector of length l, specificate lags orders in each regime. Default list(pj = c(1,1), qj = c(0,0), dj = c(0,0))
+    r: threshold value. Default NULL
+    Sigma: list type object with names (R1, ..., Rl) each a matrix type object, specification of error covariate matrix. Default NULL
+  \item{orders}{list type object with names (pj,qj,dj) each a vector of length l,specificate maximum lags orders in each regime if not known. Default NULL}
+  \item{l0}{numeric type, number maximum of regimes to consider for the model if not known. Default NULL}
   }
   \item{method}{character type object, if orders not known or enter l0 it must be one ``KUO'' or ``SSVS'', when known it is not necesary. Default NULL}
   \item{theta_prior}{list type object with names (R1, ..., Rl), each one a list type object with at least one of the names (theta0j,cov0j)(if method ``SSVS'' (theta0j,cov0j,Cij,Tauij,R)),specification of mean and covariate matrix of the prior distribution for \eqn{\theta} parameter. Default NULL}
@@ -31,25 +32,50 @@ mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2, orders = list(pj =
 }
 \value{
   Return a list type object of class ``regim_inipars''
-  $tsregim_obj = tsregim_obj
-  $pars = list_model$pars
-  $orders = list_model$orders
-  $method = method
-  $init$r = r_prior
-  init$Theta = theta_prior
-  $init$Sigma = sigma_prior
-  $init$Gamma = gamma_prior
+  \item{tsregim_obj} = tsregim_obj
+  \item{pars} = list_model$pars
+  \item{orders} = list_model$orders
+  \item{method} = method
+  \item{init$r} = r_prior
+  \item{init$Theta} = theta_prior
+  \item{init$Sigma} = sigma_prior
+  \item{init$Gamma} = gamma_prior
 }
 \references{
-  Fox, J. (2016)
-  \emph{Applied Regression Analysis and Generalized Linear Models},
-  Third Edition. Sage.
+  Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 
 \examples{
-  poner ejemplo de uso de funcion con datos reales
+data("datasim")
+tsregim_obj = datasim$Sim
+# for estimate non-structural parameters:
+# mtarns: l always known, Sigma = NULL = list(R1,R2) can be known, r = NULL can be known
+# Sigma and r known
+parameters = list(l = length(datasim$Reg),
+                  Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2),
+                  r = tsregim_obj$r,
+                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
+initpars_Sr = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
+#only r known
+parameters = list(l = length(datasim$Reg),Sigma = NULL, r = tsregim_obj$r,
+                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
+initpars_r = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
+#r and Sigma unknown
+parameters = list(l = length(datasim$Reg),Sigma = NULL, r = NULL,
+                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
+initpars = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
+# for estimate structural and non-structural parameters
+# mtarstr: l always known
+parameters = list(l = length(datasim$Reg))
+orders = list(pj = c(2,2),qj = c(1,1),dj = c(1,1))
+initpars_KUO = mtarinipars(tsregim_obj,
+                           list_model = list(
+                             pars = parameters,orders = orders),method = 'KUO')
+initpars_SSVS = mtarinipars(tsregim_obj,
+                            list_model = list(
+                              pars = parameters,orders = orders),method = 'SSVS')
 }
 
 \keyword{prior distribution}

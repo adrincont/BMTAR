@@ -196,7 +196,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       listaXj[[lj]] = Xj
       listaYj[[lj]] = Yj
     }
-    return(list(Nrg = Nrg,listaX = listaXj,listaY = listaYj))
+    return(list(Nrg = Nrg,listaX = listaXj,listaY = listaYj, Ind = Ind))
   }
   lists = compiler::cmpfun(lists)
   rgamber = function(pos,reg,i,listj,theta_iter,sigma_iter,gam_iter,...){
@@ -254,7 +254,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     micluster = parallel::makeCluster(nclus)
     doParallel::registerDoParallel(micluster)
     funcParallel = function(ik,iterprev,reg,i,listj,theta_iter,sigma_iter,gam_iter){
-      return(rgamber(pos = ik,reg = jj,i = i,listj = listj,theta_iter,sigma_iter,gam_iter))
+      return(rgamber(pos = ik,reg,i = i,listj = listj,theta_iter,sigma_iter,gam_iter))
     }
     parallel::clusterEvalQ(micluster, library(MTAR))
     obj_S = list('method','dmnormB','k','eta','Rj','rgamber','fycond','lists','l','N','eta',
@@ -301,7 +301,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       if (parallel) {
         count = 0
         list_parallel = vector(mode = 'list',length = nclus)
-        range_clus = round(k*eta[jj]/nclus) + 1
+        range_clus = floor(k*eta[jj]/nclus) + 1
         for (ih in 1:length(list_parallel)) {
           if ({1 + count} > k*eta[jj]) {break()}
           if ({range_clus + count} > k*eta[jj]) {
@@ -375,7 +375,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
     rest[,2] = apply(rchain,1,mean)
-    rvec = c('mean' = rest[,2],'prop %' = acep/niter*100)
+    rvec = c(rest[,2],'prop %' = acep/niter*100)
   }
   # save chains
   # logLik
@@ -501,18 +501,50 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   estimates$Gamma = gamest
   estimates$Sigma = sigmaest
   data = vector('list')
-  data$yt = t(Yt)
+  data$Yt = t(Yt)
   data$Ut = t(Ut)
   orders = vector('list')
   orders$pj = sapply(Rest,function(x){length(x$phi)})
   orders$qj = sapply(Rest,function(x){length(x$beta)})
   orders$dj = sapply(Rest,function(x){length(x$delta)})
+  # fitted.values and residuals
+  Yt_fit = Yt_res = matrix(ncol = N,nrow = k)
+  for (t in 1:N) {
+    lj = listj$Ind[t]
+    p = orders$pj[lj]
+    q = orders$qj[lj]
+    d = orders$dj[lj]
+    yti = vector(mode = "numeric")
+    for (w in 1:p) {yti = c(yti,Yt[,t - w])}
+    if (identical(yti,numeric(0))) {yti = rep(0,k)}
+    xti = vector(mode = "numeric")
+    for (w in 1:q) {xti = c(xti,Xt[,t - w])}
+    zti = vector(mode = "numeric")
+    for (w in 1:d) {zti = c(zti,Zt[t - w])}
+    if (q == 0 & d != 0) {
+      wtj = c(1,yti,0,zti)
+    }else if (d == 0 & q != 0) {
+      wtj = c(1,yti,xti,0)
+    }else if (d == 0 & q == 0) {
+      wtj = c(1,yti,0,0)
+    }else{
+      wtj = c(1,yti,xti,zti)}
+    Xj = t(wtj) %x% diag(k)[1,]
+    if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(wtj) %x% diag(k)[s,])}}
+    Sig = as.matrix(Rest[[lj]]$sigma)
+    Yt_fit[,t] = Xj %*% diag(gamest[[lj]][,2]) %*% thetaest[[lj]][,2]
+    Yt_res[,t] = solve(Sig) %*% (Yt[,t] - Yt_fit[,t])
+  }
   if (l != 1) {estimates$r = rest}
   if (chain) {
-    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,logLikj = logLikj,data = data,r = rvec,orders = orders)
+    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,
+                   residuals = t(Yt_res), fitted.values = t(Yt_fit),
+                   logLikj = logLikj,data = data,r = rvec,orders = orders)
     class(results) = 'regim_model'
   }else{
-    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,logLikj = logLikj,data = data,r = rvec,orders = orders)
+    results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,
+                   residuals = t(Yt_res), fitted.values = t(Yt_fit),
+                   logLikj = logLikj,data = data,r = rvec,orders = orders)
     class(results) = 'regim_model'
   }
   compiler::enableJIT(0)
