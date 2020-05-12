@@ -80,10 +80,11 @@ parameters = list(l = 2,
                   r = data$Sim$r)
 initial = mtarinipars(tsregim_obj = data$Sim,
                       list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
+estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE,burn = 1000)
 print.regim_model(estim1)
 autoplot.regim_model(estim1,2)
 autoplot.regim_model(estim1,3)
+autoplot.regim_model(estim1,5)
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
@@ -92,6 +93,7 @@ print.regim_model(estim2)
 autoplot.regim_model(estim2,1)
 autoplot.regim_model(estim2,2)
 autoplot.regim_model(estim2,3)
+autoplot.regim_model(estim2,5)
 #========================================================================================#
 # Example mtarstr
 data("datasim")
