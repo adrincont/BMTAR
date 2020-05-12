@@ -108,7 +108,7 @@ autoplot.regim_model = function(object, type = 1 , ...) {
         }
       }
       p3[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = value)) +
-        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') + 
+        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Sigma chains',j))
       }
@@ -152,11 +152,30 @@ autoplot.regim_model = function(object, type = 1 , ...) {
         }
       }
       p5[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = value)) +
-        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') + 
+        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Gamma chains',j))
     }
     return(p5)
+  }
+  if (type == 5) {
+    Chain_Yt = as.data.frame(object$data$Yt)
+    Chain_fit = as.data.frame(object$fitted.values)
+    time = seq(1,nrow(Chain_fit))
+    dat1 = data.frame(type = 'obs',name = 'Series.1',time = time, value = Chain_Yt[,1])
+    dat1 = rbind.data.frame(dat1,data.frame(type = 'fit',name = 'Series.1',time = time, value = Chain_fit[,1]))
+    if (ncol(Chain_Yt) > 1) {
+      for (i in 2:ncol(Chain_Yt)) {
+        dati = data.frame(type = 'obs',name = paste0('Series.',i),time = time,value = Chain_Yt[,i])
+        dati = rbind.data.frame(dati,data.frame(type = 'fit',name = paste0('Series.',i),time = time, value = Chain_fit[,i]))
+        dat1 = rbind.data.frame(dat1,dati)
+      }
+    }
+    p = ggplot2::ggplot(data = dat1,ggplot2::aes(x = time,y = value, color = type))
+    p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
+    p = p + ggplot2::labs(title = 'Output processes')
+    p = p + ggplot2::scale_color_manual(values = c("black","blue"))
+    return(p)
   }
 }
 autoplot.regime_missing = function(object, type = 1 , ...) {
