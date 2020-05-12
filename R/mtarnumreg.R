@@ -475,6 +475,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       listm[[paste0('m',3)]] = s[[2]]
       listm[[paste0('m',4)]] = s[[3]]
     }
+    parallel::stopCluster(micluster)
   }else{
     listm[[paste0('m',2)]] = fill(m = 2,iter = iterprev, burn = round(0.3*iterprev))
     listm[[paste0('m',3)]] = fill(m = 3,iter = iterprev, burn = round(0.3*iterprev))
@@ -482,7 +483,6 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.3*iterprev))
     }
   }
-  parallel::stopCluster(micluster)
   if (NAIC) {
     results = list(tsregim = ini_obj$tsregim_obj,list_m = listm)
     results$NAIC$m2 = mtarNAIC(listm[[paste0('m',2)]]$par)
