@@ -69,7 +69,7 @@ autoplot.regim_model = function(object, type = 1 , ...) {
     if (!inherits(object, 'regim_model')) {
       stop('autoplot.regim_model requires a regim_model object')
     }}
-  if (!{type %in% c(1:4)}) {stop('type should take values in c (1,2,3,4)')}
+  if (!{type %in% c(1:5)}) {stop('type should take values in c (1,2,3,4)')}
   if (is.null(object$Chain)) {stop('There are no chains to graph')}
   if (type == 1) {
     if (is.null(object$Chain$r)) {stop('r unknown')}
