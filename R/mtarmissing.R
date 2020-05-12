@@ -121,7 +121,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       Yj = matrix(Yt[,Inj],nrow = k,ncol = Nrg[lj])
       # matrix Wj =(1,lagY,lagX,lagZ)
       if (identical(Inj,integer(0))) {
-        Wj = matrix(nrow = eta[lj],ncol = 0)
+        Wj = matrix(nrow = etaj[lj],ncol = 0)
       }else{
         Wj = sapply(Inj,Inj_W,Yt = Yt,Zt = Zt,Xt = Xt,p = p,q = q,d = d)
       }
@@ -209,13 +209,9 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     }
     if (l > 2) {for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}}
     # indicator variable for the regime
-    Ind = c()
+    Ind = vector(mode = 'numeric',length = N)
     for (j in 1:l) {
-      for (w in 1:N) {
-        if (Zt[w] > rj[1,j] & Zt[w] <= rj[2,j]) {
-          Ind[w] = j
-        }
-      }
+      Ind[Zt > rj[1,j] & Zt <= rj[2,j]] = j
     }
     lj = Ind[t]
     p = pj[lj]
@@ -243,16 +239,13 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   alphacond = compiler::cmpfun(Vectorize(alphacond,vectorize.args = 't'))
   #objects for each regimen and iterations
-  theta_iter = sigma_iter = list()
-  length(theta_iter) = length(sigma_iter) = l
-  itheta0j = isigma0j = list()
-  length(itheta0j) = length(isigma0j) = l
-  iS0j = inu0j = list()
-  length(iS0j) = length(inu0j) = l
+  theta_iter = sigma_iter = vector('list', l)
+  itheta0j = isigma0j = vector('list', l)
+  iS0j = inu0j = vector('list', l)
   Yt_iter = matrix(ncol = niter + burn,nrow = sum(ks::vec(PosNAMat[[1]])))
   Ut_iter = matrix(ncol = niter + burn,nrow = sum(ks::vec(PosNAMat[[2]])))
   Ytr = Yt #Yt que vamos a cambiar en el proceso
-  Utr = Ut #Yt que vamos a cambiar en el proceso
+  Utr = Ut #Ut que vamos a cambiar en el proceso
   #Ytr[PosNAMat[[1]]] = 0
   Yt_iter[,1] = Ytr[PosNAMat[[1]]]
   Ut_iter[,1] = Utr[PosNAMat[[2]]]
@@ -369,13 +362,13 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
         prod1D = Reduce('*',kernU(1:b,Utr))
         prod2D = Reduce('*',alphacond(1:b,i - 1,Utr,Ytr,theta_iter,sigma_iter))
         prod3D = Reduce('*',transkernU({b + 1}:{2*b},Utr))
-        val = (prod1N*prod2N*prod3N)/(prod1D*prod2D*prod3N)
+        val = (prod1N*prod2N*prod3N)/(prod1D*prod2D*prod3D)
       }else{
-          prod1N = alphacond(i1,i - 1,Usim,Ytr,theta_iter,sigma_iter)[[1]]
-          prod2N = Reduce('*',transkernU(i1:{i1 + b},Usim))
-          prod1D = alphacond(i1,i - 1,Utr,Ytr,theta_iter,sigma_iter)[[1]]
-          prod2D = Reduce('*',transkernU(i1:{i1 + b},Utr))
-          val = (prod1N*prod2N)/(prod1D*prod2D)
+        prod1N = alphacond(i1,i - 1,Usim,Ytr,theta_iter,sigma_iter)[[1]]
+        prod2N = Reduce('*',transkernU(i1:{i1 + b},Usim))
+        prod1D = alphacond(i1,i - 1,Utr,Ytr,theta_iter,sigma_iter)[[1]]
+        prod2D = Reduce('*',transkernU(i1:{i1 + b},Utr))
+        val = (prod1N*prod2N)/(prod1D*prod2D)
       }
       if (val >= runif(1)) {
         Utr = Usim
