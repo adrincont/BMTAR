@@ -3,7 +3,7 @@
 
 \title{Compute NAIC of a MTAR model}
 \description{
-Compute NAIC of a ``regime_model'' class object
+Compute the Non-linear Akaike information criterion (NAIC) of a ``regime_model'' class object.
 }
 \usage{
 mtarNAIC(regimemodel)
@@ -14,7 +14,13 @@ mtarNAIC(regimemodel)
 }
 
 \details{
-  Detalles de los metodos usados en la funcion corespondiente
+Estimation of thresholds was made before starting the Bayesian procedure via the Non-linear Akaike information criterion (NAIC) (Tong, 1990), in MTAR model. The NAIC for a MTAR model with l regimes is:
+ \deqn{
+ NAIC = {\sum_{j = 1}^l AICj(r)}/{\sum_{j = 1}^l N_j}
+ }
+  \deqn{
+  AICj(r) = Nj*ln(|Sj/Nj|) + 2k\eta_j
+ }
 }
 \value{
   Return a list type object
