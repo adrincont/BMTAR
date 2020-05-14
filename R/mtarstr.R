@@ -2,8 +2,8 @@
 # Date: 17/04/2019
 # Description:
 #-> When r_init is NULL default is the proportion that separate the observations in l equal parts
-#-> Bayesia estimation with MCMC in order: theta gibbs sampling, sigma gibbs sampling, gamma gibs samplind and
-# finally thershold metropolis-hasting with uniform proposal
+#-> Bayesian estimation with MCMC in order: theta gibbs sampling, sigma gibbs sampling, gamma gibbs sampling and
+# finally threshold metropolis-hasting with uniform proposal
 # Function:
 #==================================================================================================#
 mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL,
@@ -511,28 +511,36 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   Yt_fit = Yt_res = matrix(ncol = N,nrow = k)
   for (t in 1:N) {
     lj = listj$Ind[t]
-    p = orders$pj[lj]
-    q = orders$qj[lj]
-    d = orders$dj[lj]
+    p = pjmax[lj]
+    q = qjmax[lj]
+    d = djmax[lj]
     yti = vector(mode = "numeric")
-    for (w in 1:p) {yti = c(yti,Yt[,t - w])}
-    if (identical(yti,numeric(0))) {yti = rep(0,k)}
+    for (w in 1:p) {
+      if (t - w > 0) {yti = c(yti,Yt[,t - w])
+      }else{yti = c(yti,rep(0,k))}}
+    if (identical(yti,numeric(0))) {yti = rep(0,k*p)}
     xti = vector(mode = "numeric")
-    for (w in 1:q) {xti = c(xti,Xt[,t - w])}
+    for (w in 1:q) {
+      if (t - w > 0) {xti = c(xti,Xt[,t - w])
+      }else{xti = c(xti,rep(0,nu))}}
+    if (identical(xti,numeric(0))) {xti = rep(0,nu*q)}
     zti = vector(mode = "numeric")
-    for (w in 1:d) {zti = c(zti,Zt[t - w])}
+    for (w in 1:d) {
+      if (t - w > 0) {xti = c(zti,Zt[t - w])
+      }else{zti = c(zti,0)}}
+    if (identical(zti,numeric(0))) {zti = rep(0,d)}
     if (q == 0 & d != 0) {
-      wtj = c(1,yti,0,zti)
+      wtj = c(1,yti,zti)
     }else if (d == 0 & q != 0) {
-      wtj = c(1,yti,xti,0)
+      wtj = c(1,yti,xti)
     }else if (d == 0 & q == 0) {
-      wtj = c(1,yti,0,0)
+      wtj = c(1,yti)
     }else{
       wtj = c(1,yti,xti,zti)}
     Xj = t(wtj) %x% diag(k)[1,]
     if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(wtj) %x% diag(k)[s,])}}
-    Sig = as.matrix(Rest[[lj]]$sigma)
     Yt_fit[,t] = Xj %*% diag(gamest[[lj]][,2]) %*% thetaest[[lj]][,2]
+    Sig = as.matrix(Rest[[lj]]$sigma)
     Yt_res[,t] = solve(Sig) %*% (Yt[,t] - Yt_fit[,t])
   }
   if (l != 1) {estimates$r = rest}
