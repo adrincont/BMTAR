@@ -18,11 +18,11 @@ auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 
   \item{niter}{numeric type, number of runs for every estimation. Default 5000}
   \item{chain}{logical type, if return chains of estimations parameters and values (if missing)}
   \item{method}{character type, must be one ``KUO'' or ``SSVS''}
-  \item{parallel}{logical, if \code{parallel} package should be used. Default FALSE}                                                                                 
+  \item{parallel}{logical, if \code{parallel} package should be used. Default FALSE}
 }
 
 \details{
-  The default arguments are designed for rapid estimation of models for any data (Yt, Zt and Xt). Returns the fit of MTAR model. 
+  The default arguments are designed for rapid estimation of models for any data (Yt, Zt and Xt). Returns the fit of MTAR model.
   The function conducts Bayesian estimation with ``niter'' chains of the number of regimes with maximum ``l0'' and within the maximum lags orders provided ``maxorders''.
   It can be a little be faster when used ``parallel'' for \code{parallel} package.
 }
