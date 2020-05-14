@@ -85,6 +85,7 @@ print.regim_model(estim1)
 autoplot.regim_model(estim1,2)
 autoplot.regim_model(estim1,3)
 autoplot.regim_model(estim1,5)
+diagnostic.mtar(estim1)
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
@@ -101,7 +102,7 @@ data = datasim
 # Metodo KUO
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
                       list_model = list(pars = list(l = 2), orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
-estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)
+    estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)
 autoplot.regim_model(estruc,1)
 autoplot.regim_model(estruc,2)
 autoplot.regim_model(estruc,3)
@@ -182,7 +183,6 @@ print(missingest)
 autoplot.regime_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]
 missingest$tsregim$Yt[is.na(data_yt[,1]),]
-
 # Example mtarnumreg
 data("datasim")
 data = datasim

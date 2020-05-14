@@ -1,6 +1,3 @@
-#
-#
-#
 prodB = function(x){
   prod = 1
   for (a in 1:length(x)) {
