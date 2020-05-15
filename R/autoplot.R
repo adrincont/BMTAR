@@ -285,6 +285,6 @@ diagnostic.mtar = function(regim_model){
   p4 = ggplot2::ggplot(data = dat, ggplot2::aes(x = time, y = cumsq,color = label))
   p4 = p4 + ggplot2::geom_ribbon(ggplot2::aes(ymin = rep(LQS,e_k$k), ymax = rep(LQI,e_k$k)),
                                 fill = "gray",color = NA,alpha = 0.5)
-  p4 = p4 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUMQ statistic for residuals')
+  p4 = p4 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUMSQ statistic for residuals')
   return(list(p1,p2,p3,p4))
-  }
+ }
