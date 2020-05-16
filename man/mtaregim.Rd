@@ -6,7 +6,7 @@
 Create an object of class ``regime'' given nonstructural and structural parameters for regime i.
 }
 \usage{
-mtaregim(orders = list(p = 1,q = 1,d = 1), cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma, ...)
+mtaregim(orders = list(p = 1,q = 0,d = 0), cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma, ...)
 }
 \arguments{
   \item{orders}{list type object with names (p,q,d), number of lags of Yt, Xt and Zt, respectively. Default p = 1, q = 0, d = 0}
