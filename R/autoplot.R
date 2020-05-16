@@ -178,12 +178,12 @@ autoplot.regim_model = function(object, type = 1 , ...) {
     return(p)
   }
 }
-autoplot.regime_missing = function(object, type = 1 , ...) {
+autoplot.regim_missing = function(object, type = 1 , ...) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
   }else {
     if (!inherits(object, 'regime_missing')) {
-      stop('autoplot.regime_missing requires a regime_missing object')
+      stop('autoplot.regim_missing requires a regim_missing object')
     }}
   if (is.null(object$Chain$Y)) {stop('There are no chains to graph')}
   if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
@@ -237,12 +237,15 @@ print.tsregim = function(x,...){
   }
   str(dats)
 }
+S3method(print, tsregim)
 print.regim_model = function(object,...) {
   print(object$estimates)
 }
-print.regime_missing = function(object,...) {
+S3method(print, regim_model)
+print.regim_missing = function(object,...) {
   print(object$estimates)
 }
+S3method(print, regim_missing)
 
 diagnostic.mtar = function(regim_model,lagmax = NULL){
   if (!requireNamespace('ggplot2', quietly = TRUE)) {

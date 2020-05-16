@@ -9,7 +9,7 @@
 # No evaluamos que Ut cumpla las propiedades de ser proceso markov
 # Function:
 #==================================================================================================#
-mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...){
+mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL){
   burn = 1000
   if (!{round(N) == N & N > 1}) {stop('N must be an integer greater than 1')}
   if (!is.null(Zt)) {

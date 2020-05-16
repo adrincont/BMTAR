@@ -29,7 +29,7 @@ lists_ind = function(r,Zt,l,...){
   }
   return(list(Ind = Ind))
 }
-tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL, ...){
+tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL){
   list_result = list()
   if (!is.null(r)) {
     if (!is.numeric(r)) {stop('r must be a numeric vector')}

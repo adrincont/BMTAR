@@ -517,11 +517,11 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   compiler::enableJIT(0)
   if (chain) {
     result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates, Chain = Chain)
-    class(result) = 'regime_missing'
+    class(result) = 'regim_missing'
     return(result)
   }else{
     result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates)
-    class(result) = 'regime_missing'
+    class(result) = 'regim_missing'
     return(result)
   }
 }
