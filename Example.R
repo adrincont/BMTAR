@@ -85,7 +85,7 @@ print.regim_model(estim1)
 autoplot.regim_model(estim1,2)
 autoplot.regim_model(estim1,3)
 autoplot.regim_model(estim1,5)
-diagnostic.mtar(estim1)
+diagnostic_mtar(estim1)
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
@@ -180,9 +180,13 @@ initial = mtarinipars(tsregim_obj = data_final,
                                                     orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
 missingest = mtarmissing(ini_obj = initial,chain = TRUE,niter = 500,burn = 500)
 print(missingest)
-autoplot.regime_missing(missingest,1)
+autoplot.regim_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]
 missingest$tsregim$Yt[is.na(data_yt[,1]),]
+
+rm(list = ls()[!{ls() %in% c('missingest')}])
+
+
 # Example mtarnumreg
 data("datasim")
 data = datasim
