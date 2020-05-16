@@ -6,7 +6,6 @@ autolayer = function(object, ...){
 
 #' @importFrom ggplot2 autoplot
 #' @export
-ggplot2::autoplot
 
 autoplot = function(x, ...) {
   UseMethod('autoplot', x)
@@ -129,47 +128,47 @@ autoplot.regim_model = function(object, type = 1) {
   }
 }
 autoplot.regim_missing = function(object, type = 1) {
-  if (!requireNamespace('ggplot2', quietly = TRUE)) {
-    stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
-  }else {
-    if (!inherits(object, 'regime_missing')) {
-      stop('autoplot.regim_missing requires a regim_missing object')
-    }}
-  if (is.null(object$Chain$Y)) {stop('There are no chains to graph')}
-  if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
-  if (type == 1) {
-    if (is.null(object$estimates$Yt)) {stop('Yt has no missing data')}
-    Chain_Yt = t(object$Chain$Yt)
-    time = seq(1,nrow(Chain_Yt))
-    names_yt = rownames(object$estimates$Yt)
-    dat2 = data.frame(name = names_yt[1],time = time,value = Chain_Yt[,1])
-    if (ncol(Chain_Yt) > 1) {
-      for (i in 2:ncol(Chain_Yt)) {
-        dat2 = rbind(dat2,data.frame(name = names_yt[i],time = time,value = Chain_Yt[,i]))
+    if (!requireNamespace('ggplot2', quietly = TRUE)) {
+      stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
+    }else {
+      if (!inherits(object, 'regime_missing')) {
+        stop('autoplot.regim_missing requires a regim_missing object')
+      }}
+    if (is.null(object$Chain$Y)) {stop('There are no chains to graph')}
+    if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
+    if (type == 1) {
+      if (is.null(object$estimates$Yt)) {stop('Yt has no missing data')}
+      Chain_Yt = t(object$Chain$Yt)
+      time = seq(1,nrow(Chain_Yt))
+      names_yt = rownames(object$estimates$Yt)
+      dat2 = data.frame(name = names_yt[1],time = time,value = Chain_Yt[,1])
+      if (ncol(Chain_Yt) > 1) {
+        for (i in 2:ncol(Chain_Yt)) {
+          dat2 = rbind(dat2,data.frame(name = names_yt[i],time = time,value = Chain_Yt[,i]))
+        }
       }
+      p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
+      p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
+      p = p +  ggplot2::labs(title = 'Missing data (Yt) chains')
+      return(p)
     }
-    p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
-    p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
-    p = p +  ggplot2::labs(title = 'Missing data (Yt) chains')
-    return(p)
-  }
-  if (type == 2) {
-    if (is.null(object$estimates$Ut)) {stop('Ut = [Zt,Xt] has no missing data')}
-    Chain_Ut = t(object$Chain$Ut)
-    time = seq(1,nrow(Chain_Ut))
-    names_ut = rownames(object$estimates$Ut)
-    dat2 = data.frame(name = names_ut[1],time = time,value = Chain_Ut[,1])
-    if (ncol(Chain_Ut) > 1) {
-      for (i in 2:ncol(Chain_Ut)) {
-        dat2 = rbind(dat2,data.frame(name = names_ut[i],time = time,value = Chain_Ut[,i]))
+    if (type == 2) {
+      if (is.null(object$estimates$Ut)) {stop('Ut = [Zt,Xt] has no missing data')}
+      Chain_Ut = t(object$Chain$Ut)
+      time = seq(1,nrow(Chain_Ut))
+      names_ut = rownames(object$estimates$Ut)
+      dat2 = data.frame(name = names_ut[1],time = time,value = Chain_Ut[,1])
+      if (ncol(Chain_Ut) > 1) {
+        for (i in 2:ncol(Chain_Ut)) {
+          dat2 = rbind(dat2,data.frame(name = names_ut[i],time = time,value = Chain_Ut[,i]))
+        }
       }
+      p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
+      p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
+      p = p +  ggplot2::labs(title = 'Missing data (Ut = [Zt,Xt]) chains')
+      return(p)
     }
-    p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
-    p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
-    p = p +  ggplot2::labs(title = 'Missing data (Ut = [Zt,Xt]) chains')
-    return(p)
   }
-}
 autoplot.tsregim = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
