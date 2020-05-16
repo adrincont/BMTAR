@@ -7,13 +7,12 @@
 Produces a ggplot object for the results of the mtarmissing function.
 }
 \usage{
-\method{autoplot}{regim_missing}(object, type = 1, ...)
+\method{autoplot}{regim_missing}(object, type = 1)
 autoplot.regim_missing(x, type = 1)
 }
 
 \arguments{
 \item{object}{Object of class \dQuote{\code{regim_missing}}.}
-\item{...}{Other plotting parameters to affect the plot.}
 \item{type}{character string giving the type of plot to be computed. Allowed
 values are 1 for "\code{Missing data (Yt) chains}" (the default) or 2 for \dQuote{\code{Missing data (Ut = [Zt,Xt]) chains}}.
 }
@@ -31,5 +30,8 @@ Graph the strings for the outputs corresponding to the functions \dQuote{\code{m
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
-
+library(ggplot2)
+data('missingest')
+autoplot.regim_missing(missingest,1)
+autoplot.regim_missing(missingest,2)
 }

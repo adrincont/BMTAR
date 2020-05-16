@@ -7,13 +7,12 @@
 Produces a ggplot object for the results of the mtarns and mtarstr functions.
 }
 \usage{
-\method{autoplot}{regim_model}(object, type = 1, ...)
+\method{autoplot}{regim_model}(object, type = 1)
 autoplot.regim_model(x, type = 1)
 }
 
 \arguments{
 \item{object}{Object of class \dQuote{\code{regim_model}}.}
-\item{...}{Other plotting parameters to affect the plot.}
 \item{type}{character string giving the type of plot to be computed. Allowed
 values are 1 for "\code{Thresholds chains}" (the default), 2 for \dQuote{\code{Sigma chains}}, 3 for \dQuote{\code{Theta chains}}, 4 for \dQuote{\code{Gamma chains}} or 5 for \dQuote{\code{Output processes fit}}
 }
@@ -33,16 +32,7 @@ Graph the strings for the outputs corresponding to the functions \dQuote{\code{m
 
 \examples{
 library(ggplot2)
-data("datasim")
-data = datasim
-#r known
-parameters = list(l = 2,
-                  orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),
-                  r = data$Sim$r)
-initial = mtarinipars(tsregim_obj = data$Sim,
-                      list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
-print.regim_model(estim1)
+data('data_ns')
 autoplot.regim_model(estim1,2)
 autoplot.regim_model(estim1,3)
 autoplot.regim_model(estim1,5)
