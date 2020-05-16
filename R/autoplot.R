@@ -1,9 +1,17 @@
-# Date: 14/04/2020
-# Description:
-# Function:
-autoplot <- function(x, ...) {
+#' @inherit ggplot2::autolayer
+#' @export
+autolayer <- function(object, ...){
+  UseMethod("autolayer")
+}
+
+#' @importFrom ggplot2 autoplot
+#' @export
+ggplot2::autoplot
+
+autoplot = function(x, ...) {
   UseMethod('autoplot', x)
 }
+
 autoplot.regim_model = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
@@ -120,6 +128,8 @@ autoplot.regim_model = function(object, type = 1) {
     return(p)
   }
 }
+#' @rdname autoplot.regim_model
+#' @export
 autoplot.regim_missing = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
@@ -162,6 +172,8 @@ autoplot.regim_missing = function(object, type = 1) {
     return(p)
   }
 }
+#' @rdname autoplot.regim_missing
+#' @export
 autoplot.tsregim = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
@@ -223,27 +235,13 @@ autoplot.tsregim = function(object, type = 1) {
     return(p3)
   }
 }
-print.tsregim = function(x,...){
-  cat('Threshold time series:\n','N =',x$N,'\n')
-  dats = x
-  class(dats) = NULL
-  if (!is.null(x$r)) {
-    cat('======================','\n')
-    cat('r = ',x$r,'\n')
-    print(x$Summary_r)
-    cat('======================','\n')
-  }else{
-    if (!is.null(x$Zt)) {
-      cat('Unknown threshold values','\n')
-    }
-  }
-  str(dats)
-}
+#' @rdname autoplot.tsregim
+#' @export
 
-
-autoplot <- function(x, ...) {
+print = function(x, ...) {
   UseMethod('print', x)
 }
+
 print.tsregim = function(x,...){
   cat('Threshold time series:\n','N =',x$N,'\n')
   dats = x
@@ -260,9 +258,15 @@ print.tsregim = function(x,...){
   }
   str(dats)
 }
+#' @rdname print.tsregim
+#' @export
 print.regim_model = function(object,...) {
   print(object$estimates)
 }
+#' @rdname print.regim_model
+#' @export
 print.regim_missing = function(object,...) {
   print(object$estimates)
 }
+#' @rdname print.regim_missing
+#' @export
