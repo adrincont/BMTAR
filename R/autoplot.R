@@ -1,6 +1,6 @@
 #' @inherit ggplot2::autolayer
 #' @export
-autolayer <- function(object, ...){
+autolayer = function(object, ...){
   UseMethod("autolayer")
 }
 
@@ -128,8 +128,6 @@ autoplot.regim_model = function(object, type = 1) {
     return(p)
   }
 }
-#' @rdname autoplot.regim_model
-#' @export
 autoplot.regim_missing = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
@@ -172,8 +170,6 @@ autoplot.regim_missing = function(object, type = 1) {
     return(p)
   }
 }
-#' @rdname autoplot.regim_missing
-#' @export
 autoplot.tsregim = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
@@ -235,8 +231,6 @@ autoplot.tsregim = function(object, type = 1) {
     return(p3)
   }
 }
-#' @rdname autoplot.tsregim
-#' @export
 
 print = function(x, ...) {
   UseMethod('print', x)
@@ -258,15 +252,9 @@ print.tsregim = function(x,...){
   }
   str(dats)
 }
-#' @rdname print.tsregim
-#' @export
 print.regim_model = function(object,...) {
   print(object$estimates)
 }
-#' @rdname print.regim_model
-#' @export
 print.regim_missing = function(object,...) {
   print(object$estimates)
 }
-#' @rdname print.regim_missing
-#' @export
