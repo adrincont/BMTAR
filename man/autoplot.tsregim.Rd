@@ -1,7 +1,7 @@
-\name{autoplot.regim_model}
-\alias{autoplot.regim_model}
+\name{autoplot.tsregim}
+\alias{autoplot.tsregim}
 
-\title{regim_model object ggplot for the outputs on the function outputs mtarns and mtastr}
+\title{tsregim object ggplot for the outputs on the function tsregim}
 
 \description{
 Produces a ggplot object for the results of the mtarns and mtarstr functions.

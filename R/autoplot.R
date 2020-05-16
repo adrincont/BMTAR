@@ -135,7 +135,7 @@ autoplot.regim_missing = function(object, type = 1) {
         stop('autoplot.regim_missing requires a regim_missing object')
       }}
     if (is.null(object$Chain$Y)) {stop('There are no chains to graph')}
-    if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
+    if (!{type %in% c(1:2)}) {stop('type should take values in c (1,2,3)')}
     if (type == 1) {
       if (is.null(object$estimates$Yt)) {stop('Yt has no missing data')}
       Chain_Yt = t(object$Chain$Yt)
