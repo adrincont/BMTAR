@@ -1,49 +1,35 @@
-\name{autoplot.regim_model}
-\alias{autoplot.regim_model}
+\name{print.tsregim}
+\alias{print.tsregim}
 
-\title{regim_model object ggplot for the outputs on the function outputs mtarns and mtastr}
+\title{summary tsregim object}
 
 \description{
 Produces a ggplot object for the results of the mtarns and mtarstr functions.
 }
 \usage{
-\method{autoplot}{regim_model}(object, type = 1, ...)
-autoplot.regim_model(x, type = 1)
+\method{print}{tsregim}(x, ...)
+print.tsregim(x)
 }
 
 \arguments{
-\item{object}{Object of class \dQuote{\code{regim_model}}.}
-\item{...}{Other plotting parameters to affect the plot.}
-\item{type}{character string giving the type of plot to be computed. Allowed
-values are 1 for "\code{Thresholds chains}" (the default), 2 for \dQuote{\code{Sigma chains}}, 3 for \dQuote{\code{Theta chains}}, 4 for \dQuote{\code{Gamma chains}} or 5 for \dQuote{\code{Output processes fit}}
-}
+\item{x}{Object of class \dQuote{\code{tsregim}}.}
+\item{...}{Other parameters that affect print.}
 }
 
 \details{
-Graph the strings for the outputs corresponding to the functions \dQuote{\code{mtarns}} and \dQuote{\code{mtarstr}} which return an object of class \dQuote{\code{regim_model}}. The chains corresponding to the samplings in each case do not contain the burning period.
+Print the structure of a object class \dQuote{\code{tsregim}}.
 }
 \value{
-  Return a ggplot object.
+  Return to console.
 }
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\seealso{\code{\link[MTAR]{mtarns}}, \code{\link[MTAR]{mtarstr}}}
+\seealso{\code{\link[MTAR]{tsregim}}}
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
-library(ggplot2)
 data("datasim")
 data = datasim
-#r known
-parameters = list(l = 2,
-                  orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),
-                  r = data$Sim$r)
-initial = mtarinipars(tsregim_obj = data$Sim,
-                      list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
-print.regim_model(estim1)
-autoplot.regim_model(estim1,2)
-autoplot.regim_model(estim1,3)
-autoplot.regim_model(estim1,5)
+print.tsregim(data$Sim)
 }
