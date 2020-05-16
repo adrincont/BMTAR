@@ -1,7 +1,7 @@
-\name{autoplot.regim_model}
-\alias{autoplot.regim_model}
+\name{autoplot.regim_missing}
+\alias{autoplot.regim_missing}
 
-\title{regim_model object ggplot for the outputs on the function outputs mtarns and mtastr}
+\title{regim_missing object ggplot for the outputs on the function outputs mtarns and mtastr}
 
 \description{
 Produces a ggplot object for the results of the mtarns and mtarstr functions.
