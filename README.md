@@ -3,7 +3,7 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/ggplot2)](https://cran.r-project.org/package=ggplot2)
 # libreria-MTAR
 
-The package implements parameter estimation using a Bayesian approach for MTAR models with missing data using Markov Chain Monte Carlo methods. This package performs the simulation of MTAR processes ("mtarsim"), estimation of matrix parameters and the threshold values ("mtarns"),  identification of the autoregressive orders using Bayesian variable selection ("mtarstr"), identification of the number of regimes using Metropolised Carlin and Chib ("mtarnumreg") and estimate missing data, coefficients and covariance matrices conditional on the autoregressive orders, the threshold values and the number of regimes  together ("mtarmissing").
+The package implements parameter estimation using a Bayesian approach for MTAR models with missing data using Markov Chain Monte Carlo methods. This package performs the simulation of MTAR processes ("mtarsim"), estimation of matrix parameters and the threshold values ("mtarns"), identification of the autoregressive orders using Bayesian variable selection ("mtarstr"), identification of the number of regimes using Metropolised Carlin and Chib ("mtarnumreg") and estimate missing data, coefficients and covariance matrices conditional on the autoregressive orders, the threshold values and the number of regimes  together ("mtarmissing").
 
 ## Getting Started
 

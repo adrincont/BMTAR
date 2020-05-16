@@ -26,19 +26,37 @@ print(regime_missing)
 }
 \value{
   Return list type object of class ``regime_missing''
-  $tsregim = ini_obj$tsregim_obj
-  $estimates confident interval and mean of estimated missing values
-  $Chain if chain TRUE, chains of the estimated missing values
+  \item{tsregim}{ini_obj$tsregim_obj with estimated observations}
+  \item{estimates}{confident interval and mean of estimated missing values}
+  \item{Chain}{if chain TRUE, chains of the estimated missing values}
 }
 \references{
-  Fox, J. (2016)
-  \emph{Applied Regression Analysis and Generalized Linear Models},
-  Third Edition. Sage.
+  Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
-  poner ejemplo de uso de funcion con datos reales
+data("datasim")
+yt = datasim$Sim
+# some missing data
+data_yt = yt$Yt
+data_zt = yt$Zt
+posNA = sample(c(1:500),8)
+data_yt[c(posNA),] = c(NA,NA)
+posNA = sample(c(1:500),8)
+data_zt[c(posNA)] = NA
+data_final = tsregim(data_yt,data_zt,r = yt$r)
+autoplot.tsregim(data_final,1)
+autoplot.tsregim(data_final,2)
+
+initial = mtarinipars(tsregim_obj = data_final,
+                      list_model = list(pars = list(l = 2,r = datasim$Sim$r,
+                                                    orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
+missingest = mtarmissing(ini_obj = initial,chain = TRUE,niter = 500,burn = 500)
+print(missingest)
+autoplot.regime_missing(missingest,1)
+datasim$Sim$Yt[is.na(data_yt[,1]),]
+missingest$tsregim$Yt[is.na(data_yt[,1]),]
 }
 
 \keyword{Bayesian estimation}
