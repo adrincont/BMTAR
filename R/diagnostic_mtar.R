@@ -67,3 +67,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
   p5 = p5 + ggplot2::ggtitle('ACF and PACF plots for residuals series') + ggplot2::theme_bw()
   return(list(p1,p2,p3,p4,p5))
 }
+
+gen <- function(x) UseMethod("gen")
+met <- function(x) writeLines("Hello world.")
+base::registerS3method("gen", "cls", met)

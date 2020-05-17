@@ -231,6 +231,9 @@ autoplot.tsregim = function(object, type = 1) {
     return(p3)
   }
 }
+base::registerS3method('autoplot','regim_model', autoplot.regim_model)
+base::registerS3method('autoplot','regim_missing', autoplot.regim_missing)
+base::registerS3method('autoplot', 'tsregim', autoplot.tsregim)
 print = function(x, ...) {
   UseMethod('print', x)
 }
@@ -256,3 +259,6 @@ print.regim_model = function(object,...) {
 print.regim_missing = function(object,...) {
   print(object$estimates)
 }
+base::registerS3method('print','regim_model', print.regim_model)
+base::registerS3method('print','regim_missing', print.regim_missing)
+base::registerS3method('print', 'tsregim', print.tsregim)
