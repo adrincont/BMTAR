@@ -6,7 +6,7 @@ autoplot = function(x, ...) {
 }
 autoplot.regim_model = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
-    stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
+    stop('ggplot2 is needed for this function to work', call. = FALSE)
   }else {
     if (!inherits(object, 'regim_model')) {
       stop('autoplot.regim_model requires a regim_model object')
