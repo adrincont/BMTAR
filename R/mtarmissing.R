@@ -293,7 +293,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   sersalY = Ytr
   # Sampling
   cat('Estimating missing data ...\n')
-  pb = txtProgressBar(min = 2, max = niter + burn, style = 3)
+  pb = utils::txtProgressBar(min = 2, max = niter + burn, style = 3)
   for (i in 2:{niter + burn}) {
     #State space model
     PtC = AlphatC = vector('list',N)
@@ -404,7 +404,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       K_zt[[lj]] = listmatrix$K
       M_zt[[lj]] = listmatrix$M
     }
-    setTxtProgressBar(pb,i)
+    utils::setTxtProgressBar(pb,i)
   }
   close(pb)
   cat('Saving results ... \n')
@@ -434,14 +434,14 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   Test_Yt = matrix(nrow = nrow(Yt_iter),ncol = 3)
   Test_Ut = matrix(nrow = nrow(Ut_iter),ncol = 3)
   colnames(Test_Yt) = colnames(Test_Ut) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-  Test_Yt[,1] = apply(Yt_chains,1,quantile,probs = (1 - level)/2)
-  Test_Yt[,3] = apply(Yt_chains,1,quantile,probs = (1 + level)/2)
+  Test_Yt[,1] = apply(Yt_chains,1,stats::quantile,probs = (1 - level)/2)
+  Test_Yt[,3] = apply(Yt_chains,1,stats::quantile,probs = (1 + level)/2)
   est_Yt = apply(Yt_chains,1,mean)
   Test_Yt[,2] = est_Yt
   rownames(Test_Yt) = Names_Yt[PosNAMat[[1]]]
 
-  Test_Ut[,1] = apply(Ut_chains,1,quantile,probs = (1 - level)/2)
-  Test_Ut[,3] = apply(Ut_chains,1,quantile,probs = (1 + level)/2)
+  Test_Ut[,1] = apply(Ut_chains,1,stats::quantile,probs = (1 - level)/2)
+  Test_Ut[,3] = apply(Ut_chains,1,stats::quantile,probs = (1 + level)/2)
   est_Ut = apply(Ut_chains,1,mean)
   Test_Ut[,2] = est_Ut
   rownames(Test_Ut) = Names_Ut[PosNAMat[[2]]]
