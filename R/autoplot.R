@@ -1,6 +1,5 @@
 #' @importFrom ggplot2 autoplot
 #' @export
-
 autoplot = function(x, ...) {
   UseMethod('autoplot', x)
 }
@@ -232,11 +231,9 @@ autoplot.tsregim = function(object, type = 1) {
     return(p3)
   }
 }
-
 print = function(x, ...) {
   UseMethod('print', x)
 }
-
 print.tsregim = function(x,...){
   cat('Threshold time series:\n','N =',x$N,'\n')
   dats = x
