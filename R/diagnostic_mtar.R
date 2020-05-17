@@ -5,7 +5,7 @@
 #==================================================================================================#
 diagnostic_mtar = function(regim_model,lagmax = NULL){
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
-    stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
+    stop('ggplot2 is needed for this function to work')
   }else {
     if (!inherits(regim_model, 'regim_model')) {
       stop('diagnostic.mtar requires a regim_model object')
@@ -25,7 +25,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
                                  cumsq = c(cumsum(e_data[,i]^2)/sum(e_data[,i]^2))))
     }
   }
-  p2 = ggplot2::ggplot(data = dat,  ggplot2::aes(x = value, color = label )) +
+  p2 = ggplot2::ggplot(data = dat,  ggplot2::aes(x = dat$value, color = dat$label )) +
     ggplot2::geom_density() + ggplot2::theme_bw()
   p2 = p2 + ggplot2::stat_function(fun = dnorm,color = "black")
   p2 = p2 + ggplot2::ggtitle("Residual density plot")
@@ -33,7 +33,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
   Af = 0.948 ###Cuantil del 95% para cusum
   LS = Af*sqrt(e_k$N) + 2*Af*c(1:e_k$N)/sqrt(e_k$N)
   LI = -LS
-  p3 = ggplot2::ggplot(data = dat, ggplot2::aes(x = time, y = cusum,color = label))
+  p3 = ggplot2::ggplot(data = dat, ggplot2::aes(x = time, y = dat$cusum,color = dat$label))
   p3 = p3 + ggplot2::geom_ribbon(ggplot2::aes(ymin = rep(LS,e_k$k), ymax = rep(LI,e_k$k)),
                                  fill = "gray",color = NA,alpha = 0.5)
   p3 = p3 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUM statistic for residuals')
@@ -41,7 +41,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
   co = 0.13461 ####Valor del cuantil aproximado para cusumsq para T/2-1=71 alpha=0.05
   LQS = co + (1:e_k$N)/e_k$N
   LQI = -co + (1:e_k$N)/e_k$N
-  p4 = ggplot2::ggplot(data = dat, ggplot2::aes(x = time, y = cumsq,color = label))
+  p4 = ggplot2::ggplot(data = dat, ggplot2::aes(x = time, y = dat$cumsq,color = dat$label))
   p4 = p4 + ggplot2::geom_ribbon(ggplot2::aes(ymin = rep(LQS,e_k$k), ymax = rep(LQI,e_k$k)),
                                  fill = "gray",color = NA,alpha = 0.5)
   p4 = p4 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUMSQ statistic for residuals')
@@ -59,7 +59,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
     }
   }
   dat_cor = rbind.data.frame(acf_Yt,pacf_Yt)
-  p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = lag, y = value))
+  p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = lag, y = dat_cor[floor(dat_cor$lag) != 0,]$value))
   p5 = p5 + ggplot2::geom_hline(yintercept = 0) + ggplot2::facet_grid(type~names)
   p5 = p5 + ggplot2::geom_segment(ggplot2::aes(xend = lag,yend = 0)) + ggplot2::geom_point(color = "blue",size = 0.4)
   ci = qnorm((1 + 0.95)/2)/sqrt(nrow(regim_model$residuals))
