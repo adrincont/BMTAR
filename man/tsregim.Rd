@@ -7,8 +7,8 @@ The function tsregim is used to create time-series-regime objects.
 }
 \usage{
 tsregim(Yt, Zt = NULL, Xt = NULL, r = NULL)
-autoplot(tsregim)
-print(tsregim)
+autoplot.tsregim(tsregim)
+print.tsregim(tsregim)
 }
 
 \arguments{
@@ -34,10 +34,13 @@ Missing data is allowed for processes \eqn{Y_t}, \eqn{X_t} and \eqn{Z_t} (can th
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
-\seealso{\code{\link[MTAR]{mtaregim}}, \code{\link[MTAR]{mtarns}},
-  \code{\link[MTAR]{mtarstr}}, \code{\link{
-mtarmissing}},\code{\link{mtarnumreg}}}
-
+\seealso{
+\code{\link[MTAR]{mtaregim}},
+\code{\link[MTAR]{mtarns}},
+\code{\link[MTAR]{mtarstr}},
+\code{\link[MTAR]{mtarmissing}},
+\code{\link[MTAR]{mtarnumreg}}
+}
 \examples{
 data("datasim")
 yt = datasim$Sim

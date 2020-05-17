@@ -8,7 +8,6 @@ Produces a ggplot object for the results of the mtarns and mtarstr functions.
 }
 \usage{
 \method{autoplot}{regim_model}(object, type = 1)
-autoplot.regim_model(object, type = 1)
 }
 
 \arguments{

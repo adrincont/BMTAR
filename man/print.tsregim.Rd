@@ -7,12 +7,11 @@
 Produces a ggplot object for the results of the mtarns and mtarstr functions.
 }
 \usage{
-\method{print}{tsregim}(x, ...)
-print.tsregim(x)
+\method{print}{tsregim}(object, ...)
 }
 
 \arguments{
-\item{x}{Object of class \dQuote{\code{tsregim}}. Not NULL}
+\item{object}{Object of class \dQuote{\code{tsregim}}. Not NULL}
 \item{...}{Other parameters that affect print.}
 }
 

@@ -67,9 +67,13 @@ datasim = mtarsim(N = Tlen,Rg = Rg,r = r,Zt = Zt,seed = 124)
 autoplot.tsregim(datasim$Sim,1)
 autoplot.tsregim(datasim$Sim,2)
 }
-\seealso{\code{\link[MTAR]{mtaregim}}, \code{\link[MTAR]{mtarns}},
-  \code{\link[MTAR]{mtarstr}}, \code{\link{
-mtarmissing}},\code{\link{mtarnumreg}}}
+\seealso{
+\code{\link[MTAR]{mtaregim}},
+\code{\link[MTAR]{mtarns}},
+\code{\link[MTAR]{mtarstr}},
+\code{\link[MTAR]{mtarmissing}},
+\code{\link[MTAR]{mtarnumreg}}
+}
 \keyword{MTAR}
 \keyword{Covariate process}
 \keyword{Threshold process}

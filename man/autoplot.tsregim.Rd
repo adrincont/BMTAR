@@ -8,7 +8,6 @@ Produces a ggplot object for the results of the tsregim function.
 }
 \usage{
 \method{autoplot}{tsregim}(object, type = 1)
-autoplot.tsregim(object, type = 1)
 }
 
 \arguments{

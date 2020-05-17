@@ -8,7 +8,6 @@ Print estimates output of mtarmissing function.
 }
 \usage{
 \method{print}{regim_missing}(object, ...)
-regim_missing(x)
 }
 
 \arguments{
@@ -25,7 +24,7 @@ Print the estimates for the outputs corresponding to the function \dQuote{\code{
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\seealso{\code{\link[MTAR]{mtarmising}}}
+\seealso{\code{\link[MTAR]{mtarmissing}}}
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{

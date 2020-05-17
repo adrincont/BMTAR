@@ -1,7 +1,7 @@
 #' @importFrom ggplot2 autoplot
 #' @export
-autoplot = function(x, ...) {
-  UseMethod('autoplot', x)
+autoplot = function(object, ...) {
+  UseMethod('autoplot', object)
 }
 autoplot.regim_model = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {

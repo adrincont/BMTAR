@@ -8,7 +8,6 @@ Print estimates for the results of the mtarns and mtarstr functions.
 }
 \usage{
 \method{print}{regim_model}(object, ...)
-print.regim_model(object)
 }
 
 \arguments{

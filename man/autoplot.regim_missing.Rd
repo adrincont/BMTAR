@@ -8,7 +8,6 @@ Produces a ggplot object for the results of the mtarmissing function.
 }
 \usage{
 \method{autoplot}{regim_missing}(object, type = 1)
-autoplot.regim_missing(object, type = 1)
 }
 
 \arguments{
