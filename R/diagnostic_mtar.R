@@ -47,27 +47,23 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
   p4 = p4 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUMSQ statistic for residuals')
 
   acf_i = stats::acf(regim_model$residuals[,1],lag.max = lagmax,plot = FALSE,type = 'correlation')
-  acf_Yt = data.frame(lag = acf_i$lag, value = acf_i$acf,names = 'Serie.1',type = 'ACF')
+  acf_Yt = data.frame(Lag = acf_i$lag, value = acf_i$acf,names = 'Serie.1',type = 'ACF')
   pacf_i = stats::acf(regim_model$residuals[,1],lag.max = lagmax,plot = FALSE,type = 'partial')
-  pacf_Yt = data.frame(lag = pacf_i$lag, value = pacf_i$acf,names = 'Serie.1',type = 'PACF')
+  pacf_Yt = data.frame(Lag = pacf_i$lag, value = pacf_i$acf,names = 'Serie.1',type = 'PACF')
   if (ncol(regim_model$residuals) > 1) {
     for (i in 2:ncol(regim_model$residuals)) {
       acf_i = stats::acf(regim_model$residuals[,i],lag.max = lagmax,plot = FALSE,type = 'correlation')
-      acf_Yt = rbind(acf_Yt,data.frame(lag = acf_i$lag + 0.1*i, value = acf_i$acf,names = paste0('Series.',i),type = 'ACF'))
+      acf_Yt = rbind(acf_Yt,data.frame(Lag = acf_i$lag + 0.1*i, value = acf_i$acf,names = paste0('Series.',i),type = 'ACF'))
       pacf_i = stats::acf(regim_model$residuals[,i],lag.max = lagmax,plot = FALSE,type = 'partial')
-      pacf_Yt = rbind(pacf_Yt,data.frame(lag = pacf_i$lag + 0.1*i, value = pacf_i$acf,names = paste0('Series.',i),type = 'PACF'))
+      pacf_Yt = rbind(pacf_Yt,data.frame(Lag = pacf_i$lag + 0.1*i, value = pacf_i$acf,names = paste0('Series.',i),type = 'PACF'))
     }
   }
   dat_cor = rbind.data.frame(acf_Yt,pacf_Yt)
-  p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = lag, y = dat_cor[floor(dat_cor$lag) != 0,]$value))
+  p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = Lag, y = dat_cor[floor(dat_cor$lag) != 0,]$value))
   p5 = p5 + ggplot2::geom_hline(yintercept = 0) + ggplot2::facet_grid(type~names)
-  p5 = p5 + ggplot2::geom_segment(ggplot2::aes(xend = lag,yend = 0)) + ggplot2::geom_point(color = "blue",size = 0.4)
+  p5 = p5 + ggplot2::geom_segment(ggplot2::aes(xend = Lag,yend = 0)) + ggplot2::geom_point(color = "blue",size = 0.4)
   ci = stats::qnorm((1 + 0.95)/2)/sqrt(nrow(regim_model$residuals))
   p5 = p5 + ggplot2::geom_ribbon(ggplot2::aes(ymax = ci ,ymin = -ci),color = NA,fill = "blue",alpha = 0.2)
   p5 = p5 + ggplot2::ggtitle('ACF and PACF plots for residuals series') + ggplot2::theme_bw()
   return(list(p1,p2,p3,p4,p5))
 }
-
-gen <- function(x) UseMethod("gen")
-met <- function(x) writeLines("Hello world.")
-base::registerS3method("gen", "cls", met)
