@@ -16,18 +16,18 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
   e_data = as.data.frame(e_k$Yt)
   time = seq(1,nrow(e_data))
   dat = data.frame(label = 'Series.1',time = time,value = e_data[,1],
-                   cusum = cumsum(e_data[,1])/sd(e_data[,1]),
+                   cusum = cumsum(e_data[,1])/stats::sd(e_data[,1]),
                    cumsq = c(cumsum(e_data[,1]^2)/sum(e_data[,1]^2)))
   if (ncol(e_data) > 1) {
     for (i in 2:ncol(e_data)) {
       dat = rbind.data.frame(dat,data.frame(label = paste0('Series.',i),time = time,value = e_data[,i],
-                                 cusum = cumsum(e_data[,i])/sd(e_data[,i]),
+                                 cusum = cumsum(e_data[,i])/stats::sd(e_data[,i]),
                                  cumsq = c(cumsum(e_data[,i]^2)/sum(e_data[,i]^2))))
     }
   }
   p2 = ggplot2::ggplot(data = dat,  ggplot2::aes(x = dat$value, color = dat$label )) +
     ggplot2::geom_density() + ggplot2::theme_bw()
-  p2 = p2 + ggplot2::stat_function(fun = dnorm,color = "black")
+  p2 = p2 + ggplot2::stat_function(fun = stats::dnorm,color = "black")
   p2 = p2 + ggplot2::ggtitle("Residual density plot")
 
   Af = 0.948 ###Cuantil del 95% para cusum
@@ -62,7 +62,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
   p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = lag, y = dat_cor[floor(dat_cor$lag) != 0,]$value))
   p5 = p5 + ggplot2::geom_hline(yintercept = 0) + ggplot2::facet_grid(type~names)
   p5 = p5 + ggplot2::geom_segment(ggplot2::aes(xend = lag,yend = 0)) + ggplot2::geom_point(color = "blue",size = 0.4)
-  ci = qnorm((1 + 0.95)/2)/sqrt(nrow(regim_model$residuals))
+  ci = stats::qnorm((1 + 0.95)/2)/sqrt(nrow(regim_model$residuals))
   p5 = p5 + ggplot2::geom_ribbon(ggplot2::aes(ymax = ci ,ymin = -ci),color = NA,fill = "blue",alpha = 0.2)
   p5 = p5 + ggplot2::ggtitle('ACF and PACF plots for residuals series') + ggplot2::theme_bw()
   return(list(p1,p2,p3,p4,p5))
