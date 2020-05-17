@@ -60,11 +60,14 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
     data_complete = data
   }
   initial = mtarinipars(tsregim_obj = data_complete,list_model = list(l0 = l0),method = method)
-  numregest_final = mtarnumreg(ini_obj = initial,niter_m = niter,chain_m = chain,
+  numregest_final = mtarnumreg(ini_obj = initial,niter_m = niter,chain_m = chain,list_m = TRUE,
                                ordersprev = list(maxpj = pjmax, maxqj = qjmax, maxdj = djmax), parallel = parallel)
+  lf = numregest_final$final_m
+  estrucopt = numregest_1$listm[[paste0('m',lf)]]$par
   initial = mtarinipars(tsregim_obj = data_complete,method = method,
-                        list_model = list(pars = list(l = numregest_final$final_m),
-                                          orders = list(pj = pjmax,qj = qjmax,dj = djmax)))
+                        list_model = list(pars = list(l = lf),
+                                          orders = list(pj = estrucopt$orders$pj,
+                                                        qj = estrucopt$orders$qj,dj = estrucopt$orders$dj)))
   est_final = mtarstr(ini_obj = initial,niter = niter,chain = chain,parallel = parallel)
   results$tsregim = data_complete
   results$numreg = numregest_final
