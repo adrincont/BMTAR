@@ -13,4 +13,3 @@ License: GPL (>= 2)
 Encoding: UTF-8
 Imports: Brobdingnag,MASS,MCMCpack,expm,ks,mvtnorm,compiler,doParallel,parallel,ggplot2
 LazyData: true
-RoxygenNote: 7.1.0

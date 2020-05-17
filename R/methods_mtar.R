@@ -1,6 +1,5 @@
-#' @importFrom ggplot2 autoplot
-#' @export
-ggplot2::autoplot
+autoplot = function(object, ...){ UseMethod("autoplot")}
+
 autoplot.regim_model = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
