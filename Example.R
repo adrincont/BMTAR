@@ -184,7 +184,7 @@ autoplot.regim_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]
 missingest$tsregim$Yt[is.na(data_yt[,1]),]
 
-rm(list = ls()[!{ls() %in% c('datastr')}])
+rm(list = ls()[!{ls() %in% c('missingest')}])
 
 
 # Example mtarnumreg
