@@ -1,19 +1,17 @@
 \name{dmnormB}
 \alias{dmnormB}
-\title{Create a complete ggplot appropriate to a particular data type}
+\title{Multivarate normal density using Brobdingnag class}
 \usage{
-autoplot(object, ...)
+dmnormB(x,mean,sigma)
 }
 \arguments{
-\item{object}{an object, whose class will determine the behaviour of autoplot}
-
-\item{...}{other arguments passed to specific methods}
+\item{x}{numeric type object, value to compute the density of multivariate normal distribution. Not NULL}
+\item{mean}{numeric type, mean of multivariate normal distribution. Not NULL}
+\item{sigma}{matrix type object, covariance parameter of multivariate normal distribution. Not NULL}
 }
 \value{
-a ggplot object
+object class \code{Brobdingnag}
 }
 \description{
-\code{autoplot} uses ggplot2 to draw a particular plot for an object of a
-particular class in a single command. This defines the S3 generic that
-other classes and packages can extend.
+Compute multivariate normal density with class \code{Brobdingnag} objects.
 }

@@ -3,7 +3,7 @@
 # Description:
 #==================================================================================================#
 auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),
-                     niter = 5000, chain = FALSE, method = 'KUO', parallel = FALSE) {
+                     niter = 3000, chain = FALSE, method = 'KUO', parallel = FALSE) {
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   if (!is.list(maxorders) | length(maxorders) != 3) {
     stop('maxorders must be a list of length 3 list(pj, qj, dj)')
@@ -63,7 +63,7 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
   numregest_final = mtarnumreg(ini_obj = initial,niter_m = niter,chain_m = chain,list_m = TRUE,
                                ordersprev = list(maxpj = pjmax, maxqj = qjmax, maxdj = djmax), parallel = parallel)
   lf = numregest_final$final_m
-  estrucopt = numregest_1$listm[[paste0('m',lf)]]$par
+  estrucopt = numregest_final$listm[[paste0('m',lf)]]$par
   initial = mtarinipars(tsregim_obj = data_complete,method = method,
                         list_model = list(pars = list(l = lf),
                                           orders = list(pj = estrucopt$orders$pj,

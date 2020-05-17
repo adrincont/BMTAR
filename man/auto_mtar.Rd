@@ -17,7 +17,7 @@ niter = 5000, chain = FALSE, method = 'KUO',parallel = FALSE)
   \item{Xt}{matrix type object, covariate process. Default NULL}
   \item{l0}{numeric type between 2 and 4, number of regimes to consider. Default 3}
   \item{maxorders}{list type object with names (pj,qj,dj), maximum lags consider for the processes in each regime. Default pj = 2, qj = 0,dj = 0}
-  \item{niter}{numeric type, number of runs for every estimation. Default 5000}
+  \item{niter}{numeric type, number of runs for every estimation. Default 3000}
   \item{chain}{logical type, if return chains of estimations parameters and values (if missing)}
   \item{method}{character type, must be one ``KUO'' or ``SSVS''}
   \item{parallel}{logical, if \code{parallel} package should be used. Default FALSE}
@@ -43,7 +43,7 @@ niter = 5000, chain = FALSE, method = 'KUO',parallel = FALSE)
 \examples{
   data('datasim')
   data = datasim$Sim
-  auto_mtar(Yt = data$Yt, Zt = data$Zt)
+  auto_mtar(Yt = data$Yt, Zt = data$Zt,niter = 1000)
 }
 
 \keyword{Bayesian estimation}
