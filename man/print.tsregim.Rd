@@ -12,7 +12,7 @@ print.tsregim(x)
 }
 
 \arguments{
-\item{x}{Object of class \dQuote{\code{tsregim}}.}
+\item{x}{Object of class \dQuote{\code{tsregim}}. Not NULL}
 \item{...}{Other parameters that affect print.}
 }
 

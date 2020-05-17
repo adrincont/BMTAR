@@ -12,7 +12,7 @@ print.regim_model(object)
 }
 
 \arguments{
-\item{object}{Object of class \dQuote{\code{regim_model}}.}
+\item{object}{Object of class \dQuote{\code{regim_model}}. Not NULL}
 \item{...}{Other print parameters that affect.}
 }
 
