@@ -474,49 +474,49 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   ini_obj$tsregim_obj$Zt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
   ini_obj$tsregim_obj$Xt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
 
-  if (chain) {Chain = vector('list')}
+  if (chain) {Chains = vector('list')}
   if (any(is.na(Yt)) & any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Zt = Test_Zt, Xt = Test_Xt)
     if (chain) {
-      Chain$Yt = Yt_chains
-      Chain$Ut = Ut_chains
+      Chains$Yt = Yt_chains
+      Chains$Ut = Ut_chains
     }
   }else if (any(is.na(Yt)) & any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Zt = Test_Zt)
     if (chain) {
-      Chain$Yt = Yt_chains
-      Chain$Ut = Ut_chains
+      Chains$Yt = Yt_chains
+      Chains$Ut = Ut_chains
     }
   }else if (any(is.na(Yt)) & !any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Xt = Test_Xt)
     if (chain) {
-      Chain$Yt = Yt_chains
-      Chain$Ut = Ut_chains
+      Chains$Yt = Yt_chains
+      Chains$Ut = Ut_chains
     }
   }else if (!any(is.na(Yt)) & any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Zt = Test_Zt, Xt = Test_Xt)
     if (chain) {
-      Chain$Ut = Ut_chains
+      Chains$Ut = Ut_chains
     }
   }else if (any(is.na(Yt)) & !any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt)
     if (chain) {
-      Chain$Yt = Yt_chains
+      Chains$Yt = Yt_chains
     }
   }else if (!any(is.na(Yt)) & any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Zt = Test_Zt)
     if (chain) {
-      Chain$Ut = Ut_chains
+      Chains$Ut = Ut_chains
     }
   }else if (!any(is.na(Yt)) & !any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Xt = Test_Xt)
     if (chain) {
-      Chain$Ut = Ut_chains
+      Chains$Ut = Ut_chains
     }
   }
   compiler::enableJIT(0)
   if (chain) {
-    result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates, Chain = Chain)
+    result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates, Chains = Chains)
     class(result) = 'regim_missing'
     return(result)
   }else{

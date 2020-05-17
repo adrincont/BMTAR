@@ -124,14 +124,14 @@ autoplot.regim_missing = function(object, type = 1) {
     if (!requireNamespace('ggplot2', quietly = TRUE)) {
       stop('ggplot2 is needed for this function to work')
     }else {
-      if (!inherits(object, 'regime_missing')) {
+      if (!inherits(object, 'regim_missing')) {
         stop('autoplot.regim_missing requires a regim_missing object')
       }}
-    if (is.null(object$Chain$Y)) {stop('There are no chains to graph')}
+    if (is.null(object$Chains$Y)) {stop('There are no chains to graph')}
     if (!{type %in% c(1:2)}) {stop('type should take values in c (1,2,3)')}
     if (type == 1) {
       if (is.null(object$estimates$Yt)) {stop('Yt has no missing data')}
-      Chain_Yt = t(object$Chain$Yt)
+      Chain_Yt = t(object$Chains$Yt)
       time = seq(1,nrow(Chain_Yt))
       names_yt = rownames(object$estimates$Yt)
       dat2 = data.frame(name = names_yt[1],time = time,value = Chain_Yt[,1])
@@ -147,7 +147,7 @@ autoplot.regim_missing = function(object, type = 1) {
     }
     if (type == 2) {
       if (is.null(object$estimates$Ut)) {stop('Ut = [Zt,Xt] has no missing data')}
-      Chain_Ut = t(object$Chain$Ut)
+      Chain_Ut = t(object$Chains$Ut)
       time = seq(1,nrow(Chain_Ut))
       names_ut = rownames(object$estimates$Ut)
       dat2 = data.frame(name = names_ut[1],time = time,value = Chain_Ut[,1])
