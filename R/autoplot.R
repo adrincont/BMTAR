@@ -242,7 +242,7 @@ print.tsregim = function(x,...){
       cat('Unknown threshold values','\n')
     }
   }
-  str(dats)
+  utils::str(dats)
 }
 print.regim_model = function(object,...) {
   print(object$estimates)

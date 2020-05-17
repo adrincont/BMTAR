@@ -349,11 +349,11 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   # iterations: gibbs and metropolis sampling
   acep = 0
   cat('Estimating threshold(s), structural and non-structural parameters ...','\n')
-  pb = txtProgressBar(min = 2, max = niter + burn + other,style = 3)
+  pb = utils::txtProgressBar(min = 2, max = niter + burn + other,style = 3)
   for (i in 2:{niter + burn + other}) {
     iter_i = iter_str(i,list_m)
     list_m = iter_i
-    setTxtProgressBar(pb,i)
+    utils::setTxtProgressBar(pb,i)
   }
   if (parallel) {parallel::stopCluster(micluster)}
   close(pb)

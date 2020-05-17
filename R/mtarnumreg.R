@@ -500,7 +500,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   acepm = 0
   # pm_im = matrix(nrow = l0,ncol = niter_m + burn_m - 1)
   cat('Estimating number of regimes ... \n')
-  pb = txtProgressBar(min = 2, max = niter_m + burn_m,style = 3)
+  pb = utils::txtProgressBar(min = 2, max = niter_m + burn_m,style = 3)
   for (im in 2:{niter_m + burn_m}) {
     m_iter[im] = rdunif(m_iter[im - 1],l0)
     # Generamos valor para Theta_m y Theta_mp
@@ -517,7 +517,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       m_iter[im] = m_iter[im - 1]
     }
     # pm_im[,im - 1] = table(factor(m_iter,levels = 1:l0))/im
-    setTxtProgressBar(pb,im)
+    utils::setTxtProgressBar(pb,im)
   }
   close(pb)
   cat('Saving results ... \n')

@@ -36,7 +36,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     if (is.null(Ut)) {
       Ut = matrix(0, ncol = N,nrow = 1)
     }else{
-      Ut = rbind(matrix(0, ncol = N,nrow = 1),t(Ut)) # only for covariable
+      Ut = rbind(matrix(0, ncol = N,nrow = 1),t(Ut)) # only for co-variable
     }
   }else{Ut = t(Ut)}
   Zt = Ut[1,]
@@ -214,7 +214,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   # iterations gibbs and metropolis for r unknown
   if (is.null(r)) {
     cat('Estimating non-structural parameters and threshold(s) ...','\n')
-    pb = txtProgressBar(min = 2, max = niter + burn + other, style = 3)
+    pb = utils::txtProgressBar(min = 2, max = niter + burn + other, style = 3)
     acep = 0
     for (i in 2:{niter + burn + other}) {
       listj = lists(r_iter[,i - 1])
@@ -258,7 +258,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
         r_iter[,i] = r_iter[,i - 1]
         acep = acep
       }
-      setTxtProgressBar(pb,i)
+      utils::setTxtProgressBar(pb,i)
     }
     close(pb)
     cat('\n')
@@ -272,7 +272,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       theta0j = itheta0j[[lj]]
       sigma0j = icov0j[[lj]]
       cat('Estimating non-structural parameters with threshold(s) known ...',paste0('Reg_',lj),'\n')
-      pb = txtProgressBar(min = 2, max = niter + burn + other, style = 3)
+      pb = utils::txtProgressBar(min = 2, max = niter + burn + other, style = 3)
       for (i in 2:{niter + burn + other}) {
         if (!is.null(Sigma)) {
           Vj = solve(Wj %*% t(Wj) %x% solve(sigma[[lj]] %*% sigma[[lj]]) + solve(sigma0j))
@@ -288,7 +288,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
           Sj = (Yj - Hj %*% Wj) %*% t(Yj - Hj %*% Wj)
           sigma_iter[[lj]][[i]] = MCMCpack::riwish(v = Nj + nu0j,S = Sj + S0j)
         }
-        setTxtProgressBar(pb,i)
+        utils::setTxtProgressBar(pb,i)
       }
       cat('\n')
     }
