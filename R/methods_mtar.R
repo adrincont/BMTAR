@@ -1,6 +1,6 @@
 #' @importFrom ggplot2 autoplot
 #' @export
-autoplot = function(object) UseMethod('autoplot')
+ggplot2::autoplot
 autoplot.regim_model = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
@@ -212,8 +212,8 @@ autoplot.tsregim = function(object, type = 1) {
     }
     p3 = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = dat2$value))
     p3 = p3 + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
-    p3 = p3 + ggplot2::labs(title = 'Covariates process') +
-      p3 = p3 + ggplot2::geom_vline(xintercept = dat2$time[is.na(dat2$value)],color = "red",linetype = 'dashed')
+    p3 = p3 + ggplot2::labs(title = 'Covariates process')
+    p3 = p3 + ggplot2::geom_vline(xintercept = dat2$time[is.na(dat2$value)],color = "red",linetype = 'dashed')
   }
   if (type == 1) {
     return(p)
@@ -229,10 +229,13 @@ autoplot.tsregim = function(object, type = 1) {
     return(p3)
   }
 }
+
 base::registerS3method('autoplot','regim_model', autoplot.regim_model)
 base::registerS3method('autoplot','regim_missing', autoplot.regim_missing)
 base::registerS3method('autoplot', 'tsregim', autoplot.tsregim)
+
 print = function(object) UseMethod('print')
+
 print.tsregim = function(object,...){
   cat('Threshold time series:\n','N =',object$N,'\n')
   dats = object
