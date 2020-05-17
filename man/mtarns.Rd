@@ -6,7 +6,8 @@
 Bayesian method for estimate non-structural parameters of a MTAR model
 }
 \usage{
-mtarns(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL)
+mtarns(ini_obj, level = 0.95, burn = NULL, niter = 1000,
+chain = FALSE, r_init = NULL)
 autoplot(regime_model)
 print(regime_model)
 }
@@ -58,7 +59,8 @@ autoplot.regim_model(estim1,5)
 diagnostic.mtar(estim1)
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
-initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
+initial = mtarinipars(tsregim_obj = data$Sim,
+list_model = list(pars = parameters))
 estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
 print.regim_model(estim2)
 autoplot.regim_model(estim2,1)

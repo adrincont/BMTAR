@@ -6,7 +6,8 @@
 Create an object of class ``regime'' given nonstructural and structural parameters for regime i.
 }
 \usage{
-mtaregim(orders = list(p = 1,q = 0,d = 0), cs = NULL, Phi, Beta = NULL, Delta = NULL, Sigma)
+mtaregim(orders = list(p = 1,q = 0,d = 0), cs = NULL, Phi,
+Beta = NULL, Delta = NULL, Sigma)
 }
 \arguments{
   \item{orders}{list type object with names (p,q,d), number of lags of Yt, Xt and Zt, respectively. Default p = 1, q = 0, d = 0}
@@ -40,7 +41,8 @@ Delta = list(delta1 = matrix(c(0.6,1),2,1))
 Sigma = matrix(c(1,0.6,0.6,1.5),2,2,byrow = T)
 cs = matrix(c(1,-1),nrow = 2)
 ## creacion de la clase regime
-Ri = mtaregim(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,Sigma = Sigma,cs = cs)
+Ri = mtaregim(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,
+Sigma = Sigma,cs = cs)
 class(Ri)
 }
 \keyword{Threshold process}

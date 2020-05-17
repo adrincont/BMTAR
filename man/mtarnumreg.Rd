@@ -6,7 +6,9 @@
 Compute estimation of number of regimes by NAIC or Carlin and Chip methodology for a MTAR model
 }
 \usage{
-mtarnumreg(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0),
+mtarnumreg(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL,
+niter_m = 1000,iterprev = 500, chain_m = FALSE, list_m = FALSE,
+NAIC = FALSE,ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0),
 parallel = FALSE)
 }
 
@@ -49,9 +51,10 @@ parallel = FALSE)
 \examples{
 data("datasim")
 data = datasim
-initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(l0 = 3),method = 'KUO')
-estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = T,
-                   ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0))
+initial = mtarinipars(tsregim_obj = data$Sim,
+list_model = list(l0 = 3),method = 'KUO')
+estim = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,
+burn_m = 500, list_m = T,ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0))
 estim$final_m
 }
 
