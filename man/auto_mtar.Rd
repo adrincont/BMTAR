@@ -6,7 +6,8 @@
 Compute by Bayesian methodology a MTAR model for some data
 }
 \usage{
-auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),niter = 5000, chain = FALSE, method = 'KUO',parallel = FALSE)
+auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),
+niter = 5000, chain = FALSE, method = 'KUO',parallel = FALSE)
 }
 
 \arguments{

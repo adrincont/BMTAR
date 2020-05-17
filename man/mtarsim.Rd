@@ -6,7 +6,7 @@
 Given an list object of the class `` regime '' (length = l) with the model specification simulates N observations for a MTAR (Multivariate threshold autoregressive process) process.
 }
 \usage{
-mtarsim(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL, ...)
+mtarsim(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL)
 }
 \arguments{
   \item{N}{numeric type greater than 0. Number of observation to simulate. Not NULL}
