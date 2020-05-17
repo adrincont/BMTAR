@@ -36,13 +36,16 @@ autoplot.regim_model = function(object, type = 1) {
     p3 = vector(mode = 'list',length = length(Chain_Sig))
     names(p3) = names(Chain_Sig)
     names(dat3l) = names(Chain_Sig)
+    if (!is.matrix(Chain_Sig$R1)) {
+      Chain_Sig$R1 = t(as.matrix(Chain_Sig$R1))
+    }
     time = seq(1,ncol(Chain_Sig$R1))
     for (j in names(Chain_Sig)) {
       dat3 = data.frame(comp = '11',time = time,value = Chain_Sig[[j]][1,])
       k = dim(object$regime[[j]]$sigma)[1]
       names_sig = paste0(1:k,1)
       for (i3 in 2:k) {names_sig = c(names_sig,paste0(1:k,i3))}
-      if (ncol(Chain_Sig[[j]]) > 1) {
+      if (nrow(Chain_Sig[[j]]) > 1) {
         ii = 1
         for (i in names_sig[-1]) {
           dat3 = rbind(dat3,data.frame(comp = i,time = time,value = Chain_Sig[[j]][ii,]))
@@ -62,6 +65,9 @@ autoplot.regim_model = function(object, type = 1) {
     dat3l = vector(mode = 'list',length = length(Chain_Theta))
     p4 = vector(mode = 'list',length = length(Chain_Theta))
     names(p4) = names(Chain_Theta)
+    if (!is.matrix(Chain_Theta$R1)) {
+      Chain_Theta$R1 = t(as.matrix(Chain_Theta$R1))
+    }
     time = seq(1,ncol(Chain_Theta$R1))
     for (j in names(Chain_Theta)) {
       dat3 = data.frame(comp = '1',time = time,value = Chain_Theta[[j]][1,])
@@ -80,6 +86,9 @@ autoplot.regim_model = function(object, type = 1) {
   }
   if (type == 4) {
     # Gamma Chains
+    if (is.null(object$Chain$Gamma)) {
+      stop('Object $Chain$Gamma does not exist (known orders)')
+    }
     Chain_Gamma = object$Chain$Gamma
     dat3l = vector(mode = 'list',length = length(Chain_Gamma))
     p5 = vector(mode = 'list',length = length(Chain_Gamma))

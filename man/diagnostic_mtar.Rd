@@ -25,7 +25,12 @@ Returns a list of ggplot objects with the graphics mentioned before.
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 \examples{
 library(ggplot2)
-data('data_ns')
-diagnostic.mtar(estim1)
+data("datasim")
+data = datasim$Sim$Zt
+parameters = list(l = 1,orders = list(pj = 1,dj = 0,qj = 0))
+initial = mtarinipars(tsregim_obj = tsregim(data),
+                      list_model = list(pars = parameters))
+estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
+diagnostic_mtar(estim1)
 }
 
