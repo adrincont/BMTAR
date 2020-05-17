@@ -29,14 +29,6 @@ Print estimates outputs corresponding to the functions \dQuote{\code{mtarns}} an
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
-data("datasim")
-data = datasim
-#r known
-parameters = list(l = 2,
-                  orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),
-                  r = data$Sim$r)
-initial = mtarinipars(tsregim_obj = data$Sim,
-                      list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
+data('data_ns')
 print.regim_model(estim1)
 }
