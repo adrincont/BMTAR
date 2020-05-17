@@ -1,1 +1,7 @@
 exportPattern("^[[:alpha:]]+")
+S3method(autoplot,regim_model)
+S3method(autoplot,regim_missing)
+S3method(autoplot,tsregim)
+S3method(print,regim_model)
+S3method(print,regim_missing)
+S3method(print,tsregim)
