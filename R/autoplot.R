@@ -4,7 +4,6 @@
 autoplot = function(x, ...) {
   UseMethod('autoplot', x)
 }
-
 autoplot.regim_model = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work. Install it via install.packages(\'ggplot2\')', call. = FALSE)
@@ -25,7 +24,7 @@ autoplot.regim_model = function(object, type = 1) {
                                      time = time,value = Chain_r[,i]))
       }
     }
-    p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
+    p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = dat2$value))
     p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
     p = p +  ggplot2::labs(title = 'Thresholds chains')
     return(p)
@@ -50,7 +49,7 @@ autoplot.regim_model = function(object, type = 1) {
           ii = ii + 1
         }
       }
-      p3[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = value)) +
+      p3[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = dat3$value)) +
         ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Sigma chains',j))
@@ -72,7 +71,7 @@ autoplot.regim_model = function(object, type = 1) {
                                        time = time,value = Chain_Theta[[j]][i,]))
         }
       }
-      p4[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = value)) +
+      p4[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = dat3$value)) +
         ggplot2::theme_bw() +
         ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::labs(title = paste('Theta chains',j))
@@ -94,7 +93,7 @@ autoplot.regim_model = function(object, type = 1) {
                                        time = time,value = Chain_Gamma[[j]][i,]))
         }
       }
-      p5[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = value)) +
+      p5[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = dat3$value)) +
         ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Gamma chains',j))
@@ -114,7 +113,7 @@ autoplot.regim_model = function(object, type = 1) {
         dat1 = rbind.data.frame(dat1,dati)
       }
     }
-    p = ggplot2::ggplot(data = dat1,ggplot2::aes(x = time,y = value, color = type))
+    p = ggplot2::ggplot(data = dat1,ggplot2::aes(x = time,y = dat1$value, color = type))
     p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
     p = p + ggplot2::labs(title = 'Output processes')
     p = p + ggplot2::scale_color_manual(values = c("black","blue"))
@@ -141,7 +140,7 @@ autoplot.regim_missing = function(object, type = 1) {
           dat2 = rbind(dat2,data.frame(name = names_yt[i],time = time,value = Chain_Yt[,i]))
         }
       }
-      p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
+      p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = dat2$value))
       p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
       p = p +  ggplot2::labs(title = 'Missing data (Yt) chains')
       return(p)
@@ -157,7 +156,7 @@ autoplot.regim_missing = function(object, type = 1) {
           dat2 = rbind(dat2,data.frame(name = names_ut[i],time = time,value = Chain_Ut[,i]))
         }
       }
-      p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
+      p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = dat2$value))
       p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
       p = p +  ggplot2::labs(title = 'Missing data (Ut = [Zt,Xt]) chains')
       return(p)
@@ -179,13 +178,13 @@ autoplot.tsregim = function(object, type = 1) {
       dat = rbind(dat,data.frame(name = paste0('Series.',i),time = time,value = dats_Yt[,i]))
     }
   }
-  p = ggplot2::ggplot(data = dat,ggplot2::aes(x = time,y = value))
+  p = ggplot2::ggplot(data = dat,ggplot2::aes(x = time,y = dat$value))
   p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
   p = p + ggplot2::labs(title = 'Output processes')
   p = p + ggplot2::geom_vline(xintercept = dat$time[is.na(dat$value)],color = "red",linetype = 'dashed')
   if (!is.null(object$Zt)) {
     dats_Zt = data.frame(time = time,value = object$Zt)
-    p2 = ggplot2::ggplot(data = dats_Zt,ggplot2::aes(x = time,y = value))
+    p2 = ggplot2::ggplot(data = dats_Zt,ggplot2::aes(x = time,y = dats_Zt$value))
     p2 = p2 + ggplot2::geom_line() + ggplot2::theme_bw()
     p2 = p2 + ggplot2::geom_vline(xintercept = dats_Zt$time[is.na(dats_Zt$value)],color = "red",linetype = 'dashed')
     if (!is.null(object$r)) {
@@ -205,7 +204,7 @@ autoplot.tsregim = function(object, type = 1) {
                                      time = time,value = dats_Xt[,i]))
       }
     }
-    p3 = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = value))
+    p3 = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = dat2$value))
     p3 = p3 + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
     p3 = p3 + ggplot2::labs(title = 'Covariates processes') +
       p3 = p3 + ggplot2::geom_vline(xintercept = dat2$time[is.na(dat2$value)],color = "red",linetype = 'dashed')
