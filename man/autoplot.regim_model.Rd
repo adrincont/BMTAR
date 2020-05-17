@@ -7,7 +7,7 @@
 Produces a ggplot object for the results of the mtarns and mtarstr functions.
 }
 \usage{
-\method{autoplot}{regim_model}(object, type = 1)
+\method{autoplot}{regim_model}(object, type = 1,...)
 }
 
 \arguments{
@@ -15,6 +15,7 @@ Produces a ggplot object for the results of the mtarns and mtarstr functions.
 \item{type}{character string giving the type of plot to be computed. Allowed
 values are 1 for "\code{Thresholds chains}" (the default), 2 for \dQuote{\code{Sigma chains}}, 3 for \dQuote{\code{Theta chains}}, 4 for \dQuote{\code{Gamma chains}} or 5 for \dQuote{\code{Output process fit}}
 }
+\item{...}{other arguments passed to specific methods}
 }
 
 \details{

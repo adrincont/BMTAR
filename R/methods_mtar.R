@@ -1,6 +1,6 @@
 autoplot = function(object, ...) UseMethod("autoplot")
 
-autoplot.regim_model = function(object, type = 1,...) {
+autoplot.regim_model = function(object, type = 1, ...) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
   }else {
@@ -125,7 +125,7 @@ autoplot.regim_model = function(object, type = 1,...) {
     return(p)
   }
 }
-autoplot.regim_missing = function(object, type = 1,...) {
+autoplot.regim_missing = function(object, type = 1, ...) {
     if (!requireNamespace('ggplot2', quietly = TRUE)) {
       stop('ggplot2 is needed for this function to work')
     }else {
@@ -167,7 +167,7 @@ autoplot.regim_missing = function(object, type = 1,...) {
       return(p)
     }
   }
-autoplot.tsregim = function(object, type = 1,...) {
+autoplot.tsregim = function(object, type = 1, ...) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
   }else {
@@ -235,7 +235,7 @@ base::registerS3method('autoplot', 'tsregim', autoplot.tsregim)
 
 print = function(object, ...) UseMethod('print')
 
-print.tsregim = function(object,...){
+print.tsregim = function(object, ...){
   cat('Threshold time series:\n','N =',object$N,'\n')
   dats = object
   class(dats) = NULL
@@ -251,10 +251,10 @@ print.tsregim = function(object,...){
   }
   utils::str(dats)
 }
-print.regim_model = function(object,...) {
+print.regim_model = function(object, ...) {
   print(object$estimates)
 }
-print.regim_missing = function(object,...) {
+print.regim_missing = function(object, ...) {
   print(object$estimates)
 }
 base::registerS3method('print','regim_model', print.regim_model)

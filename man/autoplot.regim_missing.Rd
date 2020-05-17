@@ -7,7 +7,7 @@
 Produces a ggplot object for the results of the mtarmissing function.
 }
 \usage{
-\method{autoplot}{regim_missing}(object, type = 1)
+\method{autoplot}{regim_missing}(object, type = 1,...)
 }
 
 \arguments{
@@ -15,6 +15,7 @@ Produces a ggplot object for the results of the mtarmissing function.
 \item{type}{character string giving the type of plot to be computed. Allowed
 values are 1 for "\code{Missing data (Yt) chains}" (the default) or 2 for \dQuote{\code{Missing data (Ut = [Zt,Xt]) chains}}.
 }
+\item{...}{other arguments passed to specific methods}
 }
 \details{
 Graph the strings for the outputs corresponding to the functions \dQuote{\code{mtarmissing}} which return an object of class \dQuote{\code{regim_missing}}. The chains corresponding to the samplings in each case do not contain the burning period.
