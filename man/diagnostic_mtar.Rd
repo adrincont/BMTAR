@@ -9,8 +9,8 @@ Tests to help evaluate some assumptions about the MTAR model. calculating some t
 diagnostic_mtar(regim_model,lagmax = NULL)
 }
 \arguments{
- \item{regim_model}{Object of class \dQuote{\code{regim_model}}.}
- \item{lag.max}{maximum lag at which to calculate the acf and pacf.}
+ \item{regim_model}{Object of class \dQuote{\code{regim_model}}. Not NULL}
+ \item{lagmax}{maximum lag at which to calculate the acf and pacf. Default NULL}
 }
 
 \details{
