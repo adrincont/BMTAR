@@ -115,7 +115,7 @@ autoplot.regim_model = function(object, type = 1) {
     }
     p = ggplot2::ggplot(data = dat1,ggplot2::aes(x = time,y = dat1$value, color = type))
     p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
-    p = p + ggplot2::labs(title = 'Output processes')
+    p = p + ggplot2::labs(title = 'Output process')
     p = p + ggplot2::scale_color_manual(values = c("black","blue"))
     return(p)
   }
@@ -180,7 +180,7 @@ autoplot.tsregim = function(object, type = 1) {
   }
   p = ggplot2::ggplot(data = dat,ggplot2::aes(x = time,y = dat$value))
   p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
-  p = p + ggplot2::labs(title = 'Output processes')
+  p = p + ggplot2::labs(title = 'Output process')
   p = p + ggplot2::geom_vline(xintercept = dat$time[is.na(dat$value)],color = "red",linetype = 'dashed')
   if (!is.null(object$Zt)) {
     dats_Zt = data.frame(time = time,value = object$Zt)
@@ -189,7 +189,7 @@ autoplot.tsregim = function(object, type = 1) {
     p2 = p2 + ggplot2::geom_vline(xintercept = dats_Zt$time[is.na(dats_Zt$value)],color = "red",linetype = 'dashed')
     if (!is.null(object$r)) {
       Nrg_plot = paste0(paste0(paste0('Reg_',1:object$l),'='),object$Summary_r$Prop_reg,'%')
-      p2 = p2 + ggplot2::labs(title = 'Threshold processes',subtitle = paste0('(',paste(Nrg_plot,collapse = ','),')'))
+      p2 = p2 + ggplot2::labs(title = 'Threshold process',subtitle = paste0('(',paste(Nrg_plot,collapse = ','),')'))
       for (i in c(object$r)) {
         p2 = p2 + ggplot2::geom_hline(yintercept = i,linetype = 'dashed',color = 'blue')
       }
@@ -206,7 +206,7 @@ autoplot.tsregim = function(object, type = 1) {
     }
     p3 = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = dat2$value))
     p3 = p3 + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
-    p3 = p3 + ggplot2::labs(title = 'Covariates processes') +
+    p3 = p3 + ggplot2::labs(title = 'Covariates process') +
       p3 = p3 + ggplot2::geom_vline(xintercept = dat2$time[is.na(dat2$value)],color = "red",linetype = 'dashed')
   }
   if (type == 1) {
@@ -214,12 +214,12 @@ autoplot.tsregim = function(object, type = 1) {
   }
   if (type == 2) {
     if (is.null(object$Zt)) {
-      stop('Threshold processes does not exist')}
+      stop('Threshold process does not exist')}
     return(p2)
   }
   if (type == 3) {
     if (is.null(object$Xt)) {
-      stop('Covariates processes does not exist')}
+      stop('Covariates process does not exist')}
     return(p3)
   }
 }

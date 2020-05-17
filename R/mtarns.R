@@ -86,8 +86,8 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   # initials values for r
   rini = ini_obj$init$r
   if (is.null(r)) {
-    a = ifelse(is.null(rini$za),min(Zt),quantile(Zt,probs = rini$za))
-    b = ifelse(is.null(rini$zb),max(Zt),quantile(Zt,probs = rini$zb))
+    a = ifelse(is.null(rini$za),min(Zt),stats::quantile(Zt,probs = rini$za))
+    b = ifelse(is.null(rini$zb),max(Zt),stats::quantile(Zt,probs = rini$zb))
   }
   lists = function(r,...){
     rj = matrix(nrow = 2,ncol = l)
@@ -205,7 +205,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     }
     if (l != 1) {
       if (is.null(r_init)) {
-        r_iter[,1] = c(quantile(Zt, probs = 1/l*(1:{l - 1})))
+        r_iter[,1] = c(stats::quantile(Zt, probs = 1/l*(1:{l - 1})))
       }else{
         r_iter[,1] = r_init
       }
@@ -244,14 +244,14 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       if (i <= other) {
         ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
       }else{
-        ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+        ek = stats::runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
       }
       rk = r_iter[,i - 1] + ek
       listrk = lists(rk)
       pr = dmunif(rk,a,b)*fycond(i,listrk)
       px = dmunif(r_iter[,i - 1],a,b)*fycond(i,listj)
       alpha = min(1,as.numeric(pr/px))
-      if (alpha >= runif(1)) {
+      if (alpha >= stats::runif(1)) {
         r_iter[,i] = rk
         acep = acep + 1
       }else{
@@ -313,8 +313,8 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     colnames(rest) = colnames(rest) =
       c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
     rchain = matrix(r_iter,ncol = niter,nrow = l - 1)
-    rest[,1] = apply(rchain,1,quantile,probs = (1 - level)/2)
-    rest[,3] = apply(rchain,1,quantile,probs = (1 + level)/2)
+    rest[,1] = apply(rchain,1,stats::quantile,probs = (1 - level)/2)
+    rest[,3] = apply(rchain,1,stats::quantile,probs = (1 + level)/2)
     rest[,2] = apply(rchain,1,mean)
     rvec = c(rest[,2],'prop %' = acep/niter*100)
   }else{
@@ -330,8 +330,8 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     # credibility intervals for theta
     vectheta = matrix(nrow = k*eta[lj],ncol = 3)
     colnames(vectheta) = c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
-    vectheta[,1] = apply(thetachain[[lj]],1,quantile,probs = (1 - level)/2)
-    vectheta[,3] = apply(thetachain[[lj]],1,quantile,probs = (1 + level)/2)
+    vectheta[,1] = apply(thetachain[[lj]],1,stats::quantile,probs = (1 - level)/2)
+    vectheta[,3] = apply(thetachain[[lj]],1,stats::quantile,probs = (1 + level)/2)
     vectheta[,2] = apply(thetachain[[lj]],1,mean)
     thetaest[[lj]] = vectheta
     if (nu != 0 & qj[lj] != 0 & dj[lj] != 0) {
@@ -357,12 +357,12 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       colnames(vecsigma) = c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
       rownames(vecsigma) = c(sapply(1:k, function(x){paste0(1:k,x)}))
       if (k == 1) {
-        vecsigma[,1] = sqrt(quantile(sigmachain[[lj]],probs = (1 - level)/2))
-        vecsigma[,3] = sqrt(quantile(sigmachain[[lj]],probs = (1 + level)/2))
+        vecsigma[,1] = sqrt(stats::quantile(sigmachain[[lj]],probs = (1 - level)/2))
+        vecsigma[,3] = sqrt(stats::quantile(sigmachain[[lj]],probs = (1 + level)/2))
         vecsigma[,2] = sqrt(mean(sigmachain[[lj]]))
       }else{
-        vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 - level)/2))
-        vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,quantile,probs = (1 + level)/2))
+        vecsigma[,1] = SigmaPrep(apply(sigmachain[[lj]],1,stats::quantile,probs = (1 - level)/2))
+        vecsigma[,3] = SigmaPrep(apply(sigmachain[[lj]],1,stats::quantile,probs = (1 + level)/2))
         vecsigma[,2] = SigmaPrep(apply(sigmachain[[lj]],1,mean))
       }
       sigmaest[[lj]] = vecsigma

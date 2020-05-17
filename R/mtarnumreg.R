@@ -36,8 +36,8 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     Xt = t(ini_obj$tsregim_obj$Xt)
   }
   rini = ini_obj$init$r
-  a = ifelse(is.null(rini$za),min(Zt),quantile(Zt,probs = rini$za))
-  b = ifelse(is.null(rini$zb),max(Zt),quantile(Zt,probs = rini$zb))
+  a = ifelse(is.null(rini$za),min(Zt),stats::quantile(Zt,probs = rini$za))
+  b = ifelse(is.null(rini$zb),max(Zt),stats::quantile(Zt,probs = rini$zb))
   ### FUNCIONES
   dmunif = function(r, a, b){
     l = length(r) + 1
@@ -177,7 +177,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     par = mtarstr(ini_obj = ini_obj_m, niter = iter, chain = TRUE,burn = burn)
     #Parameters pseudo Theta
     theta0Sm = lapply(par$estimates$Theta,function(x){x[,2]})
-    sigma0Sm = lapply(par$Chain$Theta,function(x){cov(t(x))})
+    sigma0Sm = lapply(par$Chain$Theta,function(x){stats::cov(t(x))})
     #Parameters pseudo Sigma
     S0Sm = lapply(par$regime,function(x){x$sigma})
     nu0Sm = lapply(1:m,function(x){1000})
@@ -185,7 +185,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     pij0Sm = lapply(par$Chain$Gamma,function(x){apply(x,1,mean)})
     #Parameters pseudo R
     rmean0Sm = par$estimates$r[,2]
-    rcov0Sm = cov(t(par$Chain$r))
+    rcov0Sm = stats::cov(t(par$Chain$r))
     # cadenas y primeros valores
     theta_iter = sigma_iter = gam_iter = Dj = Rj = list()
     length(theta_iter) = length(sigma_iter) = length(Rj) =
@@ -212,7 +212,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       }
       sigma_iter[[lj]][[1]] = MCMCpack::riwish(v = nu0Pm[[lj]],S = S0Pm[[lj]])
     }
-    r_iter[,1] = c(quantile(Zt, probs = 1/m*(1:{m - 1})))
+    r_iter[,1] = c(stats::quantile(Zt, probs = 1/m*(1:{m - 1})))
     # LISTS
     if (method == 'SSVS') {
       iniP = list(Theta = list(mean = theta0Pm, cov = sigma0Pm), Sigma = list(cov = S0Pm,gl = nu0Pm),
@@ -258,7 +258,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
         pthetacond0 = dmnormB(x = theta_iter[[reg]][,ig],mean = rep(0,k*etam[reg]),sigma = Dj[[reg]] %*% Rj[[reg]] %*% Dj[[reg]])
         bij = pycond0*pthetacond0*(1 - pij[[reg]][pos])
       }
-      return(rbinom(1,size = 1,prob = as.numeric((aij)/(aij + bij))))
+      return(stats::rbinom(1,size = 1,prob = as.numeric((aij)/(aij + bij))))
     }
     rgamber = Vectorize(rgamber,"pos")
     listPr = listm[[paste0('m',l)]]
@@ -361,7 +361,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       sigma_iter[[lj]][[i2]] = 1/nu0jS[[lj]]*MCMCpack::rwish(v = nu0jS[[lj]] ,S = S0jS[[lj]])
       sigma_iter[[lj]][[i2]] = sigma_iter[[lj]][[i2]] %*% sigma_iter[[lj]][[i2]]
       for (iga in 1:{k*etam[lj]}) {
-        gam_iter[[lj]][iga,i2] = rbinom(n = 1,size = 1,prob = pijS[[lj]][iga])
+        gam_iter[[lj]][iga,i2] = stats::rbinom(n = 1,size = 1,prob = pijS[[lj]][iga])
       }
     }
     r_iter[,i2] = mvtnorm::rmvnorm(1,mean = rmeanS, sigma = as.matrix(rcovS))
@@ -414,10 +414,10 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     rmeanSmp = thetaymp$Pseudo$r$mean
     rcovSmp = thetaymp$Pseudo$r$cov
     for (lj in 1:lmp) {
-      pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijmp[[lj]])))
+      pgammaPn = pgammaPn*prodB(Brobdingnag::as.brob(stats::dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijmp[[lj]])))
       pthetaPn = pthetaPn*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jmp[[lj]], sigma = sigma0jmp[[lj]])
       psigmaPn = psigmaPn*dwishartB(sigma_itermp[[lj]][[iAmp]], nu = nu0jmp[[lj]],S = solve(as.matrix(S0jmp[[lj]])))
-      pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijSmp[[lj]])))
+      pgammaSd = pgammaSd*prodB(Brobdingnag::as.brob(stats::dbinom(gam_itermp[[lj]][,iAmp],size = 1,prob = pijSmp[[lj]])))
       pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
       psigmaSd = psigmaSd*dwishartB(expm::sqrtm(sigma_itermp[[lj]][[iAmp]]), nu = nu0jSmp[[lj]],S = as.matrix(S0jSmp[[lj]]))
     }
@@ -425,10 +425,10 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     prSn = dmnormB(r_iterm[,iAm],mean = rmeanSm, sigma = rcovSm)
     fn = fycond(iAmp,thetaymp$listr,thetaymp$Chain$Gamma,thetaymp$Chain$Theta,thetaymp$Chain$Sigma)
     for (lj in 1:lm) {
-      pgammaPd = pgammaPd*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijm[[lj]])))
+      pgammaPd = pgammaPd*prodB(Brobdingnag::as.brob(stats::dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijm[[lj]])))
       pthetaPd = pthetaPd*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jm[[lj]], sigma = sigma0jm[[lj]])
       psigmaPd = psigmaPd*dwishartB(sigma_iterm[[lj]][[iAm]], nu = nu0jm[[lj]],S = solve(as.matrix(S0jm[[lj]])))
-      pgammaSn = pgammaSn*prodB(Brobdingnag::as.brob(dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijSm[[lj]])))
+      pgammaSn = pgammaSn*prodB(Brobdingnag::as.brob(stats::dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijSm[[lj]])))
       pthetaSn = pthetaSn*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jSm[[lj]], sigma = sigma0jSm[[lj]])
       psigmaSn = psigmaSn*dwishartB(expm::sqrtm(sigma_iterm[[lj]][[iAm]]), nu = nu0jSm[[lj]],S = as.matrix(S0jSm[[lj]]))
     }
@@ -510,7 +510,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     val = prodA(listm[[paste0('m',m_iter[im - 1])]],listm[[paste0('m',m_iter[im])]])
     # Evaluacion de el criterio
     alpham = min(1,as.numeric(val$val))
-    if (alpham >= runif(1)) {
+    if (alpham >= stats::runif(1)) {
       m_iter[im] = m_iter[im]
       acepm = acepm + 1
     }else{
