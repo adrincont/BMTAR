@@ -370,7 +370,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
         prod2D = Reduce('*',transkernU(i1:{i1 + b},Utr))
         val = (prod1N*prod2N)/(prod1D*prod2D)
       }
-      if (val >= runif(1)) {
+      if (val >= stats::runif(1)) {
         Utr = Usim
         Ut_iter[,i][PosNAvecT[[2]] == i1] = Usim[PosNAMat[[2]][,i1],i1]
       }else{

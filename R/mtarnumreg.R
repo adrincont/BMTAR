@@ -317,7 +317,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     if (i2 < 70) {
         ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
       }else{
-        ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+        ek =  stats::runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
         }
    # ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
     rk = r_iter[,i2] + ek
@@ -325,7 +325,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     pr = dmunif(rk,a,b)*fycond(i2 + 1,listark,gam_iter,theta_iter,sigma_iter)
     px = dmunif(r_iter[,i2],a,b)*fycond(i2 + 1,listaj,gam_iter,theta_iter,sigma_iter)
     alpha = min(1,as.numeric(pr/px))
-    if (alpha >= runif(1)) {
+    if (alpha >= stats::runif(1)) {
       r_iter[,i2 + 1] = rk
       listr = listark
     }else{

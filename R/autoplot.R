@@ -1,8 +1,6 @@
 #' @importFrom ggplot2 autoplot
 #' @export
-autoplot = function(object, ...) {
-  UseMethod('autoplot', object)
-}
+autoplot = function(object) UseMethod('autoplot')
 autoplot.regim_model = function(object, type = 1) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
@@ -234,20 +232,18 @@ autoplot.tsregim = function(object, type = 1) {
 base::registerS3method('autoplot','regim_model', autoplot.regim_model)
 base::registerS3method('autoplot','regim_missing', autoplot.regim_missing)
 base::registerS3method('autoplot', 'tsregim', autoplot.tsregim)
-print = function(x, ...) {
-  UseMethod('print', x)
-}
-print.tsregim = function(x,...){
-  cat('Threshold time series:\n','N =',x$N,'\n')
-  dats = x
+print = function(object) UseMethod('print')
+print.tsregim = function(object,...){
+  cat('Threshold time series:\n','N =',object$N,'\n')
+  dats = object
   class(dats) = NULL
-  if (!is.null(x$r)) {
+  if (!is.null(object$r)) {
     cat('======================','\n')
-    cat('r = ',x$r,'\n')
-    print(x$Summary_r)
+    cat('r = ',object$r,'\n')
+    print(object$Summary_r)
     cat('======================','\n')
   }else{
-    if (!is.null(x$Zt)) {
+    if (!is.null(object$Zt)) {
       cat('Unknown threshold values','\n')
     }
   }

@@ -8,8 +8,6 @@ Estimation using Bayesian methodology of missing values in observed, covariate a
 \usage{
 mtarmissing(ini_obj,niter = 1000, chain = FALSE, level = 0.95,
 burn = NULL, cU = 0.5, b = NULL)
-autoplot(regime_missing)
-print(regime_missing)
 }
 
 \arguments{

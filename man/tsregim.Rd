@@ -7,8 +7,6 @@ The function tsregim is used to create time-series-regime objects.
 }
 \usage{
 tsregim(Yt, Zt = NULL, Xt = NULL, r = NULL)
-autoplot.tsregim(tsregim)
-print.tsregim(tsregim)
 }
 
 \arguments{
