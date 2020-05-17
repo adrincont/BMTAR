@@ -1,19 +1,17 @@
 \name{repM}
 \alias{repM}
-\title{Create a complete ggplot appropriate to a particular data type}
+\title{Function to create list of matrix objets}
 \usage{
-autoplot(object, ...)
+repM(M,r)
 }
 \arguments{
-\item{object}{an object, whose class will determine the behaviour of autoplot}
-
+\item{M}{matrix type object}
+\item{r}{integer indicating the length of the list}
 \item{...}{other arguments passed to specific methods}
 }
 \value{
-a ggplot object
+List of matrix of length r
 }
 \description{
-\code{autoplot} uses ggplot2 to draw a particular plot for an object of a
-particular class in a single command. This defines the S3 generic that
-other classes and packages can extend.
+Auxiliary function of some functions in the MTAR package
 }

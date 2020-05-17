@@ -1,22 +1,18 @@
 \name{lists_ind}
 \alias{lists_ind}
-\title{Create a complete ggplot appropriate to a particular data type}
+\title{Create indicator vector for the regimen of each observation}
 \usage{
-autoplot(object, ...)
+lists_ind(r,Zt,l,...)
 }
 \arguments{
-\item{object}{an object, whose class will determine the behaviour of autoplot}
-
+\item{r}{value for the threshold variable}
+\item{Zt}{threshold processes univariate}
+\item{l}{number of regimes}
 \item{...}{other arguments passed to specific methods}
 }
 \value{
-a ggplot object
+Vector of length N indicating the number of the regime of each observation
 }
 \description{
-\code{autoplot} uses ggplot2 to draw a particular plot for an object of a
-particular class in a single command. This defines the S3 generic that
-other classes and packages can extend.
-}
-\seealso{
-\code{\link[=autolayer]{autolayer()}}, \code{\link[=ggplot]{ggplot()}} and \code{\link[=fortify]{fortify()}}
+From a threshold variable and the corresponding processes calculate a vector indicating the number of the regime of each observation.
 }

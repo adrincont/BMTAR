@@ -1,19 +1,16 @@
 \name{prodB}
 \alias{prodB}
-\title{Create a complete ggplot appropriate to a particular data type}
+\title{Function to make product of elements of a list}
 \usage{
-autoplot(object, ...)
+prodB(x)
 }
 \arguments{
-\item{object}{an object, whose class will determine the behaviour of autoplot}
-
+\item{x}{list of objects to make the product}
 \item{...}{other arguments passed to specific methods}
 }
 \value{
-a ggplot object
+float number result of the product
 }
 \description{
-\code{autoplot} uses ggplot2 to draw a particular plot for an object of a
-particular class in a single command. This defines the S3 generic that
-other classes and packages can extend.
+Auxiliary function of some functions in the MTAR package
 }
