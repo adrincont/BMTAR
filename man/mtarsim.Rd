@@ -56,7 +56,8 @@ R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R1,Sigma = Sigma_R1)
 ## R2 regime
 Phi_R2 = list(phi1 = matrix(c(0.3,0.5,0.2,0.7),2,2,byrow = T))
 Sigma_R2 = matrix(c(2.5,0.5,0.5,1),2,2,byrow = T)
-R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R2,Sigma = Sigma_R2)
+R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),
+Phi = Phi_R2,Sigma = Sigma_R2)
 ## create list of regime-type objects
 Rg = list(R1 = R1,R2 = R2)
 r = 0.3

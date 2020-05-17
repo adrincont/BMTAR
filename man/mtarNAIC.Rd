@@ -51,11 +51,12 @@ parallel::clusterEvalQ(micluster, library(MTAR))
 parallel::clusterExport(cl = micluster,varlist = list('yt'))
 
 rprop = function(r){
-  parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),r = r)
-  initial = mtarinipars(tsregim_obj = yt,list_model = list(pars = parameters))
-  estim = mtarns(ini_obj = initial,niter = 1000,chain = TRUE,burn = 500)
-  naic = mtarNAIC(estim)
-  return(naic$NAIC)
+parameters = list(l = 2,
+orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),r = r)
+initial = mtarinipars(tsregim_obj = yt,list_model = list(pars = parameters))
+estim = mtarns(ini_obj = initial,niter = 1000,chain = TRUE,burn = 500)
+naic = mtarNAIC(estim)
+return(naic$NAIC)
 }
 
 rprop = Vectorize(rprop)
@@ -70,21 +71,23 @@ parallel::stopCluster(micluster)
 rnaic = unlist(rNAIC_parallel)
 
 cat('r = ',r[rnaic == min(rnaic)])
-ggplot2::ggplot(data = NULL, ggplot2::aes(x = r,y = rnaic)) + ggplot2::geom_point() +
-  ggplot2::geom_line() + ggplot2::theme_bw() +
+ggplot2::ggplot(data = NULL, ggplot2::aes(x = r,y = rnaic)) +
+  ggplot2::geom_point() + ggplot2::geom_line() + ggplot2::theme_bw() +
   ggplot2::geom_vline(xintercept = r[rnaic == min(rnaic)], color = 2)
-
-#===============================================================================================#
+#===============================================================#
 # Estimate number of regimes with NAIC
-    initial2 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
-                           list_model = list(pars = list(l = 2), orders = list(pj = c(1,1),qj = c(1,1),dj = c(1,1))))
-    estruc2 = mtarstr(ini_obj = initial2,niter = 100,chain = T,burn = 100)
-    initial3 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
-                           list_model = list(pars = list(l = 3), orders = list(pj = c(1,1,1),qj = c(1,1,1),dj = c(1,1,1))))
-    estruc3 = mtarstr(ini_obj = initial3,niter = 100,chain = T,burn = 100)
-    initial4 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
-                           list_model = list(pars = list(l = 4), orders = list(pj = c(1,1,1,1),qj = c(1,1,1,1),dj = c(1,1,1,1))))
-    estruc4 = mtarstr(ini_obj = initial4,niter = 100,chain = T,burn = 100)
+initial2 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
+list_model = list(pars = list(l = 2),
+orders = list(pj = c(1,1),qj = c(1,1),dj = c(1,1))))
+estruc2 = mtarstr(ini_obj = initial2,niter = 100,chain = T,burn = 100)
+initial3 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
+list_model = list(pars = list(l = 3),
+orders = list(pj = c(1,1,1),qj = c(1,1,1),dj = c(1,1,1))))
+estruc3 = mtarstr(ini_obj = initial3,niter = 100,chain = T,burn = 100)
+initial4 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
+list_model = list(pars = list(l = 4),
+orders = list(pj = c(1,1,1,1),qj = c(1,1,1,1),dj = c(1,1,1,1))))
+estruc4 = mtarstr(ini_obj = initial4,niter = 100,chain = T,burn = 100)
 mtarNAIC(estruc2)
 mtarNAIC(estruc3)
 mtarNAIC(estruc4)

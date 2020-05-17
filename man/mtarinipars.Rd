@@ -8,8 +8,8 @@ Model specification of data, known or unknown parameters and its prior distribut
 \usage{
 mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2,
 orders = list(pj = c(1,1), qj = c(0,0), dj = c(0,0)), r = NULL, Sigma = NULL),
-orders = NULL,l0 = NULL), method = NULL, theta_prior = NULL, sigma_prior = NULL,
-gamma_prior = NULL, r_prior = NULL)
+orders = NULL,l0 = NULL), method = NULL, theta_prior = NULL,
+sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
 }
 \arguments{
   \item{tsregim_obj}{class ``tsregim'' object. Not NULL}
@@ -70,31 +70,30 @@ gamma_prior = NULL, r_prior = NULL)
 data("datasim")
 tsregim_obj = datasim$Sim
 # for estimate non-structural parameters:
-# mtarns: l always known, Sigma = NULL = list(R1,R2) can be known, r = NULL can be known
+# mtarns: l always known,
+# Sigma = NULL = list(R1,R2) can be known, r = NULL can be known
 # Sigma and r known
 parameters = list(l = length(datasim$Reg),
-                  Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2),
-                  r = tsregim_obj$r,
-                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
+Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2),
+r = tsregim_obj$r,
+orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars_Sr = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 #only r known
 parameters = list(l = length(datasim$Reg),Sigma = NULL, r = tsregim_obj$r,
-                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
+orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars_r = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 #r and Sigma unknown
 parameters = list(l = length(datasim$Reg),Sigma = NULL, r = NULL,
-                  orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
+orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 # for estimate structural and non-structural parameters
 # mtarstr: l always known
 parameters = list(l = length(datasim$Reg))
 orders = list(pj = c(2,2),qj = c(1,1),dj = c(1,1))
 initpars_KUO = mtarinipars(tsregim_obj,
-                           list_model = list(
-                             pars = parameters,orders = orders),method = 'KUO')
+list_model = list(pars = parameters,orders = orders),method = 'KUO')
 initpars_SSVS = mtarinipars(tsregim_obj,
-                            list_model = list(
-                              pars = parameters,orders = orders),method = 'SSVS')
+list_model = list(pars = parameters,orders = orders),method = 'SSVS')
 }
 
 \keyword{prior distribution}

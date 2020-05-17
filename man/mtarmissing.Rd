@@ -6,7 +6,8 @@
 Estimation using Bayesian methodology of missing values in observed, covariate and threshold processes
 }
 \usage{
-mtarmissing(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn = NULL, cU = 0.5, b = NULL)
+mtarmissing(ini_obj,niter = 1000, chain = FALSE, level = 0.95,
+burn = NULL, cU = 0.5, b = NULL)
 autoplot(regime_missing)
 print(regime_missing)
 }
@@ -50,9 +51,10 @@ autoplot.tsregim(data_final,1)
 autoplot.tsregim(data_final,2)
 
 initial = mtarinipars(tsregim_obj = data_final,
-                      list_model = list(pars = list(l = 2,r = datasim$Sim$r,
-                                                    orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
-missingest = mtarmissing(ini_obj = initial,chain = TRUE,niter = 500,burn = 500)
+list_model = list(pars = list(l = 2,r = datasim$Sim$r,
+orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
+missingest = mtarmissing(ini_obj = initial,chain = TRUE,
+niter = 500,burn = 500)
 print(missingest)
 autoplot.regime_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]
