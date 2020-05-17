@@ -59,9 +59,9 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
     }
   }
   dat_cor = rbind.data.frame(acf_Yt,pacf_Yt)
-  p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = Lag, y = dat_cor[floor(dat_cor$lag) != 0,]$value))
+  p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = dat_cor[floor(dat_cor$lag) != 0,]$Lag, y = dat_cor[floor(dat_cor$lag) != 0,]$value))
   p5 = p5 + ggplot2::geom_hline(yintercept = 0) + ggplot2::facet_grid(type~names)
-  p5 = p5 + ggplot2::geom_segment(ggplot2::aes(xend = Lag,yend = 0)) + ggplot2::geom_point(color = "blue",size = 0.4)
+  p5 = p5 + ggplot2::geom_segment(ggplot2::aes(xend = dat_cor[floor(dat_cor$lag) != 0,]$Lag,yend = 0)) + ggplot2::geom_point(color = "blue",size = 0.4)
   ci = stats::qnorm((1 + 0.95)/2)/sqrt(nrow(regim_model$residuals))
   p5 = p5 + ggplot2::geom_ribbon(ggplot2::aes(ymax = ci ,ymin = -ci),color = NA,fill = "blue",alpha = 0.2)
   p5 = p5 + ggplot2::ggtitle('ACF and PACF plots for residuals series') + ggplot2::theme_bw()
