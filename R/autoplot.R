@@ -1,9 +1,3 @@
-#' @inherit ggplot2::autolayer
-#' @export
-autolayer = function(object, ...){
-  UseMethod("autolayer")
-}
-
 #' @importFrom ggplot2 autoplot
 #' @export
 
