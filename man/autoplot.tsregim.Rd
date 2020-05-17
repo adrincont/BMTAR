@@ -8,7 +8,7 @@ Produces a ggplot object for the results of the tsregim function.
 }
 \usage{
 \method{autoplot}{tsregim}(object, type = 1)
-autoplot.tsregim(x, type = 1)
+autoplot.tsregim(object, type = 1)
 }
 
 \arguments{
@@ -18,7 +18,7 @@ values are 1 for "\code{Output processes}" (the default), 2 for \dQuote{\code{Th
 }.
 }
 \details{
-Graph for the stochastic processes of the object \ dQuote {\ code {tsregim}} for: Output processes and if they exist for: Threshold processes and Covariates processes. In the case that there are missing data, a red line is drawn at the indicated time.
+Graph for the stochastic processes of the object \ dQuote {\ code {tsregim}} for: Output process and if they exist for: Threshold process and Covariates process. In the case that there are missing data, a red line is drawn at the indicated time.
 }
 \value{
   Return a ggplot object.

@@ -17,7 +17,7 @@ regim_missing(x)
 }
 
 \details{
-Print the estimates for the outputs corresponding to the functions \dQuote{\code{mtarmissing}} which return an object of class \dQuote{\code{regim_missing}}.
+Print the estimates for the outputs corresponding to the function \dQuote{\code{mtarmissing}} which return an object of class \dQuote{\code{regim_missing}}.
 }
 \value{
   Return to console.

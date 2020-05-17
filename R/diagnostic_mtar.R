@@ -1,6 +1,6 @@
 #==================================================================================================#
 # Date: 14/04/2020
-# Description:
+# Description: Display some graphics for residuals analysis
 # Function:
 #==================================================================================================#
 diagnostic_mtar = function(regim_model,lagmax = NULL){
@@ -20,12 +20,12 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
                    cumsq = c(cumsum(e_data[,1]^2)/sum(e_data[,1]^2)))
   if (ncol(e_data) > 1) {
     for (i in 2:ncol(e_data)) {
-      dat = rbind(dat,data.frame(label = paste0('Series.',i),time = time,value = e_data[,i],
+      dat = rbind.data.frame(dat,data.frame(label = paste0('Series.',i),time = time,value = e_data[,i],
                                  cusum = cumsum(e_data[,i])/sd(e_data[,i]),
                                  cumsq = c(cumsum(e_data[,i]^2)/sum(e_data[,i]^2))))
     }
   }
-  p2 = ggplot2::ggplot(data = as.data.frame(dat),  ggplot2::aes(x = value, color = label )) +
+  p2 = ggplot2::ggplot(data = dat,  ggplot2::aes(x = value, color = label )) +
     ggplot2::geom_density() + ggplot2::theme_bw()
   p2 = p2 + ggplot2::stat_function(fun = dnorm,color = "black")
   p2 = p2 + ggplot2::ggtitle("Residual density plot")
@@ -58,7 +58,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
       pacf_Yt = rbind(pacf_Yt,data.frame(lag = pacf_i$lag + 0.1*i, value = pacf_i$acf,names = paste0('Series.',i),type = 'PACF'))
     }
   }
-  dat_cor = rbind(acf_Yt,pacf_Yt)
+  dat_cor = rbind.data.frame(acf_Yt,pacf_Yt)
   p5 = ggplot2::ggplot(data = dat_cor[floor(dat_cor$lag) != 0,],ggplot2::aes(x = lag, y = value))
   p5 = p5 + ggplot2::geom_hline(yintercept = 0) + ggplot2::facet_grid(type~names)
   p5 = p5 + ggplot2::geom_segment(ggplot2::aes(xend = lag,yend = 0)) + ggplot2::geom_point(color = "blue",size = 0.4)
