@@ -21,7 +21,7 @@ Estimation of thresholds was made before starting the Bayesian procedure via the
   \deqn{
   AICj(r) = Nj ln(|Sj/Nj|) + 2k \eta_j
  }
- Nj Corresponds number observations in each regime.
+ Nj: number of observations in each regime.
  \deqn{
  S_{j}=\sum_{t:j_t = j}(y_t-YP)'(y_t-YP)
  }
@@ -37,7 +37,7 @@ Estimation of thresholds was made before starting the Bayesian procedure via the
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
   data("datasim")

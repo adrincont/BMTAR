@@ -3,7 +3,7 @@
 
 \title{Estimation of non-structural parameters for MTAR model}
 \description{
-Bayesian method for estimate non-structural parameters of a MTAR model
+Bayesian method for estimating non-structural parameters of a MTAR model with prior conjugate.
 }
 \usage{
 mtarns(ini_obj, level = 0.95, burn = NULL, niter = 1000,
@@ -20,7 +20,12 @@ chain = FALSE, r_init = NULL)
 }
 
 \details{
-  Detalles de los metodos usados en la funcion corespondiente
+  Based on the equation of the Multivariate Thresold Autoregressive(MTAR) Model
+
+ \eqn{Y_t= \phi^{(j)}_{0}+ \sum_{i=1}^{p_j} \phi_{i}^{(j)}Y_{t-i}+  \sum_{i=1}^{q_j}\beta_{i}^{(j)}X_{t-i} + \sum{i=1}^{d_j}\delta_{i}^{(j)}Z_{t-i} +\Sigma_{(j)}^{1/2} \epsilon_{t}  if  r_{j-1}< Z_t \le r_{j},}
+
+where process \eqn{\{\epsilon_{t}\}} is a k-variate independent Gaussian process, \eqn{\{Y_t\}} is k-variate process, \eqn{\{X_t\} is a \nu - variate process.}
+The function implements Bayesian estimation of non-structural parameters of each regime j(\eqn{\phi^{(j)}_{0} \phi_{i}^{(j)}, \beta_{i}^{(j)}, \delta_{i}^{(j)} and \Sigma_{(j)}^{1/2}}) is carried out. The structural parameters: Number of Regimes(l), Thresholds(\eqn{r_1,\cdots,r_{l-1}}), and autoregressive orders(\eqn{p_j,q_j,d_j}) must be known. Prior distributions where selected in order to get conjugate distributions.
 }
 \value{
   Return a list type object of class ``regime_model''
@@ -38,7 +43,7 @@ chain = FALSE, r_init = NULL)
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
  data("datasim")

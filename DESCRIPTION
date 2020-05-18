@@ -4,7 +4,9 @@ Date: 2020-04-22
 Title: Bayesian approach for MTAR models with missing data
 Version: 0.1.0
 Author: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
-                Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
+        Sergio Alejandro Calderón Villanueva <sacalderonv@unal.edu.co>
+        Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
+                
 Maintainer: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
             Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
 Depends: R (>= 3.5.0)

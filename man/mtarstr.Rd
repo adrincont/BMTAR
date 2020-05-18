@@ -3,7 +3,7 @@
 
 \title{Estimation of structural parameters of MTAR model}
 \description{
-Estimate structural and non-structural parameters of a MTAR model
+Estimate structural and non-structural parameters of a MTAR model when the number of regimes is fixed.
 }
 \usage{
 mtarstr(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE,
@@ -21,7 +21,7 @@ r_init = NULL, parallel = FALSE)
 }
 
 \details{
-  Detalles de los metodos usados en la funcion corespondiente
+  If the number of regimes \eqn{l} is known or fixed, we can estimate other structural parameters of the MTAR model: Thresholds(\eqn{r_1,\cdots,r_{l-1}}), and autoregressive orders(\eqn{p_j,q_j,d_j}). Of course, the non-structural parameters are also estimated. The problem of estimation the autoregressive orders is addressed to the problem of Bayesian variable selection in regression using Gibss Variable selection(GVS) or Kuo and Mallick Methodologies. Samples of the full conditional distribution for Threshold values are extracted using Random Walk Metropolis-Hastings Algorithm.
 }
 \value{
   Return a list type object of class ``regime_model''
@@ -39,7 +39,7 @@ r_init = NULL, parallel = FALSE)
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
 data("datasim")

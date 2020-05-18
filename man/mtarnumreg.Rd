@@ -3,7 +3,7 @@
 
 \title{Estimation of the number of regimes in a MTAR model}
 \description{
-Compute estimation of number of regimes by NAIC or Carlin and Chip methodology for a MTAR model
+Compute estimation of number of regimes by NAIC or Carlin and Chib methodology for a MTAR model
 }
 \usage{
 mtarnumreg(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL,
@@ -27,7 +27,7 @@ parallel = FALSE)
 }
 
 \details{
-  Detalles de los metodos usados en la funcion corespondiente
+  Two proposals to identify or estimate the number of regimes l are implemented. Metropolised Carlin and Chib methodology takes into account the changing dimension in the parameter vector when the number of regimes changes, that proposal is  Bayesian model selection. Other methodology consists in calculating the information criterion NAIC.
 }
 \value{
   Return a list type object of class ``regime_number''
@@ -46,7 +46,7 @@ parallel = FALSE)
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
 data("datasim")

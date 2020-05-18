@@ -3,7 +3,7 @@
 
 \title{Estimation of missing values of observed, covariate and threshold processes}
 \description{
-Estimation using Bayesian methodology of missing values in observed, covariate and threshold processes
+Estimation using Bayesian methology of missing values in observed(output), covariate and threshold processes.
 }
 \usage{
 mtarmissing(ini_obj,niter = 1000, chain = FALSE, level = 0.95,
@@ -21,7 +21,12 @@ burn = NULL, cU = 0.5, b = NULL)
 }
 
 \details{
-  Detalles de los metodos usados en la funcion corespondiente
+  The MTAR model
+
+  \eqn{Y_t= \phi^{(j)}_{0}+ \sum_{i=1}^{p_j} \phi_{i}^{(j)}Y_{t-i}+  \sum_{i=1}^{q_j}\beta_{i}^{(j)}X_{t-i} + \sum{i=1}^{d_j}\delta_{i}^{(j)}Z_{t-i} +\Sigma_{(j)}^{1/2} \epsilon_{t}  if  r_{j-1}< Z_t \le r_{j},}
+
+is written into a state space model with regime-switching where the matrices depend on the threshold variable. In order to estimate the missing data in the observed vector \eqn{Y_t}, it is necessary to obtain samples of the full conditional distribution of the state vector \eqn{\alpha_t}, for all times \eqn{t=1,\cdots,T} using Kalman Filter. It is assumed that the process \eqn{U_t=(X_t,Z_t)} is a Markov chain, and in order to get samples of the full conditional distribution of \eqn{U_t, t=1,\cdots,T}, it is supposed that kernel and initial distribution
+are Gaussian for simplicity. However, in the next updates, we are going to get flexibility at this point.
 }
 \value{
   Return list type object of class ``regime_missing''
@@ -32,7 +37,7 @@ burn = NULL, cU = 0.5, b = NULL)
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
+\author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
 data("datasim")
