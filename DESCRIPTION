@@ -6,7 +6,6 @@ Version: 0.1.0
 Author: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
         Sergio Alejandro Calderon Villanueva <sacalderonv@unal.edu.co>
         Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
-                
 Maintainer: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
             Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
 Depends: R (>= 3.5.0)
