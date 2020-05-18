@@ -1,6 +1,6 @@
 MTAR <img src="man/figures/logoMTAR.png" align="right" />
 ======================
-Bayesian approach for MTAR models with missing data
+Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing Data
 
 
 ![coverage](https://img.shields.io/badge/coverage-60%25-yellowgreen)
@@ -25,4 +25,7 @@ You will find the theoretical basis of the method in the documents:
   * https://core.ac.uk/download/pdf/77274943.pdf
 ## License
 This package is free and open source software, licensed under GPL-3.
+
+## References
+ * Calderón Villanueva, S. A. (2014). Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing Data (Doctoral dissertation, Universidad Nacional de Colombia).
 
