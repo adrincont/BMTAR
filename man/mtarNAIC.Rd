@@ -41,7 +41,7 @@ Estimation of thresholds was made before starting the Bayesian procedure via the
 
 \examples{
 data("datasim")
-yt = datasim$Sim
+data = datasim
 # Estimate number of regimes with NAIC
 initial2 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
 list_model = list(pars = list(l = 2),
