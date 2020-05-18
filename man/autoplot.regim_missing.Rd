@@ -33,5 +33,4 @@ Graph the strings for the outputs corresponding to the functions \dQuote{\code{m
 library(ggplot2)
 data('missingest')
 autoplot.regim_missing(missingest,1)
-autoplot.regim_missing(missingest,2)
 }
