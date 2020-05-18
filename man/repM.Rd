@@ -7,7 +7,6 @@ repM(M,r)
 \arguments{
 \item{M}{matrix type object}
 \item{r}{integer indicating the length of the list}
-\item{...}{other arguments passed to specific methods}
 }
 \value{
 List of matrix of length r
