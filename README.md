@@ -13,6 +13,7 @@ devtools::install_github("adrincont/libreria-MTAR")
 ## Example of use
 ```s
 library(MTAR)
+library(ggplot2)
 ```
 ## For more information
 You will find the theoretical basis of the method in the documents:
@@ -20,3 +21,4 @@ You will find the theoretical basis of the method in the documents:
   * https://core.ac.uk/download/pdf/77274943.pdf
 ## License
 This package is free and open source software, licensed under GPL-3.
+
