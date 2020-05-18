@@ -1,6 +1,8 @@
 MTAR <img src="man/figures/logoMTAR.png" align="right" />
 ======================
 Bayesian approach for MTAR models with missing data
+
+
 ![coverage](https://img.shields.io/badge/coverage-60%25-yellowgreen)
 ![version](https://img.shields.io/badge/version-0-blue)
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/ggplot2)](https://cran.r-project.org/package=ggplot2)
