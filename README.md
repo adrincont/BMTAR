@@ -3,9 +3,8 @@ MTAR <img src="man/figures/logoMTAR.png" align="right" />
 Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing Data
 
 
-![coverage](https://img.shields.io/badge/coverage-60%25-yellowgreen)
+![coverage](https://img.shields.io/badge/coverage-90%25-yellowgreen)
 ![version](https://img.shields.io/badge/version-0-blue)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/ggplot2)](https://cran.r-project.org/package=ggplot2)
 
 The R package *MTAR* implements parameter estimation using a Bayesian approach for MTAR models with missing data using Markov Chain Monte Carlo methods. This package performs the simulation of MTAR processes ("mtarsim"), estimation of matrix parameters and the threshold values ("mtarns"), identification of the autoregressive orders using Bayesian variable selection ("mtarstr"), identification of the number of regimes using Metropolised Carlin and Chib ("mtarnumreg") and estimate missing data, coefficients and covariance matrices conditional on the autoregressive orders, the threshold values and the number of regimes  together ("mtarmissing").
 
