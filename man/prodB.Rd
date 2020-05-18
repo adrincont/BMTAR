@@ -6,7 +6,6 @@ prodB(x)
 }
 \arguments{
 \item{x}{list of objects to make the product}
-\item{...}{other arguments passed to specific methods}
 }
 \value{
 float number result of the product
