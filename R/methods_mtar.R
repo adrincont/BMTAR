@@ -20,7 +20,7 @@ autoplot.regim_model = function(object, type = 1, ...) {
                                      time = time,value = Chain_r[,i]))
       }
     }
-    p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = time,y = dat2$value))
+    p = ggplot2::ggplot(data = dat2,ggplot2::aes(x = ~time,y = ~value))
     p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
     p = p +  ggplot2::labs(title = 'Thresholds chains')
     return(p)
@@ -48,7 +48,7 @@ autoplot.regim_model = function(object, type = 1, ...) {
           ii = ii + 1
         }
       }
-      p3[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = dat3$value)) +
+      p3[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = ~time,y = ~value)) +
         ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Sigma chains',j))
@@ -73,7 +73,7 @@ autoplot.regim_model = function(object, type = 1, ...) {
                                        time = time,value = Chain_Theta[[j]][i,]))
         }
       }
-      p4[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = dat3$value)) +
+      p4[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = ~time,y = ~value)) +
         ggplot2::theme_bw() +
         ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::labs(title = paste('Theta chains',j))
@@ -98,7 +98,7 @@ autoplot.regim_model = function(object, type = 1, ...) {
                                        time = time,value = Chain_Gamma[[j]][i,]))
         }
       }
-      p5[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = time,y = dat3$value)) +
+      p5[[j]] = ggplot2::ggplot(data = dat3,ggplot2::aes(x = ~time,y = ~value)) +
         ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
         ggplot2::theme_bw() +
         ggplot2::labs(title = paste('Gamma chains',j))
@@ -118,7 +118,7 @@ autoplot.regim_model = function(object, type = 1, ...) {
         dat1 = rbind.data.frame(dat1,dati)
       }
     }
-    p = ggplot2::ggplot(data = dat1,ggplot2::aes(x = time,y = dat1$value, color = type))
+    p = ggplot2::ggplot(data = dat1,ggplot2::aes(x = ~time,y = ~value, color = ~type))
     p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
     p = p + ggplot2::labs(title = 'Output process')
     p = p + ggplot2::scale_color_manual(values = c("black","blue"))
@@ -229,10 +229,6 @@ autoplot.tsregim = function(object, type = 1, ...) {
   }
 }
 
-base::registerS3method('autoplot','regim_model', autoplot.regim_model)
-base::registerS3method('autoplot','regim_missing', autoplot.regim_missing)
-base::registerS3method('autoplot', 'tsregim', autoplot.tsregim)
-
 print = function(object, ...) UseMethod('print')
 
 print.tsregim = function(object, ...){
@@ -257,6 +253,3 @@ print.regim_model = function(object, ...) {
 print.regim_missing = function(object, ...) {
   print(object$estimates)
 }
-base::registerS3method('print','regim_model', print.regim_model)
-base::registerS3method('print','regim_missing', print.regim_missing)
-base::registerS3method('print', 'tsregim', print.tsregim)

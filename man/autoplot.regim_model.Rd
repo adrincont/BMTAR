@@ -38,7 +38,6 @@ parameters = list(l = 1,orders = list(pj = 1,dj = 0,qj = 0))
 initial = mtarinipars(tsregim_obj = tsregim(data),
                       list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
-print.regim_model(estim1)
 autoplot.regim_model(estim1,2)
 autoplot.regim_model(estim1,3)
 autoplot.regim_model(estim1,5)
