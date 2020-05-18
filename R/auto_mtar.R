@@ -45,7 +45,7 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
     numregest_1 = mtarnumreg(ini_obj = initial,niter_m = niter,NAIC = TRUE,
                              ordersprev = list(maxpj = pjmax,maxqj = qjmax,maxdj = djmax),parallel = parallel)
     l_1 = numregest_1$NAIC_final_m
-    estrucopt = numregest_1$listm[[paste0('m',l_1)]]$par
+    estrucopt = numregest_1$list_m[[paste0('m',l_1)]]$par
     initial = mtarinipars(tsregim_obj = data_temp,method = method,
                           list_model = list(pars = list(l = l_1),
                                             orders = list(pj = estrucopt$orders$pj,qj = estrucopt$orders$qj,dj = estrucopt$orders$dj)))
@@ -63,7 +63,7 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
   numregest_final = mtarnumreg(ini_obj = initial,niter_m = niter,chain_m = chain,list_m = TRUE,
                                ordersprev = list(maxpj = pjmax, maxqj = qjmax, maxdj = djmax), parallel = parallel)
   lf = numregest_final$final_m
-  estrucopt = numregest_final$listm[[paste0('m',lf)]]$par
+  estrucopt = numregest_final$list_m[[paste0('m',lf)]]$par
   initial = mtarinipars(tsregim_obj = data_complete,method = method,
                         list_model = list(pars = list(l = lf),
                                           orders = list(pj = estrucopt$orders$pj,
