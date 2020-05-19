@@ -10,7 +10,8 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
     if (!inherits(regim_model, 'regim_model')) {
       stop('diagnostic.mtar requires a regim_model object')
     }}
-  e_k = tsregim(regim_model$residuals[-nrow(regim_model$residuals),])
+  regim_model$residuals = as.data.frame(regim_model$residuals[-nrow(regim_model$residuals),])
+  e_k = tsregim(as.matrix(regim_model$residuals))
   p1 = autoplot.tsregim(e_k) + ggplot2::geom_hline(yintercept = 0,color = "red") +
     ggplot2::ggtitle('Residual serie plot')
   e_data = as.data.frame(e_k$Yt)
@@ -45,7 +46,6 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
   p4 = p4 + ggplot2::geom_ribbon(ggplot2::aes(ymin = rep(LQS,e_k$k), ymax = rep(LQI,e_k$k)),
                                  fill = "gray",color = NA,alpha = 0.5)
   p4 = p4 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUMSQ statistic for residuals')
-
   acf_i = stats::acf(regim_model$residuals[,1],lag.max = lagmax,plot = FALSE,type = 'correlation')
   acf_Yt = data.frame(Lag = acf_i$lag, value = acf_i$acf,names = 'Serie.1',type = 'ACF')
   pacf_i = stats::acf(regim_model$residuals[,1],lag.max = lagmax,plot = FALSE,type = 'partial')
