@@ -43,16 +43,18 @@ Estimation of thresholds was made before starting the Bayesian procedure via the
 data("datasim")
 data = datasim
 # Estimate number of regimes with NAIC
+initial1 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
+list_model = list(pars = list(l = 1),
+orders = list(pj = 1,qj = 1,dj = 1)))
+estruc1 = mtarstr(ini_obj = initial1,niter = 100,chain = TRUE,burn = 100)
+
 initial2 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
 list_model = list(pars = list(l = 2),
 orders = list(pj = c(1,1),qj = c(1,1),dj = c(1,1))))
 estruc2 = mtarstr(ini_obj = initial2,niter = 100,chain = TRUE,burn = 100)
-initial3 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
-list_model = list(pars = list(l = 3),
-orders = list(pj = c(1,1,1),qj = c(1,1,1),dj = c(1,1,1))))
-estruc3 = mtarstr(ini_obj = initial3,niter = 100,chain = TRUE,burn = 100)
+#NAIC
+mtarNAIC(estruc1)
 mtarNAIC(estruc2)
-mtarNAIC(estruc3)
 }
 \keyword{AIC}
 \keyword{MTAR   }

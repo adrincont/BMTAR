@@ -76,7 +76,7 @@ tsregim_obj = datasim$Sim
 # Sigma = NULL = list(R1,R2) can be known, r = NULL can be known
 # Sigma and r known
 parameters = list(l = length(datasim$Reg),
-Sigma = list(R1 = Sigma_R1,R2 = Sigma_R2),
+Sigma = list(R1 = datasim$Reg$R1$sigma,R2 = datasim$Reg$R2$sigma),
 r = tsregim_obj$r,
 orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
 initpars_Sr = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
@@ -96,6 +96,8 @@ initpars_KUO = mtarinipars(tsregim_obj,
 list_model = list(pars = parameters,orders = orders),method = 'KUO')
 initpars_SSVS = mtarinipars(tsregim_obj,
 list_model = list(pars = parameters,orders = orders),method = 'SSVS')
+# mtarnumreg l0_min or l0_max and method always
+initpars_l = mtarinipars(tsregim_obj,list_model = list(l0_max = 3),method = 'KUO')
 }
 
 \keyword{prior distribution}

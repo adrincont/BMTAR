@@ -27,7 +27,7 @@ Returns a list of ggplot objects with the graphics mentioned before.
 library(ggplot2)
 data("datasim")
 data = datasim$Sim$Zt
-parameters = list(l = 1,orders = list(pj = 1,dj = 0,qj = 0))
+parameters = list(l = 1,orders = list(pj = 1))
 initial = mtarinipars(tsregim_obj = tsregim(data),
                       list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
