@@ -50,12 +50,12 @@ Zt = Ut$Sim$Yt
 # Yt process
 k = 2
 ## R1 regime
-Phi_R1 = list(phi1 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = T))
-Sigma_R1 = matrix(c(1,0,0,1),k,k,byrow = T)
+Phi_R1 = list(phi1 = matrix(c(0.1,0.6,-0.4,0.5),k,k,byrow = TRUE))
+Sigma_R1 = matrix(c(1,0,0,1),k,k,byrow = TRUE)
 R1 = mtaregim(orders = list(p = 1,q = 0,d = 0),Phi = Phi_R1,Sigma = Sigma_R1)
 ## R2 regime
-Phi_R2 = list(phi1 = matrix(c(0.3,0.5,0.2,0.7),2,2,byrow = T))
-Sigma_R2 = matrix(c(2.5,0.5,0.5,1),2,2,byrow = T)
+Phi_R2 = list(phi1 = matrix(c(0.3,0.5,0.2,0.7),2,2,byrow = TRUE))
+Sigma_R2 = matrix(c(2.5,0.5,0.5,1),2,2,byrow = TRUE)
 R2 = mtaregim(orders = list(p = 1,q = 0,d = 0),
 Phi = Phi_R2,Sigma = Sigma_R2)
 ## create list of regime-type objects
