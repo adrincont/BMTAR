@@ -1,6 +1,6 @@
 #==================================================================================================#
 # Date: 14/04/2020
-# Description:
+# Description: Functions for checking prior and other parameters for estimation
 # Function:
 #==================================================================================================#
 mtarinipars = function(tsregim_obj,

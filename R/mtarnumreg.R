@@ -1,6 +1,7 @@
 #==================================================================================================#
 # Date: 14/04/2020
-# Description:
+# Description: Function for estimate number of regimes when unknown. Default method is
+# Metropolized Carlin and Chib, when NAIC is TRUE number of regimes is choose only with this result.
 # Function:
 #==================================================================================================#
 mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
