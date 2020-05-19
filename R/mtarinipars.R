@@ -31,6 +31,13 @@ mtarinipars = function(tsregim_obj,
             if (sum(names(list_model$pars) %in% c('l','Sigma','r','orders')) == 0) {
               stop('list_model$pars must be a list type object with l,Sigma,r or orders')
             }else{
+              if (is.null(list_model$pars$orders$pj)) {stop('the list should have orders$p a positive integer')}
+              if (is.null(list_model$pars$orders$qj)) {
+                list_model$pars$orders$qj = list_model$pars$orders$pj*0
+              }
+              if (is.null(list_model$pars$orders$dj)) {
+                list_model$pars$orders$dj = list_model$pars$orders$pj*0
+              }
               l = list_model$pars$l
               if (round(l) != l & l <= 0) {stop('l must be an integer greater than 0')}
               if (l > 4) {stop('l must be less than 4')}
@@ -43,7 +50,6 @@ mtarinipars = function(tsregim_obj,
             stop('If l is known, l0_min and l0_max is not necesary')
           }
         }
-        l1 = list_model$l0_min
         l = list_model$l0_max
         if (!is.null(l1)) {
           if (round(l1) != l1 & l1 <= 0) {stop('l0_min must be an integer greater than 0')}

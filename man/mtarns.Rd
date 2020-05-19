@@ -46,7 +46,7 @@ The function implements Bayesian estimation of non-structural parameters of each
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
- data("datasim")
+data("datasim")
 data = datasim
 #r known
 parameters = list(l = 2,
