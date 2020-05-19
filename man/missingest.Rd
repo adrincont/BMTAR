@@ -2,7 +2,7 @@
 \alias{missingest}
 \title{Datos simulados}
 \description{
-  Contingency Table
+results example missing data estimation process for a mtar process
 }
 \usage{data(missingest)}
 \format{Object whit class \code{mtar_missing}}

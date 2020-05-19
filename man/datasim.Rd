@@ -2,7 +2,7 @@
 \alias{datasim}
 \title{Datos simulados}
 \description{
-  Contingency Table
+ simulated MTAR process
 }
 \usage{data(datasim)}
 \format{Object with class \code{mtarsim}}
