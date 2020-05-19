@@ -10,7 +10,7 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
     if (!inherits(regim_model, 'regim_model')) {
       stop('diagnostic.mtar requires a regim_model object')
     }}
-  e_k = tsregim(regim_model$residuals)
+  e_k = tsregim(regim_model$residuals[-1])
   p1 = autoplot.tsregim(e_k) + ggplot2::geom_hline(yintercept = 0,color = "red") +
     ggplot2::ggtitle('Residual serie plot')
   e_data = as.data.frame(e_k$Yt)
