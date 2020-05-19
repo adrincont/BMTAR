@@ -486,10 +486,10 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     pf[lj] = max(as.numeric(sapply(names(Ri$phi),substr,4,4)))
     if (!is.null(Ri$beta)) {
       qf[lj] = max(as.numeric(sapply(names(Ri$beta),substr,4,4)))
-    }
+    }else{qf[lj] = 0}
     if (!is.null(Ri$delta)) {
       df[lj] = max(as.numeric(sapply(names(Ri$delta),substr,4,4)))
-    }
+    }else{df[lj] = 0}
     Rest[[lj]] = mtaregim(orders = list(p = pf[lj],q = qf[lj],d = df[lj]),cs = Ri$cs,
                           Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
                           Sigma = Ri$sigma)
@@ -523,7 +523,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   orders$dj = df
   # fitted.values and residuals
   Yt_fit = Yt_res = matrix(ncol = N,nrow = k)
-  for (t in 1:N) {
+  for (t in 2:N) {
     lj = listj$Ind[t]
     p = pjmax[lj]
     q = qjmax[lj]
@@ -553,9 +553,9 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       wtj = c(1,yti,xti,zti)}
     Xj = t(wtj) %x% diag(k)[1,]
     if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(wtj) %x% diag(k)[s,])}}
-    Yt_fit[,t] = Xj %*% diag(gamest[[lj]][,2]) %*% thetaest[[lj]][,2]
+    Yt_fit[,t - 1] = Xj %*% diag(gamest[[lj]][,2]) %*% thetaest[[lj]][,2]
     Sig = as.matrix(Rest[[lj]]$sigma)
-    Yt_res[,t] = solve(Sig) %*% (Yt[,t] - Yt_fit[,t])
+    Yt_res[,t] = solve(Sig) %*% (Yt[,t] - Yt_fit[,t - 1])
   }
   if (l != 1) {estimates$r = rest}
   if (chain) {
