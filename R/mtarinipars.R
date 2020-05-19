@@ -125,9 +125,9 @@ mtarinipars = function(tsregim_obj,
     }
     if (is.null(method)) {stop("For orders unknown method must be KUO or SSVS")}
   }
-  if (!is.list(orders) | length(orders) != 1) {
+  if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(pj, qj, dj)')
-  }else if (!{names(orders) %in% c('pj','qj','dj')}) {
+  }else if (!{all(names(orders) %in% c('pj','qj','dj'))}) {
     stop('orders must be a list of length 3 list(pj, qj, dj)')
   }
   pj = orders$pj
