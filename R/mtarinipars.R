@@ -28,14 +28,14 @@ mtarinipars = function(tsregim_obj,
         if (is.null(list_model$orders$qj)) {
           list_model$orders$qj = list_model$orders$pj*0
         }else{
-          if (is.null(tsregim_obj$Xt)) {
+          if (any(list_model$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
             stop('For qj > 0 covariate process Xt must be in tsregim_obj')
           }
         }
         if (is.null(list_model$orders$dj)) {
           list_model$orders$dj = list_model$orders$pj*0
         }else{
-          if (is.null(tsregim_obj$Zt)) {
+          if (any(list_model$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
             stop('For dj > 0 threshold process Zt must be in tsregim_obj')
           }
         }
@@ -53,14 +53,14 @@ mtarinipars = function(tsregim_obj,
                 if (is.null(list_model$pars$orders$qj)) {
                   list_model$pars$orders$qj = list_model$pars$orders$pj*0
                 }else{
-                  if (is.null(tsregim_obj$Xt)) {
+                  if (any(list_model$pars$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
                     stop('For qj > 0 covariate process Xt must be in tsregim_obj')
                   }
                 }
                 if (is.null(list_model$pars$orders$dj)) {
                   list_model$pars$orders$dj = list_model$pars$orders$pj*0
                 }else{
-                  if (is.null(tsregim_obj$Zt)) {
+                  if (any(list_model$pars$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
                     stop('For dj > 0 threshold process Zt must be in tsregim_obj')
                   }
                 }

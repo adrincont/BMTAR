@@ -3,7 +3,7 @@
 # Description:
 # Function:
 #==================================================================================================#
-mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
+mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
                       iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
                       ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = FALSE){
   compiler::enableJIT(3)
@@ -28,9 +28,9 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   N = ini_obj$tsregim_obj$N
   nu = ini_obj$tsregim_obj$nu
   if (is.null(nu)) {nu = 0}
-  maxpj = ordersprev$maxpj
-  maxqj = ordersprev$maxqj
-  maxdj = ordersprev$maxdj
+  maxpj = ifelse(is.null(ordersprev$maxpj),2,ordersprev$maxpj)
+  maxqj = ifelse(is.null(ordersprev$maxqj),0,ordersprev$maxqj)
+  maxdj = ifelse(is.null(ordersprev$maxdj),0,ordersprev$maxdj)
   # Code
   burn_m = ifelse(is.null(burn_m),round(0.1*niter_m),burn_m)
   Yt = t(Yt)
