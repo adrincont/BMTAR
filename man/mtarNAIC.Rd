@@ -55,4 +55,5 @@ mtarNAIC(estruc2)
 mtarNAIC(estruc3)
 }
 \keyword{AIC}
+\keyword{MTAR}
 \keyword{NAIC}
