@@ -360,6 +360,8 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   cat('Saving results ... \n')
   if (l > 2) {
     r_iter = list_m$r_iter[,-c(1:{other + burn})]
+  }else if (l == 2) {
+    r_iter = list_m$r_iter[-c(1:{other + burn})]
   }else{
     r_iter = NULL
   }
@@ -375,13 +377,13 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     rest[,1] = apply(rchain,1,stats::quantile,probs = (1 - level)/2)
     rest[,3] = apply(rchain,1,stats::quantile,probs = (1 + level)/2)
     rest[,2] = apply(rchain,1,mean)
-    rvec = c(rest[,2],'prop %' = acep/niter*100)
+    rvec = c(rest[,2],'prop %' = round(acep/niter*100,4))
   }else{
     rvec = NULL
   }
   # save chains
   # logLik
-  if (l > 2) {
+  if (l >= 2) {
     listj = lists(rest[,2])
   }else{
     listj = lists(0)
