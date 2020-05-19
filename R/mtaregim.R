@@ -9,17 +9,19 @@ repM = function(M,r){lapply(rep(0,r),function(x){x*M})}
 mtaregim = function(orders = list(p = 1,q = 0,d = 0), cs = NULL,
                     Phi, Beta = NULL, Delta = NULL, Sigma){
   if (is.numeric(Sigma) & !is.matrix(Sigma)) {Sigma = as.matrix(Sigma)}
+  if (is.numeric(cs) & !is.matrix(cs)) {cs = as.matrix(cs)}
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')
   }else if (sum(names(orders) %in% c('p','q','d')) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')
   }
+  if (is.null(orders$p)) {stop('the list should have orders$p a positive integer or 0')}
   p = orders$p
-  q = orders$q
-  d = orders$d
+  q = ifelse(is.null(orders$q),0,orders$q)
+  d = ifelse(is.null(orders$d),0,orders$d)
   # Validation of values
   ## structural parameters
-  if (!{round(p) == p & p >= 0}) {stop('p must be a positive integer or 0')}
+  if (!{round(p) == p & p >= 0}) {stop('p must be a positive integer')}
   if (!{round(q) == q & q >= 0}) {stop('q must be a positive integer or 0')}
   if (!{round(d) == d & d >= 0}) {stop('d must be a positive integer or 0')}
   # set matrix dimensions
