@@ -125,7 +125,7 @@ mtarinipars = function(tsregim_obj,
       method = 'ns'
     }else{
       if (!is.null(list_model$orders)) {orders = list_model$orders}else{
-        stop('For orders unknown they must be enter in list_model$orders')
+        stop('For orders unknown they must be enter maximum orders in list_model$orders')
       }
       if (is.null(method)) {stop('For orders unknown method must be KUO or SSVS')}
     }

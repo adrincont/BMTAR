@@ -4,7 +4,7 @@
 # Function:
 #==================================================================================================#
 mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
-                      iterprev = 500, chain_m = FALSE, list_m = FALSE, l0_min = 2, NAIC = FALSE,
+                      iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
                       ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = FALSE){
   compiler::enableJIT(3)
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
@@ -14,8 +14,12 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
   }
+  if (is.null(ini_obj$tsregim_obj$Zt)) {
+    stop('Threshold process must be enter in ini_obj for evaluate l0_max number of regimes')}
+  l0_min = ini_obj$l0_min
+  if (is.null(l0_min)) {l0_min = 2}
   l0 = ini_obj$l0_max
-  if (is.null(l0)) {stop('If parameters are unknown enter l0 maximum number of regimes in ini_obj')}
+  if (is.null(l0)) {stop('If parameters are unknown enter l0_max maximum number of regimes in ini_obj')}
   method = ini_obj$method
   # data
   Yt = ini_obj$tsregim_obj$Yt
@@ -39,7 +43,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   rini = ini_obj$init$r
   a = ifelse(is.null(rini$za),min(Zt),stats::quantile(Zt,probs = rini$za))
   b = ifelse(is.null(rini$zb),max(Zt),stats::quantile(Zt,probs = rini$zb))
-  ### FUNCIONES
+  ### FUNCTIONS
   dmunif = function(r, a, b){
     l = length(r) + 1
     names(a) = names(b) = NULL
@@ -88,7 +92,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     return(muestra)
   }
   rdunif = compiler::cmpfun(rdunif)
-  ### Funcion para crear las listas
+  ### Function to create lists
   lists = function(l, r, pjmax, qjmax, djmax, etam, ...){
     rj = matrix(nrow = 2,ncol = l)
     rj[,1] = c(-Inf,r[1])
@@ -142,7 +146,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     return(list(Nrg = Nrg,listaX = listaXj,listaY = listaYj))
   }
   lists = compiler::cmpfun(lists)
-  ### Funcion verosimilitud para y
+  ### Likelihood function for Yt
   fycond = function(ir, listar, gamma, theta, sigma){
     acum = 0
     l = length(listar$listaY)
@@ -161,7 +165,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     return(val)
   }
   fycond = compiler::cmpfun(fycond)
-  ### Crear iteraciones previas
+  ### Previous iterations
   fill = function(m, iter = 500, burn = 1000, ...){
     i = 1
     ordersm = list(pj = rep(maxpj,m),qj = rep(maxqj,m),dj = rep(maxdj,m))
@@ -185,17 +189,25 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     #Parameters pseudo Gamma
     pij0Sm = lapply(par$Chain$Gamma,function(x){apply(x,1,mean)})
     #Parameters pseudo R
-    rmean0Sm = par$estimates$r[,2]
-    rcov0Sm = stats::cov(t(par$Chain$r))
-    # cadenas y primeros valores
-    theta_iter = sigma_iter = gam_iter = Dj = Rj = list()
-    length(theta_iter) = length(sigma_iter) = length(Rj) =
-      length(gam_iter) = length(Dj) = m
-    if (method == 'SSVS') {
-      tauij = itauij = cij = list()
-      length(tauij) = length(itauij) = length(cij) = m
+    if (m != 1) {
+      rmean0Sm = par$estimates$r[,2]
+      rcov0Sm = stats::cov(t(par$Chain$r))
+    }else{
+      rmean0Sm = rcov0Sm = NULL
     }
-    r_iter = matrix(ncol = niter_m + burn_m,nrow = m - 1)
+    # cadenas y primeros valores
+    theta_iter = sigma_iter = gam_iter = Dj = Rj = vector('list',m)
+    if (method == 'SSVS') {
+      tauij = itauij = cij = vector('list',m)
+    }
+    if (m != 1) {
+      r_iter = matrix(ncol = niter_m + burn_m,nrow = m - 1)
+      r_iter[,1] = c(stats::quantile(Zt, probs = 1/m*(1:{m - 1})))
+      r0iter = r_iter[,1]
+    }else{
+      r_iter = NULL
+      r0iter = 0
+    }
     for (lj in 1:m) {
       theta_iter[[lj]] = gam_iter[[lj]] = matrix(ncol = niter_m + burn_m,nrow = k*etam[lj])
       sigma_iter[[lj]] = vector('list',length = niter_m + burn_m)
@@ -213,7 +225,6 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       }
       sigma_iter[[lj]][[1]] = MCMCpack::riwish(v = nu0Pm[[lj]],S = S0Pm[[lj]])
     }
-    r_iter[,1] = c(stats::quantile(Zt, probs = 1/m*(1:{m - 1})))
     # LISTS
     if (method == 'SSVS') {
       iniP = list(Theta = list(mean = theta0Pm, cov = sigma0Pm), Sigma = list(cov = S0Pm,gl = nu0Pm),
@@ -226,11 +237,11 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
                 Gamma = list(prob = pij0Sm), r = list(mean = rmean0Sm, cov = rcov0Sm))
     listchain = list(Theta = theta_iter, Sigma = sigma_iter,
                      Gamma = gam_iter, r = r_iter)
-    listr = lists(l = m,r = r_iter[,1],pjmax = ordersm$pj,qjmax = ordersm$qj,djmax = ordersm$dj, etam)
+    listr = lists(l = m,r = r0iter,pjmax = ordersm$pj,qjmax = ordersm$qj,djmax = ordersm$dj, etam)
     return(list(i = i,orders = ordersm,Priori = iniP,Pseudo = iniS,Chain = listchain,listr = listr,par = par))
   }
   fill = compiler::cmpfun(fill)
-  ### Funcion para actualizar listas
+  ### Function to compute posterioris
   updatelist = function(l, ...){
     rgamber = function(pos, reg, ig, ...){
       gam_j = gam_iter
@@ -287,7 +298,11 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       Rj = listPr$Priori$Gamma$Rj
     }
     #iterations update
-    listaj = lists(l,r_iter[,i2],pjmax,qjmax,djmax,etam)
+    if (!is.null(r_iter)) {
+      listaj = lists(l,r_iter[,i2],pjmax,qjmax,djmax,etam)
+    }else{
+      listaj = lists(l,0,pjmax,qjmax,djmax,etam)
+    }
     for (lj in 1:l) {
       Xj = listaj$listaX[[lj]]
       Yj = listaj$listaY[[lj]]
@@ -315,23 +330,27 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       gam_iter[[jj]][,i2 + 1] = rgamber(pos = 1:{k*etam[jj]},reg = jj,ig = i2 + 1)
     }
     #r
-    if (i2 < 70) {
-        ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
+    if (l != 1) {
+      if (i2 < 70) {
+          ek = mvtnorm::rmvnorm(1,mean = rep(0,l - 1),sigma = 0.5*diag(l - 1))
+        }else{
+          ek =  stats::runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+          }
+     # ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
+      rk = r_iter[,i2] + ek
+      listark = lists(l,rk,pjmax,qjmax,djmax,etam)
+      pr = dmunif(rk,a,b)*fycond(i2 + 1,listark,gam_iter,theta_iter,sigma_iter)
+      px = dmunif(r_iter[,i2],a,b)*fycond(i2 + 1,listaj,gam_iter,theta_iter,sigma_iter)
+      alpha = min(1,as.numeric(pr/px))
+      if (alpha >= stats::runif(1)) {
+        r_iter[,i2 + 1] = rk
+        listr = listark
       }else{
-        ek =  stats::runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
-        }
-   # ek = runif(l - 1,-abs(rini$val_rmh),abs(rini$val_rmh))
-    rk = r_iter[,i2] + ek
-    listark = lists(l,rk,pjmax,qjmax,djmax,etam)
-    pr = dmunif(rk,a,b)*fycond(i2 + 1,listark,gam_iter,theta_iter,sigma_iter)
-    px = dmunif(r_iter[,i2],a,b)*fycond(i2 + 1,listaj,gam_iter,theta_iter,sigma_iter)
-    alpha = min(1,as.numeric(pr/px))
-    if (alpha >= stats::runif(1)) {
-      r_iter[,i2 + 1] = rk
-      listr = listark
+        r_iter[,i2 + 1] = r_iter[,i2]
+        listr = listaj
+      }
     }else{
-      r_iter[,i2 + 1] = r_iter[,i2]
-      listr = listaj
+      listr = lists(l,0,pjmax,qjmax,djmax,etam)
     }
     listPr$Chain = list(Theta = theta_iter, Sigma = sigma_iter,Gamma = gam_iter, r = r_iter)
     listPr$listr = listr
@@ -365,14 +384,18 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
         gam_iter[[lj]][iga,i2] = stats::rbinom(n = 1,size = 1,prob = pijS[[lj]][iga])
       }
     }
-    r_iter[,i2] = mvtnorm::rmvnorm(1,mean = rmeanS, sigma = as.matrix(rcovS))
+    if (l != 1) {
+      r_iter[,i2] = mvtnorm::rmvnorm(1,mean = rmeanS, sigma = as.matrix(rcovS))
+      listPr$listr = lists(l,r_iter[,i2],pjmax,qjmax,djmax,etam)
+    }else{
+      listPr$listr = lists(l,0,pjmax,qjmax,djmax,etam)
+    }
     listPr$Chain = list(Theta = theta_iter, Sigma = sigma_iter,Gamma = gam_iter, r = r_iter)
-    listPr$listr = lists(l,r_iter[,i2],pjmax,qjmax,djmax,etam)
     listPr$i = i2
     return(listPr)
   }
   rpseudo = compiler::cmpfun(rpseudo)
-  ### Funcion calculo verosimilitudes
+  ### Function to compute quotient
   prodA = function(thetaym, thetaymp){
     pgammaPn = pthetaPn = psigmaPn = Brobdingnag::as.brob(1)
     pgammaPd = pthetaPd = psigmaPd = Brobdingnag::as.brob(1)
@@ -422,8 +445,6 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       pthetaSd = pthetaSd*dmnormB(theta_itermp[[lj]][,iAmp],mean = theta0jSmp[[lj]], sigma = sigma0jSmp[[lj]])
       psigmaSd = psigmaSd*dwishartB(expm::sqrtm(sigma_itermp[[lj]][[iAmp]]), nu = nu0jSmp[[lj]],S = as.matrix(S0jSmp[[lj]]))
     }
-    prPn = dmunif(r_itermp[,iAmp],a,b)
-    prSn = dmnormB(r_iterm[,iAm],mean = rmeanSm, sigma = rcovSm)
     fn = fycond(iAmp,thetaymp$listr,thetaymp$Chain$Gamma,thetaymp$Chain$Theta,thetaymp$Chain$Sigma)
     for (lj in 1:lm) {
       pgammaPd = pgammaPd*prodB(Brobdingnag::as.brob(stats::dbinom(gam_iterm[[lj]][,iAm],size = 1,prob = pijm[[lj]])))
@@ -433,27 +454,27 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
       pthetaSn = pthetaSn*dmnormB(theta_iterm[[lj]][,iAm],mean = theta0jSm[[lj]], sigma = sigma0jSm[[lj]])
       psigmaSn = psigmaSn*dwishartB(expm::sqrtm(sigma_iterm[[lj]][[iAm]]), nu = nu0jSm[[lj]],S = as.matrix(S0jSm[[lj]]))
     }
-    prPd = dmunif(r_iterm[,iAm],a,b)
-    prSd = dmnormB(r_itermp[,iAmp],mean = rmeanSmp, sigma = as.matrix(rcovSmp))
+    if (lmp != 1) {
+      prPn = dmunif(r_itermp[,iAmp],a,b)
+      prSd = dmnormB(r_itermp[,iAmp],mean = rmeanSmp, sigma = as.matrix(rcovSmp))
+    }else{
+      prPn = prSd = 1
+    }
+    if (lm != 1) {
+      prPd = dmunif(r_iterm[,iAm],a,b)
+      prSn = dmnormB(r_iterm[,iAm],mean = rmeanSm, sigma = rcovSm)
+    }else{
+      prPd = prSn = 1
+    }
     fd = fycond(iAm,thetaym$listr,thetaym$Chain$Gamma,thetaym$Chain$Theta,thetaym$Chain$Sigma)
     # Calculo para el valor del cociente
     vald = fd*(pgammaPd*pthetaPd*psigmaPd*prPd)*(pgammaSd*pthetaSd*psigmaSd*prSd)
     valn = fn*(pgammaPn*pthetaPn*psigmaPn*prPn)*(pgammaSn*pthetaSn*psigmaSn*prSn)
     val = valn/vald
-    prodTS = c(fd = as.numeric(fd),fn = as.numeric(fn),c1 = as.numeric(fn/fd),
-               thetaPn = as.numeric(pgammaPn*pthetaPn*psigmaPn*prPn),
-               thetaPd = as.numeric(pgammaPd*pthetaPd*psigmaPd*prPd),
-               c2 = as.numeric((pgammaPn*pthetaPn*psigmaPn*prPn)/(pgammaPd*pthetaPd*psigmaPd*prPd)),
-               pthetaPd = as.numeric(pthetaPd),pgammaPd = as.numeric(pgammaPd),psigmaPd = as.numeric(psigmaPd),prPd = as.numeric(prPd),
-               pthetaPn = as.numeric(pthetaPn),pgammaPn = as.numeric(pgammaPn),psigmaPn = as.numeric(psigmaPn),prPn = as.numeric(prPn),
-               c3 = as.numeric((pgammaSn*pthetaSn*psigmaSn*prSn)/(pgammaSd*pthetaSd*psigmaSd*prSd)),
-               pthetaSd = as.numeric(pthetaSd),pgammaSd = as.numeric(pgammaSd),psigmaSd = as.numeric(psigmaSd),prSd = as.numeric(prSd),
-               pthetaSn = as.numeric(pthetaSn),pgammaSn = as.numeric(pgammaSn),psigmaSn = as.numeric(psigmaSn),prSn = as.numeric(prSn)
-    )
-    return(list(val = val,prodTS = prodTS))
+    return(val)
   }
   prodA = compiler::cmpfun(prodA)
-  # Corridas previas
+  # Previous runs
   cat('Running previous chains ... \n')
   listm = vector('list')
   if (parallel) {
@@ -467,14 +488,14 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     parallel::clusterExport(cl = micluster,varlist = obj_S,envir = environment())
     s = parallel::parLapply(micluster,as.list(l0_min:l0), funcParallel, iterprev = iterprev)
     cc = 1
-    for (i in l0_min:l0) {
-      listm[[paste0('m',i)]] = s[[cc]]
+    for (o in l0_min:l0) {
+      listm[[paste0('m',o)]] = s[[cc]]
       cc = cc + 1
     }
     parallel::stopCluster(micluster)
   }else{
-    for (i in l0_min:l0) {
-      listm[[paste0('m',i)]] = fill(m = i,iter = iterprev, burn = round(0.3*iterprev))
+    for (o in l0_min:l0) {
+      listm[[paste0('m',o)]] = fill(m = o,iter = iterprev, burn = round(0.3*iterprev))
     }
   }
   if (NAIC) {
@@ -487,10 +508,10 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     return(results)
   }
   # Code
-  m_iter = c()
+  m_iter = vector('numeric')
   m_iter[1] = sample(l0_min:l0,1)
   acepm = 0
-  # pm_im = matrix(nrow = l0,ncol = niter_m + burn_m - 1)
+  pm_im = matrix(nrow = l0,ncol = niter_m + burn_m - 1)
   cat('Estimating number of regimes ... \n')
   pb = utils::txtProgressBar(min = 2, max = niter_m + burn_m,style = 3)
   for (im in 2:{niter_m + burn_m}) {
@@ -499,16 +520,17 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     listm[[paste0('m',m_iter[im - 1])]] = updatelist(l = m_iter[im - 1])
     listm[[paste0('m',m_iter[im])]] = rpseudo(l = m_iter[im])
     # Calculo para la probabilidad alpha
-    val = prodA(listm[[paste0('m',m_iter[im - 1])]],listm[[paste0('m',m_iter[im])]])
+    val = prodA(thetaym = listm[[paste0('m',m_iter[im - 1])]],
+                thetaymp = listm[[paste0('m',m_iter[im])]])
     # Evaluacion de el criterio
-    alpham = min(1,as.numeric(val$val))
+    alpham = min(1,as.numeric(val))
     if (alpham >= stats::runif(1)) {
       m_iter[im] = m_iter[im]
       acepm = acepm + 1
     }else{
       m_iter[im] = m_iter[im - 1]
     }
-    # pm_im[,im - 1] = table(factor(m_iter,levels = 1:l0))/im
+    pm_im[,im - 1] = table(factor(m_iter,levels = 1:l0))/im
     utils::setTxtProgressBar(pb,im)
   }
   close(pb)
@@ -521,21 +543,33 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   names(vecm) = paste(namest[1:length(vecm)],paste0(round(vecm,2),'%'))
   vecm[1:length(vecm)] = ls[1:length(vecm)]
   if (chain_m & list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj,list_m = listm ,m_chain = m_iter,estimates = vecm,final_m = vecm[[1]])
+    results = list(tsregim = ini_obj$tsregim_obj,
+                   list_m = listm ,m_chain = m_iter,
+                   prop = pm_im,
+                   estimates = vecm,final_m = vecm[[1]])
     class(results) = 'regim_number'
   }else if (chain_m & !list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj,m_chain = m_iter, estimates = vecm,final_m = vecm[1])
+    results = list(tsregim = ini_obj$tsregim_obj,
+                   m_chain = m_iter,
+                   prop = pm_im,
+                   estimates = vecm,final_m = vecm[1])
     class(results) = 'regim_number'
   }else if (!chain_m & list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj,list_m = listm, estimates = vecm,final_m = vecm[1])
+    results = list(tsregim = ini_obj$tsregim_obj,
+                   list_m = listm,
+                   prop = pm_im,
+                   estimates = vecm,final_m = vecm[1])
     class(results) = 'regim_number'
   }else if (!chain_m & !list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj, estimates = vecm,final_m = vecm[1])
+    results = list(tsregim = ini_obj$tsregim_obj,
+                   prop = pm_im,
+                   estimates = vecm,
+                   final_m = vecm[1])
     class(results) = 'regim_number'
   }
-  results$NAIC$m2 = mtarNAIC(listm[[paste0('m',2)]]$par)
-  results$NAIC$m3 = mtarNAIC(listm[[paste0('m',3)]]$par)
-  if (l0 == 4) {results$NAIC$m4 = mtarNAIC(listm[[paste0('m',4)]]$par)}
+  for (o in l0_min:l0) {
+    results$NAIC[[paste0('m',o)]] = mtarNAIC(listm[[paste0('m',o)]]$par)
+  }
   compiler::enableJIT(0)
   return(results)
 }
