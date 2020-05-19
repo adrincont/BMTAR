@@ -62,6 +62,7 @@ mtarinipars = function(tsregim_obj,
           }
         }
         l = list_model$l0_max
+        l1 = list_model$l0_min
         if (!is.null(l1)) {
           if (round(l1) != l1 & l1 <= 0) {stop('l0_min must be an integer greater than 0')}
           if (round(l) != l & l < l1) {stop('l0_max must be an integer greater than l0_min')}
@@ -103,8 +104,8 @@ mtarinipars = function(tsregim_obj,
           r_prior$zb = NULL
           r_prior$val_rmh = 0.00375
         }
-        cat('If pars are unknown use mtarnumreg with l0 maximum number of regimes','\n')
-        listf = list(tsregim_obj = tsregim_obj, l0 = list_model$l0,method = method,init = list(r = r_prior))
+        cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
+        listf = list(tsregim_obj = tsregim_obj, l0_min = list_model$l0_min,l0_max = list_model$l0_max,method = method,init = list(r = r_prior))
         class(listf) = 'regim_inipars'
         return(listf)
       }
@@ -117,20 +118,25 @@ mtarinipars = function(tsregim_obj,
   }
   # sacar de la lista
   #orders
-  if (!is.null(list_model$pars$orders)) {
-    orders = list_model$pars$orders
-    if (!is.null(method)) {cat('For orders known, method is not necesary','\n')}
-    method = 'ns'
-  }else{
-    if (!is.null(list_model$orders)) {orders = list_model$orders}else{
-      'For orders unknown they must be enter in list_model$orders'
+  if (is.null(list_model$l0_min) & is.null(list_model$l0_max)) {
+    if (!is.null(list_model$pars$orders)) {
+      orders = list_model$pars$orders
+      if (!is.null(method)) {cat('For orders known, method is not necesary','\n')}
+      method = 'ns'
+    }else{
+      if (!is.null(list_model$orders)) {orders = list_model$orders}else{
+        stop('For orders unknown they must be enter in list_model$orders')
+      }
+      if (is.null(method)) {stop('For orders unknown method must be KUO or SSVS')}
     }
-    if (is.null(method)) {stop("For orders unknown method must be KUO or SSVS")}
+  }else{
+    orders = list(pj = NULL,qj = NULL,dj = NULL)
+    cat('For l unknown, orders are not necesary')
   }
   if (!is.list(orders) | length(orders) != 3) {
-    stop('orders must be a list of length 3 list(pj, qj, dj)')
+    stop('orders must be a list with names pj (Not NULL), qj or dj')
   }else if (!{all(names(orders) %in% c('pj','qj','dj'))}) {
-    stop('orders must be a list of length 3 list(pj, qj, dj)')
+    stop('orders must be a list with names pj (Not NULL), qj or dj')
   }
   pj = orders$pj
   qj = orders$qj

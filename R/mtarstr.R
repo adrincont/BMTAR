@@ -388,6 +388,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   }
   SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
   logLikj = vector(mode = "numeric")
+  pf = qf = df = vector('numeric')
   for (lj in 1:l) {
     theta_iter[[lj]] = theta_iter[[lj]][,-c(1:other)]
     gam_iter[[lj]] = gam_iter[[lj]][,-c(1:other)]
@@ -453,7 +454,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       thetaind = c(90,(10 + (1:p)) %x% rep(1,k),(20 + (1:q)) %x% rep(1,nu),30 + (1:d))
     }
     Thetaj = t(ks::invvec(thetaest[[lj]][,2],ncol = k,nrow = eta[lj]))*t(ks::invvec(gamest[[lj]][,1],ncol = k,nrow = eta[lj]))
-    Ri = list()
+    Ri = vector('list')
     cs = matrix(Thetaj[,thetaind == 90],nrow = k,ncol = 1)
     if (sum(cs == 0) != k) {Ri$cs = cs}
     phiest = vector('list', p)
@@ -482,7 +483,10 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       }
     }
     Ri$sigma = ks::invvec(sigmaest[[lj]][,2],ncol = k,nrow = k)
-    Rest[[lj]] = mtaregim(orders = list(p = length(Ri$phi),q = length(Ri$beta),d = length(Ri$delta)),cs = Ri$cs,
+    pf[lj] = max(as.numeric(sapply(names(Ri$phi),substr,4,4)))
+    qf[lj] = max(as.numeric(sapply(names(Ri$beta),substr,4,4)))
+    df[lj] = max(as.numeric(sapply(names(Ri$delta),substr,4,4)))
+    Rest[[lj]] = mtaregim(orders = list(p = pf[lj],q = qf[lj],d = df[lj]),cs = Ri$cs,
                           Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
                           Sigma = Ri$sigma)
     Xj = listj$listaX[[lj]]
@@ -510,9 +514,9 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   data$Yt = t(Yt)
   data$Ut = t(Ut)
   orders = vector('list')
-  orders$pj = sapply(Rest,function(x){length(x$phi)})
-  orders$qj = sapply(Rest,function(x){length(x$beta)})
-  orders$dj = sapply(Rest,function(x){length(x$delta)})
+  orders$pj = pf
+  orders$qj = qf
+  orders$dj = df
   # fitted.values and residuals
   Yt_fit = Yt_res = matrix(ncol = N,nrow = k)
   for (t in 1:N) {
