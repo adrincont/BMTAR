@@ -432,18 +432,27 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   data$Ut = t(Ut)
   # fitted.values and residuals
   Yt_fit = Yt_res = matrix(ncol = N,nrow = k)
-  for (t in 2:N) {
+  for (t in 1:N) {
     lj = listj$Ind[t]
     p = pj[lj]
     q = qj[lj]
     d = dj[lj]
     Wj = matrix(0,nrow = eta[lj],ncol = 1)
-    yti = vector('numeric')
-    for (w in 1:p) {yti = c(yti,Yt[,t - w])}
-    xti = vector('numeric')
-    for (w in 1:q) {xti = c(xti,Xt[,t - w])}
-    zti = vector('numeric')
-    for (w in 1:d) {zti = c(zti,Zt[t - w])}
+    yti = vector(mode = "numeric")
+    for (w in 1:p) {
+      if (t - w > 0) {yti = c(yti,Yt[,t - w])
+      }else{yti = c(yti,rep(0,k))}}
+    if (identical(yti,numeric(0))) {yti = rep(0,k*p)}
+    xti = vector(mode = "numeric")
+    for (w in 1:q) {
+      if (t - w > 0) {xti = c(xti,Xt[,t - w])
+      }else{xti = c(xti,rep(0,nu))}}
+    if (identical(xti,numeric(0))) {xti = rep(0,nu*q)}
+    zti = vector(mode = "numeric")
+    for (w in 1:d) {
+      if (t - w > 0) {xti = c(zti,Zt[t - w])
+      }else{zti = c(zti,0)}}
+    if (identical(zti,numeric(0))) {zti = rep(0,d)}
     if (q == 0 & d != 0) {
       wtj = c(1,yti,zti)
     }else if (d == 0 & q != 0) {
