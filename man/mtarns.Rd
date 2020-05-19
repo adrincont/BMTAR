@@ -50,18 +50,19 @@ data("datasim")
 data = datasim
 #r known
 parameters = list(l = 2,
-                  orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)),
+                  orders = list(pj = c(1,1)),
                   r = data$Sim$r)
 initial = mtarinipars(tsregim_obj = data$Sim,
                       list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE,burn = 1000)
+estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 print.regim_model(estim1)
 autoplot.regim_model(estim1,2)
 autoplot.regim_model(estim1,3)
 autoplot.regim_model(estim1,5)
-diagnostic.mtar(estim1)
+diagnostic_mtar(estim1)
+
 #r unknown
-parameters = list(l = 2,orders = list(pj = c(1,1),dj = c(0,0),qj = c(0,0)))
+parameters = list(l = 2,orders = list(pj = c(1,1)))
 initial = mtarinipars(tsregim_obj = data$Sim,
 list_model = list(pars = parameters))
 estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
@@ -70,6 +71,7 @@ autoplot.regim_model(estim2,1)
 autoplot.regim_model(estim2,2)
 autoplot.regim_model(estim2,3)
 autoplot.regim_model(estim2,5)
+diagnostic_mtar(estim2)
 }
 
 \keyword{Bayesian estimation}

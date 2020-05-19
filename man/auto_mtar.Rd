@@ -43,7 +43,7 @@ niter = 3000, chain = FALSE, method = 'KUO',parallel = FALSE)
 \examples{
   data('datasim')
   data = datasim$Sim
-  auto_mtar(Yt = data$Yt, Zt = data$Zt,niter = 1000)
+  auto = auto_mtar(Yt = data$Yt, Zt = data$Zt,niter = 1000)
 }
 
 \keyword{Bayesian estimation}
