@@ -48,7 +48,7 @@ data = datasim
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
 list_model = list(pars = list(l = 2),
 orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
-estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)
+estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
 autoplot.regim_model(estruc,1)
 autoplot.regim_model(estruc,2)
 autoplot.regim_model(estruc,3)
@@ -58,7 +58,7 @@ autoplot.regim_model(estruc,5)
 initial = mtarinipars(tsregim_obj = data$Sim,method = 'SSVS',
                       list_model = list(pars = list(l = 2),
                       orders = list(pj = c(2,2),qj = c(0,0),dj = c(0,0))))
-estruc = mtarstr(ini_obj = initial,niter = 500,chain = T)
+estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
 
 autoplot.regim_model(estruc,1)
 autoplot.regim_model(estruc,2)
