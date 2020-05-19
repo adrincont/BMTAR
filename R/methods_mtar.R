@@ -108,6 +108,8 @@ autoplot.regim_model = function(object, type = 1, ...) {
   if (type == 5) {
     Chain_Yt = as.data.frame(object$data$Yt)
     Chain_fit = as.data.frame(object$fitted.values)
+    Chain_Yt = Chain_Yt[-nrow(Chain_Yt),]
+    Chain_fit = Chain_fit[-nrow(Chain_fit),]
     time = seq(1,nrow(Chain_fit))
     dat1 = data.frame(type = 'obs',name = 'Series.1',time = time, value = Chain_Yt[,1])
     dat1 = rbind.data.frame(dat1,data.frame(type = 'fit',name = 'Series.1',time = time, value = Chain_fit[,1]))
