@@ -16,15 +16,15 @@ mtarinipars = function(tsregim_obj,
   nu = tsregim_obj$nu
   if (is.null(nu)) {nu = 0}
   if (!is.list(list_model)) {
-    stop('list_model must be a list type object with pars, orders or l0')
-    cat('If pars are unknown use mtarnumreg with l0 maximum number of regimes','\n')
+    stop('list_model must be a list type object with pars, orders, l0_min or l0_max')
+    cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
   }else{
-    if (sum(names(list_model) %in% c('pars','orders','l0')) == 0) {
-      stop('list_model must be a list type object with pars, orders or l0')
-      cat('If pars are unknown use mtarnumreg with l0 maximum number of regimes','\n')
+    if (sum(names(list_model) %in% c('pars','orders','l0_min','l0_max')) == 0) {
+      stop('list_model must be a list type object with pars, orders, l0_min or l0_max')
+      cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
     }else{
       if (!is.null(list_model$orders)) {
-        if (is.null(list_model$orders$pj)) {stop('the list should have orders$p a positive integer')}
+        if (is.null(list_model$orders$pj)) {stop('list_model$orders must have orders$pj a positive integer')}
         if (is.null(list_model$orders$qj)) {
           list_model$orders$qj = list_model$orders$pj*0
         }
@@ -32,7 +32,7 @@ mtarinipars = function(tsregim_obj,
           list_model$orders$dj = list_model$orders$pj*0
         }
       }
-      if (is.null(list_model$l0)) {
+      if (is.null(list_model$l0_max)) {
         if (!is.null(list_model$pars)) {
           if (!is.list(list_model$pars)) {
             stop('list_model$pars must be a list type object with l,Sigma,r or orders')
@@ -40,12 +40,14 @@ mtarinipars = function(tsregim_obj,
             if (sum(names(list_model$pars) %in% c('l','Sigma','r','orders')) == 0) {
               stop('list_model$pars must be a list type object with l,Sigma,r or orders')
             }else{
-              if (is.null(list_model$pars$orders$pj)) {stop('the list should have orders$p a positive integer')}
-              if (is.null(list_model$pars$orders$qj)) {
-                list_model$pars$orders$qj = list_model$pars$orders$pj*0
-              }
-              if (is.null(list_model$pars$orders$dj)) {
-                list_model$pars$orders$dj = list_model$pars$orders$pj*0
+              if (!is.null(list_model$pars$orders)) {
+                if (is.null(list_model$pars$orders$pj)) {stop('list_model$pars$orders must have orders$pj a positive integer')}
+                if (is.null(list_model$pars$orders$qj)) {
+                  list_model$pars$orders$qj = list_model$pars$orders$pj*0
+                }
+                if (is.null(list_model$pars$orders$dj)) {
+                  list_model$pars$orders$dj = list_model$pars$orders$pj*0
+                }
               }
               l = list_model$pars$l
               if (round(l) != l & l <= 0) {stop('l must be an integer greater than 0')}
