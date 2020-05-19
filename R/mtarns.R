@@ -456,7 +456,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     Hj = ks::invvec(thetaest[[lj]][,2],nrow = k,ncol = eta[lj])
     Sig = as.matrix(Rest[[lj]]$sigma)
     Yt_fit[,t - 1] = Hj %*% Wj
-    Yt_res[,t] = solve(Sig) %*% (Yt[,t] - Yt_fit[,t - 1])
+    Yt_res[,t - 1] = solve(Sig) %*% (Yt[,t - 1] - Yt_fit[,t - 1])
   }
   if (chain) {
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,
