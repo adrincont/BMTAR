@@ -41,7 +41,7 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
       data_temp$Xt[is.na(data_temp$Xt)] = meanX
     }
     data_temp = tsregim(data_temp$Yt,data_temp$Zt,data_temp$Xt)
-    initial = mtarinipars(tsregim_obj = data_temp,list_model = list(l0 = l0),method = method)
+    initial = mtarinipars(tsregim_obj = data_temp,list_model = list(l0_max = l0),method = method)
     numregest_1 = mtarnumreg(ini_obj = initial,niter_m = niter,NAIC = TRUE,
                              ordersprev = list(maxpj = pjmax,maxqj = qjmax,maxdj = djmax),parallel = parallel)
     l_1 = numregest_1$NAIC_final_m
@@ -59,7 +59,7 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
   }else{
     data_complete = data
   }
-  initial = mtarinipars(tsregim_obj = data_complete,list_model = list(l0 = l0),method = method)
+  initial = mtarinipars(tsregim_obj = data_complete,list_model = list(l0_max = l0),method = method)
   numregest_final = mtarnumreg(ini_obj = initial,niter_m = niter,chain_m = chain,list_m = TRUE,
                                ordersprev = list(maxpj = pjmax, maxqj = qjmax, maxdj = djmax), parallel = parallel)
   lf = numregest_final$final_m
