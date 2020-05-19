@@ -557,7 +557,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(wtj) %x% diag(k)[s,])}}
     Yt_fit[,t - 1] = Xj %*% diag(gamest[[lj]][,2]) %*% thetaest[[lj]][,2]
     Sig = as.matrix(Rest[[lj]]$sigma)
-    Yt_res[,t - 1] = solve(Sig) %*% (Yt[,t] - Yt_fit[,t - 1])
+    Yt_res[,t - 1] = solve(Sig) %*% (Yt[,t - 1] - Yt_fit[,t - 1])
   }
   if (l != 1) {estimates$r = rest}
   if (chain) {
