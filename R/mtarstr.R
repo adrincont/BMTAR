@@ -54,7 +54,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   if (method == 'SSVS') {
     tauij = itauij = cij = vector('list', l)
   }
-  if (l != 1) {r_iter = matrix(ncol = niter + burn + other,nrow = l - 1)}
+  if (l != 1) {r_iter = matrix(ncol = niter + burn + other,nrow = l - 1)}else{r_iter = NULL}
   # set initial values for each regime in each chain
   itheta0j = isigma0j = iS0j = inu0j = vector('list',l)
   thetaini = ini_obj$init$Theta
@@ -361,7 +361,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   if (l > 2) {
     r_iter = list_m$r_iter[,-c(1:{other + burn})]
   }else{
-    r_iter = list_m$r_iter[-c(1:{other + burn})]
+    r_iter = NULL
   }
   theta_iter = list_m$theta_iter
   sigma_iter = list_m$sigma_iter
@@ -376,10 +376,16 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     rest[,3] = apply(rchain,1,stats::quantile,probs = (1 + level)/2)
     rest[,2] = apply(rchain,1,mean)
     rvec = c(rest[,2],'prop %' = acep/niter*100)
+  }else{
+    rvec = NULL
   }
   # save chains
   # logLik
-  listj = lists(rest[,2])
+  if (l > 2) {
+    listj = lists(rest[,2])
+  }else{
+    listj = lists(0)
+  }
   SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
   logLikj = vector(mode = "numeric")
   for (lj in 1:l) {
