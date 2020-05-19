@@ -15,7 +15,7 @@ mtaregim = function(orders = list(p = 1,q = 0,d = 0), cs = NULL,
   }else if (sum(names(orders) %in% c('p','q','d')) != 3) {
     stop('orders must be a list of length 3 list(p, q, d)')
   }
-  if (is.null(orders$p)) {stop('the list should have orders$p a positive integer or 0')}
+  if (is.null(orders$p)) {stop('the list should have orders$p a positive integer')}
   p = orders$p
   q = ifelse(is.null(orders$q),0,orders$q)
   d = ifelse(is.null(orders$d),0,orders$d)
