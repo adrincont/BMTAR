@@ -36,7 +36,7 @@ mtaregim = function(orders = list(p = 1,q = 0,d = 0), cs = NULL,
       if (!vl) {stop('Phi must be a list of real matrix of dimension kxk')}
       if (!is.matrix(Phi[[i]])) {stop('Phi[[i]] must be a matrix type object')}
       if (substr(names(Phi[i]),1,3) != 'phi' | !{as.numeric(substr(names(Phi[i]),4,4)) %in% c(1:p)}) {
-        stop('names  in the list Phi must be \'phii\' with a integer i in 1:q')
+        stop('names  in the list Phi must be \'phii\' with a integer i in 1:p')
       }
     }
     if (max(as.numeric(sapply(names(Phi),substr,4,4))) != p) {
