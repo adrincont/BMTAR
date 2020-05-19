@@ -484,8 +484,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     }
     Ri$sigma = ks::invvec(sigmaest[[lj]][,2],ncol = k,nrow = k)
     pf[lj] = max(as.numeric(sapply(names(Ri$phi),substr,4,4)))
-    qf[lj] = max(as.numeric(sapply(names(Ri$beta),substr,4,4)))
-    df[lj] = max(as.numeric(sapply(names(Ri$delta),substr,4,4)))
+    if (!is.null(Ri$beta)) {
+      qf[lj] = max(as.numeric(sapply(names(Ri$beta),substr,4,4)))
+    }
+    if (!is.null(Ri$delta)) {
+      df[lj] = max(as.numeric(sapply(names(Ri$delta),substr,4,4)))
+    }
     Rest[[lj]] = mtaregim(orders = list(p = pf[lj],q = qf[lj],d = df[lj]),cs = Ri$cs,
                           Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
                           Sigma = Ri$sigma)
