@@ -23,6 +23,15 @@ mtarinipars = function(tsregim_obj,
       stop('list_model must be a list type object with pars, orders or l0')
       cat('If pars are unknown use mtarnumreg with l0 maximum number of regimes','\n')
     }else{
+      if (!is.null(list_model$orders)) {
+        if (is.null(list_model$orders$pj)) {stop('the list should have orders$p a positive integer')}
+        if (is.null(list_model$orders$qj)) {
+          list_model$orders$qj = list_model$orders$pj*0
+        }
+        if (is.null(list_model$orders$dj)) {
+          list_model$orders$dj = list_model$orders$pj*0
+        }
+      }
       if (is.null(list_model$l0)) {
         if (!is.null(list_model$pars)) {
           if (!is.list(list_model$pars)) {
