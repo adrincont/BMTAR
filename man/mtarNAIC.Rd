@@ -46,11 +46,11 @@ data = datasim
 initial2 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
 list_model = list(pars = list(l = 2),
 orders = list(pj = c(1,1),qj = c(1,1),dj = c(1,1))))
-estruc2 = mtarstr(ini_obj = initial2,niter = 100,chain = T,burn = 100)
+estruc2 = mtarstr(ini_obj = initial2,niter = 100,chain = TRUE,burn = 100)
 initial3 = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
 list_model = list(pars = list(l = 3),
 orders = list(pj = c(1,1,1),qj = c(1,1,1),dj = c(1,1,1))))
-estruc3 = mtarstr(ini_obj = initial3,niter = 100,chain = T,burn = 100)
+estruc3 = mtarstr(ini_obj = initial3,niter = 100,chain = TRUE,burn = 100)
 mtarNAIC(estruc2)
 mtarNAIC(estruc3)
 }
