@@ -4,16 +4,17 @@
 # Function:
 #==================================================================================================#
 mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter_m = 1000,
-                      iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
+                      iterprev = 500, chain_m = FALSE, list_m = FALSE, l0_min = 2, NAIC = FALSE,
                       ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = FALSE){
   compiler::enableJIT(3)
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
+  if (!is.logical(parallel)) {stop('paralell must be a logical object')}
   if (!is.logical(NAIC)) {stop('NAIC must be a logical object')}
   # Checking
   if (!inherits(ini_obj, 'regim_inipars')) {
     stop('ini_obj must be a regim_inipars object')
   }
-  l0 = ini_obj$l0
+  l0 = ini_obj$l0_max
   if (is.null(l0)) {stop('If parameters are unknown enter l0 maximum number of regimes in ini_obj')}
   method = ini_obj$method
   # data
@@ -76,8 +77,8 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
     return(prob/volume)
   }
   dmunif = compiler::cmpfun(dmunif)
-  rdunif = function(m,l0){
-    sec = 2:l0
+  rdunif = function(m,l0,...){
+    sec = l0_min:l0
     sec = sec[sec != m]
     if (length(sec) == 1) {
       muestra = sec
@@ -456,39 +457,30 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   cat('Running previous chains ... \n')
   listm = vector('list')
   if (parallel) {
-    micluster = parallel::makeCluster(2)
+    micluster = parallel::makeCluster(parallel::detectCores())
     doParallel::registerDoParallel(micluster)
     funcParallel = function(i,iterprev){return(fill(m = i,iter = iterprev, burn = round(0.3*iterprev)))}
     parallel::clusterEvalQ(micluster, library(MTAR))
     obj_S = list('ini_obj','r_init','burn_m','niter_m','chain_m','list_m',
               'ordersprev','k','N','nu','method','fill','maxpj','maxqj','maxdj',
-              'Zt','Yt','Xt','Ut','lists','fycond','rdunif','dmunif')
+              'Zt','Yt','Xt','Ut','lists','fycond','rdunif','dmunif','l0_min')
     parallel::clusterExport(cl = micluster,varlist = obj_S,envir = environment())
-    if (l0 == 3) {
-      s = parallel::parLapply(micluster,list(2,3), funcParallel, iterprev = iterprev)
-      listm[[paste0('m',2)]] = s[[1]]
-      listm[[paste0('m',3)]] = s[[2]]
-    }
-    if (l0 == 4) {
-      s = parallel::parLapply(micluster,list(2,3,4), funcParallel, iterprev = iterprev)
-      listm[[paste0('m',2)]] = s[[1]]
-      listm[[paste0('m',3)]] = s[[2]]
-      listm[[paste0('m',4)]] = s[[3]]
+    s = parallel::parLapply(micluster,as.list(l0_min:l0), funcParallel, iterprev = iterprev)
+    cc = 1
+    for (i in l0_min:l0) {
+      listm[[paste0('m',i)]] = s[[cc]]
+      cc = cc + 1
     }
     parallel::stopCluster(micluster)
   }else{
-    listm[[paste0('m',2)]] = fill(m = 2,iter = iterprev, burn = round(0.3*iterprev))
-    listm[[paste0('m',3)]] = fill(m = 3,iter = iterprev, burn = round(0.3*iterprev))
-    if (l0 == 4) {
-      listm[[paste0('m',4)]] = fill(m = 4,iter = iterprev, burn = round(0.3*iterprev))
+    for (i in l0_min:l0) {
+      listm[[paste0('m',i)]] = fill(m = i,iter = iterprev, burn = round(0.3*iterprev))
     }
   }
   if (NAIC) {
     results = list(tsregim = ini_obj$tsregim_obj,list_m = listm)
-    results$NAIC$m2 = mtarNAIC(listm[[paste0('m',2)]]$par)
-    results$NAIC$m3 = mtarNAIC(listm[[paste0('m',3)]]$par)
-    if (l0 == 4) {
-      results$NAIC$m4 = mtarNAIC(listm[[paste0('m',4)]]$par)
+    for (i in l0_min:l0) {
+      results$NAIC[[paste0('m',i)]] = mtarNAIC(listm[[paste0('m',i)]]$par)
     }
     x_NAIC = unlist(sapply(results$NAIC,function(x){x$NAIC}))
     results$NAIC_final_m = as.numeric(gsub('m','',names(x_NAIC[which.min(x_NAIC)])))
@@ -496,7 +488,7 @@ mtarnumreg = function(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL, niter
   }
   # Code
   m_iter = c()
-  m_iter[1] = sample(2:l0,1)
+  m_iter[1] = sample(l0_min:l0,1)
   acepm = 0
   # pm_im = matrix(nrow = l0,ncol = niter_m + burn_m - 1)
   cat('Estimating number of regimes ... \n')
