@@ -8,7 +8,7 @@ Model specification of data, known or unknown parameters and its prior distribut
 \usage{
 mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2,
 orders = list(pj = c(1,1), qj = c(0,0), dj = c(0,0)), r = NULL, Sigma = NULL),
-orders = NULL,l0 = NULL), method = NULL, theta_prior = NULL,
+orders = NULL,l0_min = NULL,l0_max = NULL), method = NULL, theta_prior = NULL,
 sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
 }
 \arguments{

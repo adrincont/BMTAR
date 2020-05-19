@@ -6,15 +6,14 @@
 Compute estimation of number of regimes by NAIC or Carlin and Chib methodology for a MTAR model
 }
 \usage{
-mtarnumreg(ini_obj, r_init = NULL, level = 0.95, burn_m = NULL,
-niter_m = 1000,iterprev = 500, chain_m = FALSE, list_m = FALSE,
+mtarnumreg(ini_obj, level = 0.95, burn_m = NULL,niter_m = 1000,
+iterprev = 500, chain_m = FALSE, list_m = FALSE,
 NAIC = FALSE,ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0),
 parallel = FALSE)
 }
 
 \arguments{
   \item{ini_obj}{class ``regime_inipars'' object, here specificate only l0. Not NULL}
-  \item{r_init}{numeric type of length l - 1. If r not known, starting value of the chain. Default NULL}
   \item{level}{numeric type, confident interval for estimations. Default 0.95}
   \item{burn_m}{numeric type, number of initial runs. Default NULL (10\% of niter)}
   \item{niter_m}{numeric type, number of runs of MCMC. Default 1000}
