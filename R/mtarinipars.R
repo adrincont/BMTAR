@@ -27,9 +27,17 @@ mtarinipars = function(tsregim_obj,
         if (is.null(list_model$orders$pj)) {stop('list_model$orders must have orders$pj a positive integer')}
         if (is.null(list_model$orders$qj)) {
           list_model$orders$qj = list_model$orders$pj*0
+        }else{
+          if (is.null(tsregim_obj$Xt)) {
+            stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+          }
         }
         if (is.null(list_model$orders$dj)) {
           list_model$orders$dj = list_model$orders$pj*0
+        }else{
+          if (is.null(tsregim_obj$Zt)) {
+            stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+          }
         }
       }
       if (is.null(list_model$l0_max)) {
@@ -44,9 +52,17 @@ mtarinipars = function(tsregim_obj,
                 if (is.null(list_model$pars$orders$pj)) {stop('list_model$pars$orders must have orders$pj a positive integer')}
                 if (is.null(list_model$pars$orders$qj)) {
                   list_model$pars$orders$qj = list_model$pars$orders$pj*0
+                }else{
+                  if (is.null(tsregim_obj$Xt)) {
+                    stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+                  }
                 }
                 if (is.null(list_model$pars$orders$dj)) {
                   list_model$pars$orders$dj = list_model$pars$orders$pj*0
+                }else{
+                  if (is.null(tsregim_obj$Zt)) {
+                    stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+                  }
                 }
               }
               l = list_model$pars$l
@@ -116,7 +132,7 @@ mtarinipars = function(tsregim_obj,
       stop('za must be less than zb')
     }
   }
-  # sacar de la lista
+  # list_model
   #orders
   if (is.null(list_model$l0_min) & is.null(list_model$l0_max)) {
     if (!is.null(list_model$pars$orders)) {
@@ -155,7 +171,7 @@ mtarinipars = function(tsregim_obj,
           if (dj[lj] > 5) {stop('dj must be smaller or 5 for each regime')}
         }
       }
-    }else{stop('pj qj and dj must be of type vector')}
+    }else{stop('pj qj and dj must be of numeric type')}
   }
   eta = 1 + pj*k + qj*nu + dj
   #

@@ -34,7 +34,7 @@ Graph the strings for the outputs corresponding to the functions \dQuote{\code{m
 library(ggplot2)
 data("datasim")
 data = datasim$Sim$Zt
-parameters = list(l = 1,orders = list(pj = 1,dj = 0,qj = 0))
+parameters = list(l = 1,orders = list(pj = 1))
 initial = mtarinipars(tsregim_obj = tsregim(data),
                       list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
