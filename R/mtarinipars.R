@@ -6,7 +6,7 @@
 mtarinipars = function(tsregim_obj,
                        list_model = list(pars = list(l = 2, orders = list(pj = c(1,1), qj = c(0,0), dj = c(0,0)),
                                                      r = NULL, Sigma = NULL),
-                                         orders = NULL,l0 = NULL),
+                                         orders = NULL,l0_min = NULL,l0_max = NULL),
                        method = NULL, theta_prior = NULL, sigma_prior = NULL, gamma_prior = NULL,
                        r_prior = NULL){
   if (!inherits(tsregim_obj, 'tsregim')) {
@@ -40,12 +40,18 @@ mtarinipars = function(tsregim_obj,
       }else{
         if (!is.null(list_model$pars) & is.list(list_model$pars)) {
           if ('l' %in% names(list_model$pars)) {
-            stop('If l is known, l0 is not necesary')
+            stop('If l is known, l0_min and l0_max is not necesary')
           }
         }
-        l = list_model$l0
-        if (round(l) != l & l <= 0) {stop('l0 must be an integer greater than 0')}
-        if (l > 4) {stop('l0 must be less than 4')}
+        l1 = list_model$l0_min
+        l = list_model$l0_max
+        if (!is.null(l1)) {
+          if (round(l1) != l1 & l1 <= 0) {stop('l0_min must be an integer greater than 0')}
+          if (round(l) != l & l < l1) {stop('l0_max must be an integer greater than l0_min')}
+        }else{
+          if (round(l) != l & l <= 1) {stop('l0_max must be an integer greater than 1')}
+        }
+        if (l > 4) {stop('l0_max must be less than 4')}
         if (is.null(method)) {stop('For l unknown method must be KUO or SSVS')}
         if (!is.null(r_prior)) {
           if (!is.list(r_prior)) {
