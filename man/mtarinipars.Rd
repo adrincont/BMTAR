@@ -91,7 +91,7 @@ initpars = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
 # for estimate structural and non-structural parameters
 # mtarstr: l always known
 parameters = list(l = length(datasim$Reg))
-orders = list(pj = c(2,2),qj = c(1,1),dj = c(1,1))
+orders = list(pj = c(2,2),dj = c(1,1))
 initpars_KUO = mtarinipars(tsregim_obj,
 list_model = list(pars = parameters,orders = orders),method = 'KUO')
 initpars_SSVS = mtarinipars(tsregim_obj,
