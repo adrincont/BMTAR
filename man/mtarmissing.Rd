@@ -59,7 +59,7 @@ orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
 missingest = mtarmissing(ini_obj = initial,chain = TRUE,
 niter = 500,burn = 500)
 print(missingest)
-autoplot.regime_missing(missingest,1)
+autoplot.regim_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]
 missingest$tsregim$Yt[is.na(data_yt[,1]),]
 }
