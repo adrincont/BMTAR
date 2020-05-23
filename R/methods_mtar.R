@@ -211,7 +211,7 @@ autoplot.tsregim = function(object, type = 1, ...) {
                                      time = time,value = dats_Xt[,i]))
       }
     }
-    p3 = ggplot2::ggplot(ggplot2::aes(x = ~time,y = ~value),data = dat2)
+    p3 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat2)
     p3 = p3 + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
     p3 = p3 + ggplot2::labs(title = 'Covariates process')
     p3 = p3 + ggplot2::geom_vline(xintercept = dat2$time[is.na(dat2$value)],color = "red",linetype = 'dashed')
