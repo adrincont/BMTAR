@@ -23,9 +23,9 @@ library(ggplot2)
 data(datasim_miss)
 
 data = tsregim(datasim_miss$Yt,datasim_miss$Zt,ddatasim_miss$Xt)
-autoplot.tsregim(datos,1)
-autoplot.tsregim(datos,2)
-autoplot.tsregim(datos,3)
+autoplot.tsregim(data,1)
+autoplot.tsregim(data,2)
+autoplot.tsregim(data,3)
 
 Y_temp = datasim_miss$Yt
 meanY = apply(Y_temp,2,mean,na.rm = T)
