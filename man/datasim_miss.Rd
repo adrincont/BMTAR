@@ -1,8 +1,8 @@
-\name{datasim}
-\alias{datasim}
-\title{Simulated Multivariate threshold autoregressive process simulation}
+\name{datasim_miss}
+\alias{datasim_miss}
+\title{Multivariate threshold autoregressive process simulation with missing data}
 \description{
- simulated MTAR process
+ simulated MTAR process with missing data
 }
 \usage{data(datasim)}
 \format{Object with class \code{mtarsim}}
