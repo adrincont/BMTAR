@@ -16,7 +16,9 @@ devtools::install_github("adrincont/libreria-MTAR")
 ## Example of use
 ```s
 library(MTAR)
-library(ggplot2)  
+library(ggplot2)
+
+
 ```
 ## For more information
 You will find the theoretical basis of the method in the documents:

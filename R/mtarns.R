@@ -450,7 +450,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     if (identical(xti,numeric(0))) {xti = rep(0,nu*q)}
     zti = vector(mode = "numeric")
     for (w in 1:d) {
-      if (t - w > 0) {xti = c(zti,Zt[t - w])
+      if (t - w > 0) {zti = c(zti,Zt[t - w])
       }else{zti = c(zti,0)}}
     if (identical(zti,numeric(0))) {zti = rep(0,d)}
     if (q == 0 & d != 0) {
