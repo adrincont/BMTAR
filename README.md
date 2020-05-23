@@ -11,6 +11,8 @@ The R package *MTAR* implements parameter estimation using a Bayesian approach f
 ## Installation
 You can install the **development** version from [Github](https://github.com/adrincont/libreria-MTAR).
 ```s
+install.packages("devtools)")
+library(devtools)
 devtools::install_github("adrincont/libreria-MTAR")
 ```
 ## Example of use
