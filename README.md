@@ -18,6 +18,59 @@ devtools::install_github("adrincont/libreria-MTAR")
 library(MTAR)
 library(ggplot2)
 
+data(datasim_miss)
+
+data = tsregim(datasim_miss$Yt,datasim_miss$Zt,ddatasim_miss$Xt)
+autoplot.tsregim(datos,1)
+autoplot.tsregim(datos,2)
+autoplot.tsregim(datos,3)
+
+Y_temp = datasim_miss$Yt
+meanY = apply(Y_temp,2,mean,na.rm = T)
+Y_temp[apply(Y_temp,2,is.na)] = meanY
+X_temp = datasim_miss$Xt
+meanX = mean(X_temp,na.rm = T)
+X_temp[apply(X_temp,2,is.na)] = meanX
+Z_temp = datasim_miss$Zt
+meanZ = mean(Z_temp,na.rm = T)
+Z_temp[apply(Z_temp,2,is.na)] = meanZ
+
+data_temp = tsregim(Y_temp,Z_temp,X_temp)
+initial = mtarinipars(tsregim_obj = data_temp,list_model = list(l0_max = 3),method = 'KUO')
+estim_nr = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = TRUE,
+ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2))
+print(estim_nr)
+
+nitial = mtarinipars(tsregim_obj = data_temp,method = 'KUO',
+list_model = list(pars = list(l = estim_nr$final_m),orders = list(pj = c(2,2))))
+estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
+autoplot.regim_model(estruc,1)
+autoplot.regim_model(estruc,2)
+autoplot.regim_model(estruc,3)
+autoplot.regim_model(estruc,4)
+autoplot.regim_model(estruc,5)
+
+
+initial = mtarinipars(tsregim_obj = data_temp,
+list_model = list(pars = list(l = estim_nr$final_m,r = estruc$regim$r, orders = estruc$regim$orders)
+missingest = mtarmissing(ini_obj = initial,chain = TRUE, niter = 500,burn = 500)
+print(missingest)
+autoplot.regim_missing(missingest,1)
+data_c = missingest$tsregim
+
+initial = mtarinipars(tsregim_obj = data_c,list_model = list(l0_max = 3),method = 'KUO')
+estim_nr = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = TRUE,
+ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2))
+print(estim_nr)
+
+nitial = mtarinipars(tsregim_obj = data_c,method = 'KUO',
+list_model = list(pars = list(l = estim_nr$final_m),orders = list(pj = c(2,2))))
+estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
+autoplot.regim_model(estruc,1)
+autoplot.regim_model(estruc,2)
+autoplot.regim_model(estruc,3)
+autoplot.regim_model(estruc,4)
+autoplot.regim_model(estruc,5)
 
 ```
 ## For more information

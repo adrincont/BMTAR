@@ -185,7 +185,7 @@ autoplot.tsregim = function(object, type = 1, ...) {
       dat = rbind(dat,data.frame(name = paste0('Series.',i),time = time,value = dats_Yt[,i]))
     }
   }
-  p = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)
+  p = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value,group = ~name),data = dat)
   p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.) + ggplot2::theme_bw()
   p = p + ggplot2::labs(title = 'Output process')
   p = p + ggplot2::geom_vline(xintercept = dat$time[is.na(dat$value)],color = "red",linetype = 'dashed')
