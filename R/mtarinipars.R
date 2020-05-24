@@ -24,19 +24,22 @@ mtarinipars = function(tsregim_obj,
       cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
     }else{
       if (!is.null(list_model$orders)) {
-        if (is.null(list_model$orders$pj)) {stop('list_model$orders must have orders$pj a positive integer')}
-        if (is.null(list_model$orders$qj)) {
-          list_model$orders$qj = list_model$orders$pj*0
+        if (!is.list(list_model$orders)) {stop('list_model$orders must be a list type object with names pj(Not NULL),qj,dj')
         }else{
-          if (any(list_model$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
-            stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+          if (is.null(list_model$orders$pj)) {stop('list_model$orders must have orders$pj a positive integer')}
+          if (is.null(list_model$orders$qj)) {
+            list_model$orders$qj = list_model$orders$pj*0
+          }else{
+            if (any(list_model$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
+              stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+            }
           }
-        }
-        if (is.null(list_model$orders$dj)) {
-          list_model$orders$dj = list_model$orders$pj*0
-        }else{
-          if (any(list_model$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
-            stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+          if (is.null(list_model$orders$dj)) {
+            list_model$orders$dj = list_model$orders$pj*0
+          }else{
+            if (any(list_model$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
+              stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+            }
           }
         }
       }
@@ -49,19 +52,22 @@ mtarinipars = function(tsregim_obj,
               stop('list_model$pars must be a list type object with l,Sigma,r or orders')
             }else{
               if (!is.null(list_model$pars$orders)) {
-                if (is.null(list_model$pars$orders$pj)) {stop('list_model$pars$orders must have orders$pj a positive integer')}
-                if (is.null(list_model$pars$orders$qj)) {
-                  list_model$pars$orders$qj = list_model$pars$orders$pj*0
+                if (!is.list(list_model$pars$orders)) {stop('list_model$pars$orders must be a list type object with names pj(Not NULL),qj,dj')
                 }else{
-                  if (any(list_model$pars$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
-                    stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+                  if (is.null(list_model$pars$orders$pj)) {stop('list_model$pars$orders must have orders$pj a positive integer')}
+                  if (is.null(list_model$pars$orders$qj)) {
+                    list_model$pars$orders$qj = list_model$pars$orders$pj*0
+                  }else{
+                    if (any(list_model$pars$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
+                      stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+                    }
                   }
-                }
-                if (is.null(list_model$pars$orders$dj)) {
-                  list_model$pars$orders$dj = list_model$pars$orders$pj*0
-                }else{
-                  if (any(list_model$pars$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
-                    stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+                  if (is.null(list_model$pars$orders$dj)) {
+                    list_model$pars$orders$dj = list_model$pars$orders$pj*0
+                  }else{
+                    if (any(list_model$pars$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
+                      stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+                    }
                   }
                 }
               }
