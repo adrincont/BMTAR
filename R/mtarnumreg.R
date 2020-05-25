@@ -18,19 +18,19 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   if (is.null(ini_obj$tsregime_obj$Zt)) {
     stop('Threshold process must be enter in ini_obj for evaluate l0_max number of regimes')}
   if (is.null(ini_obj$l0_min)) {
-    cat('l0_min NULL default 2')
+    cat('l0_min NULL default 2 \n')
     l0_min = 2
   }else{
     l0_min = ini_obj$l0_min
   }
   if (is.null(ini_obj$l0_max)) {
-    cat('l0_max NULL default 3')
+    cat('l0_max NULL default 3 \n')
     l0 = 3
   }else{
     l0 = ini_obj$l0_max
   }
   if (is.null(ini_obj$method)) {
-    cat('method NULL default KUO')
+    cat('method NULL default KUO \n')
     method = 'KUO'
   }else{
     method = ini_obj$method
@@ -495,7 +495,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
     micluster = parallel::makeCluster(parallel::detectCores())
     doParallel::registerDoParallel(micluster)
     funcParallel = function(i,iterprev){return(fill(m = i,iter = iterprev, burn = round(0.3*iterprev)))}
-    parallel::clusterEvalQ(micluster, library(MTAR))
+    parallel::clusterEvalQ(micluster, library(mtar))
     obj_S = list('ini_obj','burn_m','niter_m','chain_m','list_m',
               'ordersprev','k','N','nu','method','fill','maxpj','maxqj','maxdj',
               'Zt','Yt','Xt','Ut','lists','fycond','rdunif','dmunif','l0_min')

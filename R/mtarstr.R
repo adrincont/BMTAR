@@ -23,24 +23,24 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   if (is.null(nu)) {nu = 0}
   # parameters
   if (is.null(ini_obj$pars$l)) {
-    cat('l NULL default 2')
+    cat('l NULL default 2 \n')
     l = 2
   }else{
     l = ini_obj$pars$l
   }
   if (names(ini_obj$pars) %in% c('orders','r','Sigma')) {
-    cat('Parameters different of l in list_model$pars will be ignored')
+    cat('Parameters different of l in list_model$pars will be ignored \n')
   }
   # method
   if (is.null(ini_obj$method)) {
-    cat('Method NULL default KUO')
+    cat('Method NULL default KUO \n')
     method = 'KUO'
   }else{
     method = ini_obj$method
   }
   # unknown
   if (is.null(ini_obj$orders)) {
-    cat('orders NULL default por each regime pj = 2,qj = 0,dj = 0')
+    cat('orders NULL default por each regime pj = 2,qj = 0,dj = 0 \n')
     orders = list(pj = rep(2,l),qj = rep(0,l),dj = rep(0,l))
   }else{
     orders = ini_obj$orders
@@ -274,7 +274,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     funcParallel = function(ik,iterprev,reg,i,listj,theta_iter,sigma_iter,gam_iter){
       return(rgamber(pos = ik,reg,i = i,listj = listj,theta_iter,sigma_iter,gam_iter))
     }
-    parallel::clusterEvalQ(micluster, library(MTAR))
+    parallel::clusterEvalQ(micluster, library(mtar))
     obj_S = list('method','dmnormB','k','eta','Rj','rgamber','fycond','lists','l','N','eta',
                  'pij')
     parallel::clusterExport(cl = micluster,varlist = obj_S,envir = environment())
