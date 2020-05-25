@@ -32,11 +32,11 @@ autoplot.regim_model = function(object, type = 1, ...) {
     p3 = vector(mode = 'list',length = length(Chain_Sig))
     names(p3) = names(Chain_Sig)
     names(dat3l) = names(Chain_Sig)
-    if (!is.matrix(Chain_Sig$R1)) {
-      Chain_Sig$R1 = t(as.matrix(Chain_Sig$R1))
-    }
-    time = seq(1,ncol(Chain_Sig$R1))
     for (j in names(Chain_Sig)) {
+      if (!is.matrix(Chain_Sig[[j]])) {
+        Chain_Sig[[j]] = t(as.matrix(Chain_Sig[[j]]))
+      }
+      time = seq(1,ncol(Chain_Sig[[j]]))
       dat3 = data.frame(comp = '11',time = time,value = Chain_Sig[[j]][1,])
       k = dim(object$regime[[j]]$sigma)[1]
       names_sig = paste0(1:k,1)
