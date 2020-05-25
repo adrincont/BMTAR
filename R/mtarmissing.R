@@ -7,8 +7,8 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   #checking
   compiler::enableJIT(3)
   if (!is.logical(chain)) {stop('chain must be a logical object')}
-  if (!inherits(ini_obj, 'regim_inipars')) {
-    stop('ini_obj must be a regim_inipars object')
+  if (!inherits(ini_obj, 'regime_inipars')) {
+    stop('ini_obj must be a regime_inipars object')
   }
   #code
   symm = function(x) {
@@ -517,11 +517,9 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   compiler::enableJIT(0)
   if (chain) {
     result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates, Chains = Chains)
-    class(result) = 'regim_missing'
-    return(result)
   }else{
     result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates)
-    class(result) = 'regim_missing'
-    return(result)
   }
+  class(result) = 'regime_missing'
+  return(result)
 }

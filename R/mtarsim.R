@@ -25,6 +25,8 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL){
     Xt = t(Xt)
   }
   Ut = rbind(Zt,Xt)
+  k = nrow(Rg[[1]]$sigma)
+  nu = nrow(Ut) - 1
   l = length(Rg)
   if (l == 1) {
     rj = matrix(c(-Inf,Inf),nrow = 2,ncol = l)
@@ -35,23 +37,22 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL){
     }
   }
   # Validations
-  if (!is.list(Rg)) {stop('Rg must be a list of objects of class regime')}
-  if (ncol(Ut) != N | !is.numeric(Ut) | !is.matrix(Ut)) {stop('Ut must be a matrix of dimension nx(nu+1)')}
+  if (!is.list(Rg)) {stop('Rg must be a list type object with objects of class regime')}
+  if (ncol(Ut) != N | !is.numeric(Ut) | !is.matrix(Ut)) {
+    stop(paste0('Ut must be a matrix of dimension ',N,'x',nu + 1))}
   for (i in 1:l) {
     if (class(Rg[[i]]) != 'regime') {stop('Rg must be a list of objects of class regime')}
   }
   if (l >= 2) {
     if (length(r) < 1 | length(r) != (l - 1) | !is.numeric(r) | is.null(r)) {
-      stop('r must be a numeric vector of length(Rg)-1 ')}else{
+      stop(paste('r must be a numeric vector of length',length(Rg) - 1))}else{
       if (l > 2) {for (i in 1:{l - 2}) {
         if (r[i] >= r[i + 1]) {stop('r[i] must be smaller than r[i+1]')}}
       }
     }
   }
   # values by regime
-  k = nrow(Rg[[1]]$sigma)
-  nu = nrow(Ut) - 1
-  pj = qj = dj = c()
+  pj = qj = dj = vector('numeric')
   for (i in 1:l) {
     pj[i] = length(Rg[[i]]$phi)
     qj[i] = length(Rg[[i]]$beta)
@@ -124,13 +125,13 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL){
     Xt = t(Xt[,-c(1:{maxj + burn})])
   }
   if (sum(Xt) != 0 & sum(Zt) != 0) {
-    sim = tsregim(Yt = Yt,Xt = Xt,Zt = Zt,r = r)
+    sim = tsregime(Yt = Yt,Xt = Xt,Zt = Zt,r = r)
   }else if (sum(Xt) == 0 & sum(Zt) != 0) {
-    sim = tsregim(Yt = Yt,Zt = Zt,r = r)
+    sim = tsregime(Yt = Yt,Zt = Zt,r = r)
   }else if (sum(Zt) == 0 & sum(Xt) != 0) {
-    sim = tsregim(Yt = Yt,Xt = Xt)
+    sim = tsregime(Yt = Yt,Xt = Xt)
   }else if (sum(Zt) == 0 & sum(Xt) == 0) {
-    sim = tsregim(Yt = Yt)
+    sim = tsregime(Yt = Yt)
   }
   List_RS = list(Sim = sim, Reg = Rg,pj = pj,qj = qj,dj = dj)
   class(List_RS) = 'mtarsim'

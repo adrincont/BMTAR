@@ -29,8 +29,8 @@ lists_ind = function(r,Zt,l,...){
   }
   return(list(Ind = Ind))
 }
-tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL){
-  list_result = list()
+tsregime = function(Yt, Zt = NULL, Xt = NULL, r = NULL){
+  list_result = vector('list')
   if (!is.null(r)) {
     if (!is.numeric(r)) {stop('r must be a numeric vector')}
     l = length(r) + 1
@@ -79,6 +79,6 @@ tsregim = function(Yt, Zt = NULL, Xt = NULL, r = NULL){
   }
   list_result$N = N
   list_result$k = k
-  class(list_result) = 'tsregim'
+  class(list_result) = 'tsregime'
   return(list_result)
 }

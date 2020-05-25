@@ -12,8 +12,8 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
     if (!is.logical(parallel)) {stop('paralell must be a logical object')}
   if (!is.logical(NAIC)) {stop('NAIC must be a logical object')}
   # Checking
-  if (!inherits(ini_obj, 'regim_inipars')) {
-    stop('ini_obj must be a regim_inipars object')
+  if (!inherits(ini_obj, 'regime_inipars')) {
+    stop('ini_obj must be a regime_inipars object')
   }
   if (is.null(ini_obj$tsregim_obj$Zt)) {
     stop('Threshold process must be enter in ini_obj for evaluate l0_max number of regimes')}
@@ -548,29 +548,26 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
                    list_m = listm ,m_chain = m_iter,
                    prop = pm_im,
                    estimates = vecm,final_m = vecm[[1]])
-    class(results) = 'regim_number'
   }else if (chain_m & !list_m) {
     results = list(tsregim = ini_obj$tsregim_obj,
                    m_chain = m_iter,
                    prop = pm_im,
                    estimates = vecm,final_m = vecm[1])
-    class(results) = 'regim_number'
   }else if (!chain_m & list_m) {
     results = list(tsregim = ini_obj$tsregim_obj,
                    list_m = listm,
                    prop = pm_im,
                    estimates = vecm,final_m = vecm[1])
-    class(results) = 'regim_number'
   }else if (!chain_m & !list_m) {
     results = list(tsregim = ini_obj$tsregim_obj,
                    prop = pm_im,
                    estimates = vecm,
                    final_m = vecm[1])
-    class(results) = 'regim_number'
   }
   for (o in l0_min:l0) {
     results$NAIC[[paste0('m',o)]] = mtarNAIC(listm[[paste0('m',o)]]$par)
   }
   compiler::enableJIT(0)
+  class(results) = 'regime_number'
   return(results)
 }

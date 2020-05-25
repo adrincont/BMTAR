@@ -4,8 +4,8 @@
 # Function:
 #==================================================================================================#
 mtarNAIC = function(regimemodel){
-  if (class(regimemodel) != 'regim_model') {
-    stop('regimemodel must be an object of type (regim_model)')
+  if (class(regimemodel) != 'regime_model') {
+    stop('regimemodel must be an object of type (regime_model)')
   }
   l = length(regimemodel$regime)
   k = nrow(regimemodel$regime[[1]]$sigma)

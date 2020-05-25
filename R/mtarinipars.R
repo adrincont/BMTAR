@@ -9,8 +9,8 @@ mtarinipars = function(tsregim_obj,
                                          orders = NULL,l0_min = NULL,l0_max = NULL),
                        method = NULL, theta_prior = NULL, sigma_prior = NULL, gamma_prior = NULL,
                        r_prior = NULL){
-  if (!inherits(tsregim_obj, 'tsregim')) {
-    stop('tsregim_obj must be a tsregim object')
+  if (!inherits(tsregim_obj, 'tsregime')) {
+    stop('tsregim_obj must be a tsregime object')
   }
   k = tsregim_obj$k
   nu = tsregim_obj$nu
@@ -427,7 +427,7 @@ mtarinipars = function(tsregim_obj,
       listf = list(tsregim_obj = tsregim_obj, pars = list_model$pars,init = list(Theta = theta_prior))
     }
   }
-  class(listf) = 'regim_inipars'
+  class(listf) = 'regime_inipars'
   return(listf)
 }
 

@@ -11,8 +11,8 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   # Just-In-Time (JIT)
   compiler::enableJIT(3)
   # checking
-  if (!inherits(ini_obj, 'regim_inipars')) {
-    stop('ini_obj must be a regim_inipars object')
+  if (!inherits(ini_obj, 'regime_inipars')) {
+    stop('ini_obj must be a regime_inipars object')
   }
   # data
   Yt = ini_obj$tsregim_obj$Yt
@@ -564,13 +564,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
                    logLikj = logLikj,data = data,r = rvec,orders = orders)
-    class(results) = 'regim_model'
   }else{
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
                    logLikj = logLikj,data = data,r = rvec,orders = orders)
-    class(results) = 'regim_model'
   }
   compiler::enableJIT(0)
+  class(results) = 'regime_model'
   return(results)
 }

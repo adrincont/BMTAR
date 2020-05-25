@@ -8,8 +8,8 @@
 mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL){
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   # checking
-  if (!inherits(ini_obj, 'regim_inipars')) {
-    stop('ini_obj must be a regim_inipars object')
+  if (!inherits(ini_obj, 'regime_inipars')) {
+    stop('ini_obj must be a regime_inipars object')
   }
   # data
   Yt = ini_obj$tsregim_obj$Yt
@@ -471,12 +471,11 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
                    logLikj = logLikj,data = data,r = rvec,orders = list(pj = pj,qj = qj,dj = dj))
-    class(results) = 'regim_model'
   }else{
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
                    logLikj = logLikj,data = data,r = rvec,orders = list(pj = pj,qj = qj,dj = dj))
-    class(results) = 'regim_model'
   }
+  class(results) = 'regime_model'
   return(results)
 }

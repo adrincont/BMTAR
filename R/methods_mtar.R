@@ -1,11 +1,11 @@
 autoplot = function(object, ...) UseMethod("autoplot")
 
-autoplot.regim_model = function(object, type = 1, ...) {
+autoplot.regime_model = function(object, type = 1, ...) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
   }else {
-    if (!inherits(object, 'regim_model')) {
-      stop('autoplot.regim_model requires a regim_model object')
+    if (!inherits(object, 'regime_model')) {
+      stop('autoplot.regime_model requires a regime_model object')
     }}
   if (!{type %in% c(1:5)}) {stop('type should take values in c (1,2,3,4)')}
   if (is.null(object$Chain)) {stop('There are no chains to graph')}
@@ -127,12 +127,12 @@ autoplot.regim_model = function(object, type = 1, ...) {
     return(p)
   }
 }
-autoplot.regim_missing = function(object, type = 1, ...) {
+autoplot.regime_missing = function(object, type = 1, ...) {
     if (!requireNamespace('ggplot2', quietly = TRUE)) {
       stop('ggplot2 is needed for this function to work')
     }else {
-      if (!inherits(object, 'regim_missing')) {
-        stop('autoplot.regim_missing requires a regim_missing object')
+      if (!inherits(object, 'regime_missing')) {
+        stop('autoplot.regime_missing requires a regime_missing object')
       }}
     if (is.null(object$Chains$Y)) {stop('There are no chains to graph')}
     if (!{type %in% c(1:2)}) {stop('type should take values in c (1,2,3)')}
@@ -169,12 +169,12 @@ autoplot.regim_missing = function(object, type = 1, ...) {
       return(p)
     }
   }
-autoplot.tsregim = function(object, type = 1, ...) {
+autoplot.tsregime = function(object, type = 1, ...) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
   }else {
-    if (!inherits(object, 'tsregim')) {
-      stop('autoplot.tsregim requires a tsregim object')
+    if (!inherits(object, 'tsregime')) {
+      stop('autoplot.tsregime requires a tsregim object')
     }}
   if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
   dats_Yt = as.data.frame(object$Yt)
@@ -233,7 +233,7 @@ autoplot.tsregim = function(object, type = 1, ...) {
 
 print = function(object, ...) UseMethod('print')
 
-print.tsregim = function(object, ...){
+print.tsregime = function(object, ...){
   cat('Threshold time series:\n','N =',object$N,'\n')
   dats = object
   class(dats) = NULL
@@ -249,9 +249,9 @@ print.tsregim = function(object, ...){
   }
   utils::str(dats)
 }
-print.regim_model = function(object, ...) {
+print.regime_model = function(object, ...) {
   print(object$estimates)
 }
-print.regim_missing = function(object, ...) {
+print.regime_missing = function(object, ...) {
   print(object$estimates)
 }
