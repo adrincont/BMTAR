@@ -52,14 +52,14 @@ Z_temp[apply(Z_temp,2,is.na)] = meanZ
 
 # Estimate the number of regimens with the completed series
 data_temp = tsregime(Y_temp,Z_temp,X_temp)
-initial = mtarinipars(tsregim_obj = data_temp,list_model = list(l0_max = 3),method = 'KUO')
+initial = mtarinipars(tsregime_obj = data_temp,list_model = list(l0_max = 3),method = 'KUO')
 estim_nr = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = TRUE,
                       ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2),parallel = TRUE)
 print(estim_nr)
 
 # Estimate the structural and non-structural parameters 
 # for the series once we know the number of regimes
-initial = mtarinipars(tsregim_obj = data_temp,method = 'KUO',
+initial = mtarinipars(tsregime_obj = data_temp,method = 'KUO',
                       list_model = list(pars = list(l = estim_nr$final_m),orders = list(pj = c(2,2))))
 estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
 autoplot.regime_model(estruc,1)
@@ -74,7 +74,7 @@ diagnostic_mtar(estruc,CusumSQ = 0.05333)
 
 # With the known structural parameters we estimate the missing data
 list_model = list(pars = list(l = estim_nr$final_m,r = estruc$estimates$r[,2],orders = estruc$orders))
-initial = mtarinipars(tsregim_obj = data_temp,list_model = list_model)
+initial = mtarinipars(tsregime_obj = data_temp,list_model = list_model)
 missingest = mtarmissing(ini_obj = initial,chain = TRUE, niter = 500,burn = 500)
 print(missingest)
 autoplot.regime_missing(missingest,1)
@@ -83,12 +83,12 @@ data_c = missingest$tsregim
 # Once the missing data has been estimated, we make the estimates again for all the structural 
 # and non-structural parameters.
 # ============================================================================================#
-initial = mtarinipars(tsregim_obj = data_c,list_model = list(l0_max = 3),method = 'KUO')
+initial = mtarinipars(tsregime_obj = data_c,list_model = list(l0_max = 3),method = 'KUO')
 estim_nr = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 500, list_m = TRUE,
                       ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2))
 print(estim_nr)
 
-initial = mtarinipars(tsregim_obj = data_c,method = 'KUO',
+initial = mtarinipars(tsregime_obj = data_c,method = 'KUO',
 list_model = list(pars = list(l = estim_nr$final_m),orders = list(pj = c(2,2))))
 estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
 autoplot.regime_model(estruc,1)
