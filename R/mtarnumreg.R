@@ -483,7 +483,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
     doParallel::registerDoParallel(micluster)
     funcParallel = function(i,iterprev){return(fill(m = i,iter = iterprev, burn = round(0.3*iterprev)))}
     parallel::clusterEvalQ(micluster, library(MTAR))
-    obj_S = list('ini_obj','r_init','burn_m','niter_m','chain_m','list_m',
+    obj_S = list('ini_obj','burn_m','niter_m','chain_m','list_m',
               'ordersprev','k','N','nu','method','fill','maxpj','maxqj','maxdj',
               'Zt','Yt','Xt','Ut','lists','fycond','rdunif','dmunif','l0_min')
     parallel::clusterExport(cl = micluster,varlist = obj_S,envir = environment())

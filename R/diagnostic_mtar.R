@@ -3,7 +3,7 @@
 # Description: Display some graphics for residuals analysis
 # Function:
 #==================================================================================================#
-diagnostic_mtar = function(regim_model,lagmax = NULL){
+diagnostic_mtar = function(regim_model,lagmax = NULL, CusumSQ = NULL){
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
   }else {
@@ -39,13 +39,16 @@ diagnostic_mtar = function(regim_model,lagmax = NULL){
                                  fill = "gray",color = NA,alpha = 0.5)
   p3 = p3 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUM statistic for residuals')
 
-  co = 0.13461 ####Valor del cuantil aproximado para cusumsq para T/2-1=71 alpha=0.05
-  LQS = co + (1:e_k$N)/e_k$N
-  LQI = -co + (1:e_k$N)/e_k$N
-  p4 = ggplot2::ggplot(ggplot2::aes_(x = ~time, y = ~cumsq,color = ~label),data = dat)
-  p4 = p4 + ggplot2::geom_ribbon(ggplot2::aes(ymin = rep(LQS,e_k$k), ymax = rep(LQI,e_k$k)),
-                                 fill = "gray",color = NA,alpha = 0.5)
-  p4 = p4 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUMSQ statistic for residuals')
+  if (!is.null(CusumSQ)) {
+    co = CusumSQ ####Valor del cuantil aproximado para cusumsq para T/2-1=71 alpha=0.05
+    LQS = co + (1:e_k$N)/e_k$N
+    LQI = -co + (1:e_k$N)/e_k$N
+    p4 = ggplot2::ggplot(ggplot2::aes_(x = ~time, y = ~cumsq,color = ~label),data = dat)
+    p4 = p4 + ggplot2::geom_ribbon(ggplot2::aes(ymin = rep(LQS,e_k$k), ymax = rep(LQI,e_k$k)),
+                                   fill = "gray",color = NA,alpha = 0.5)
+    p4 = p4 + ggplot2::geom_line() + ggplot2::theme_bw() + ggplot2::ggtitle('CUSUMSQ statistic for residuals')
+
+  }
   acf_i = stats::acf(regim_model$residuals[,1],lag.max = lagmax,plot = FALSE,type = 'correlation')
   acf_Yt = data.frame(Lag = acf_i$lag, value = acf_i$acf,names = 'Serie.1',type = 'ACF')
   pacf_i = stats::acf(regim_model$residuals[,1],lag.max = lagmax,plot = FALSE,type = 'partial')
