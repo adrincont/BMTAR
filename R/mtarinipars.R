@@ -3,17 +3,17 @@
 # Description: Functions for checking prior and other parameters for estimation
 # Function:
 #==================================================================================================#
-mtarinipars = function(tsregim_obj,
+mtarinipars = function(tsregime_obj,
                        list_model = list(pars = list(l = 2, orders = list(pj = c(1,1), qj = c(0,0), dj = c(0,0)),
                                                      r = NULL, Sigma = NULL),
                                          orders = NULL,l0_min = NULL,l0_max = NULL),
                        method = NULL, theta_prior = NULL, sigma_prior = NULL, gamma_prior = NULL,
                        r_prior = NULL){
-  if (!inherits(tsregim_obj, 'tsregime')) {
-    stop('tsregim_obj must be a tsregime object')
+  if (!inherits(tsregime_obj, 'tsregime')) {
+    stop('tsregime_obj must be a tsregime object')
   }
-  k = tsregim_obj$k
-  nu = tsregim_obj$nu
+  k = tsregime_obj$k
+  nu = tsregime_obj$nu
   if (is.null(nu)) {nu = 0}
   if (!is.list(list_model)) {
     stop('list_model must be a list type object with pars, orders, l0_min or l0_max')
@@ -30,15 +30,15 @@ mtarinipars = function(tsregim_obj,
           if (is.null(list_model$orders$qj)) {
             list_model$orders$qj = list_model$orders$pj*0
           }else{
-            if (any(list_model$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
-              stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+            if (any(list_model$orders$qj != 0) & is.null(tsregime_obj$Xt)) {
+              stop('For qj > 0 covariate process Xt must be in tsregime_obj')
             }
           }
           if (is.null(list_model$orders$dj)) {
             list_model$orders$dj = list_model$orders$pj*0
           }else{
-            if (any(list_model$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
-              stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+            if (any(list_model$orders$dj != 0) & is.null(tsregime_obj$Zt)) {
+              stop('For dj > 0 threshold process Zt must be in tsregime_obj')
             }
           }
         }
@@ -58,15 +58,15 @@ mtarinipars = function(tsregim_obj,
                   if (is.null(list_model$pars$orders$qj)) {
                     list_model$pars$orders$qj = list_model$pars$orders$pj*0
                   }else{
-                    if (any(list_model$pars$orders$qj != 0) & is.null(tsregim_obj$Xt)) {
-                      stop('For qj > 0 covariate process Xt must be in tsregim_obj')
+                    if (any(list_model$pars$orders$qj != 0) & is.null(tsregime_obj$Xt)) {
+                      stop('For qj > 0 covariate process Xt must be in tsregime_obj')
                     }
                   }
                   if (is.null(list_model$pars$orders$dj)) {
                     list_model$pars$orders$dj = list_model$pars$orders$pj*0
                   }else{
-                    if (any(list_model$pars$orders$dj != 0) & is.null(tsregim_obj$Zt)) {
-                      stop('For dj > 0 threshold process Zt must be in tsregim_obj')
+                    if (any(list_model$pars$orders$dj != 0) & is.null(tsregime_obj$Zt)) {
+                      stop('For dj > 0 threshold process Zt must be in tsregime_obj')
                     }
                   }
                 }
@@ -127,7 +127,7 @@ mtarinipars = function(tsregim_obj,
           r_prior$val_rmh = 0.00375
         }
         cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
-        listf = list(tsregim_obj = tsregim_obj, l0_min = list_model$l0_min,l0_max = list_model$l0_max,method = method,init = list(r = r_prior))
+        listf = list(tsregime_obj = tsregime_obj, l0_min = list_model$l0_min,l0_max = list_model$l0_max,method = method,init = list(r = r_prior))
         class(listf) = 'regim_inipars'
         return(listf)
       }
@@ -207,7 +207,7 @@ mtarinipars = function(tsregim_obj,
   # r
   r = list_model$pars$r
   if (is.null(r)) {
-    if (l > 1 & is.null(tsregim_obj$Zt)) {stop('Threshold process Zt must be enter')}
+    if (l > 1 & is.null(tsregime_obj$Zt)) {stop('Threshold process Zt must be enter')}
     if (!is.null(r_prior)) {
       if (!is.list(r_prior)) {
         stop('r_prior must be a list type object with names za, zb or val_rmh')
@@ -246,7 +246,7 @@ mtarinipars = function(tsregim_obj,
     if (l == 1) {stop('One regime must not have threshold')
     }else{
       if (length(r) != {l - 1}) {stop('r known must be of length l-1')}
-      if (is.null(tsregim_obj$Zt)) {stop('Zt must be enter with threshold value')}
+      if (is.null(tsregime_obj$Zt)) {stop('Zt must be enter with threshold value')}
     }
   }
   # validar iniciales
@@ -414,17 +414,17 @@ mtarinipars = function(tsregim_obj,
   }
   # exits
   if (method %in% c('KUO','SSVS')) {
-    listf = list(tsregim_obj = tsregim_obj, pars = list_model$pars, orders = list_model$orders,method = method,
+    listf = list(tsregime_obj = tsregime_obj, pars = list_model$pars, orders = list_model$orders,method = method,
                  init = list(r = r_prior, Theta = theta_prior, Sigma = sigma_prior, Gamma = gamma_prior))
   }else{
     if (!is.null(Sigma) & is.null(r)) {
-      listf = list(tsregim_obj = tsregim_obj, pars = list_model$pars,init = list(r = r_prior, Theta = theta_prior))
+      listf = list(tsregime_obj = tsregime_obj, pars = list_model$pars,init = list(r = r_prior, Theta = theta_prior))
     }else if (is.null(Sigma) & !is.null(r)) {
-      listf = list(tsregim_obj = tsregim_obj, pars = list_model$pars,init = list(Theta = theta_prior, Sigma = sigma_prior))
+      listf = list(tsregime_obj = tsregime_obj, pars = list_model$pars,init = list(Theta = theta_prior, Sigma = sigma_prior))
     }else if (is.null(Sigma) & is.null(r)) {
-      listf = list(tsregim_obj = tsregim_obj, pars = list_model$pars,init = list(r = r_prior, Theta = theta_prior, Sigma = sigma_prior))
+      listf = list(tsregime_obj = tsregime_obj, pars = list_model$pars,init = list(r = r_prior, Theta = theta_prior, Sigma = sigma_prior))
     }else if (!is.null(Sigma) & !is.null(r)) {
-      listf = list(tsregim_obj = tsregim_obj, pars = list_model$pars,init = list(Theta = theta_prior))
+      listf = list(tsregime_obj = tsregime_obj, pars = list_model$pars,init = list(Theta = theta_prior))
     }
   }
   class(listf) = 'regime_inipars'

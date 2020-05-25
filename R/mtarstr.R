@@ -15,18 +15,36 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     stop('ini_obj must be a regime_inipars object')
   }
   # data
-  Yt = ini_obj$tsregim_obj$Yt
-  Ut = cbind(ini_obj$tsregim_obj$Zt,ini_obj$tsregim_obj$Xt)
-  k = ini_obj$tsregim_obj$k
-  N = ini_obj$tsregim_obj$N
-  nu = ini_obj$tsregim_obj$nu
+  Yt = ini_obj$tsregime_obj$Yt
+  Ut = cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt)
+  k = ini_obj$tsregime_obj$k
+  N = ini_obj$tsregime_obj$N
+  nu = ini_obj$tsregime_obj$nu
   if (is.null(nu)) {nu = 0}
   # parameters
-  l = ini_obj$pars$l
+  if (is.null(ini_obj$pars$l)) {
+    cat('l NULL default 2')
+    l = 2
+  }else{
+    l = ini_obj$pars$l
+  }
+  if (names(ini_obj$pars) %in% c('orders','r','Sigma')) {
+    cat('Parameters different of l in list_model$pars will be ignored')
+  }
   # method
-  method = ini_obj$method
+  if (is.null(ini_obj$method)) {
+    cat('Method NULL default KUO')
+    method = 'KUO'
+  }else{
+    method = ini_obj$method
+  }
   # unknown
-  orders = ini_obj$orders
+  if (is.null(ini_obj$orders)) {
+    cat('orders NULL default por each regime pj = 2,qj = 0,dj = 0')
+    orders = list(pj = rep(2,l),qj = rep(0,l),dj = rep(0,l))
+  }else{
+    orders = ini_obj$orders
+  }
   # code
   burn = ifelse(is.null(burn),round(0.3*niter),burn)
   other = 100
@@ -46,7 +64,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     Xt = matrix(0,ncol = N,nrow = 1)
     qjmax = rep(0,l)
   }else{
-    Xt = t(ini_obj$tsregim_obj$Xt)
+    Xt = t(ini_obj$tsregime_obj$Xt)
   }
   eta = 1 + pjmax*k + qjmax*nu + djmax
   # objects for each regimen and iterations
@@ -492,7 +510,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     if (!is.null(Ri$delta)) {
       df[lj] = max(as.numeric(sapply(names(Ri$delta),substr,6,6)))
     }else{df[lj] = 0}
-    Rest[[lj]] = mtaregim(orders = list(p = pf[lj],q = qf[lj],d = df[lj]),cs = Ri$cs,
+    Rest[[lj]] = mtaregime(orders = list(p = pf[lj],q = qf[lj],d = df[lj]),cs = Ri$cs,
                           Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
                           Sigma = Ri$sigma)
     Xj = listj$listaX[[lj]]

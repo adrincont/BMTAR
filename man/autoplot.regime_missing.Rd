@@ -1,13 +1,13 @@
-\name{autoplot.regim_missing}
-\alias{autoplot.regim_missing}
+\name{autoplot.regime_missing}
+\alias{autoplot.regime_missing}
 
-\title{regim_missing object ggplot for the outputs on the function outputs mtarmissing}
+\title{regime_missing object ggplot for the outputs on the function outputs mtarmissing}
 
 \description{
 Produces a ggplot object for the results of the mtarmissing function.
 }
 \usage{
-\method{autoplot}{regim_missing}(object, type = 1,...)
+\method{autoplot}{regime_missing}(object, type = 1,...)
 }
 
 \arguments{
@@ -26,11 +26,11 @@ Graph the strings for the outputs corresponding to the functions \dQuote{\code{m
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\seealso{\code{\link[MTAR]{mtarns}}, \code{\link[MTAR]{mtarstr}}}
+\seealso{\code{\link[MTAR]{mtarmissing}}}
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
 library(ggplot2)
 data('missingest')
-autoplot.regim_missing(missingest,1)
+autoplot.regime_missing(missingest,1)
 }

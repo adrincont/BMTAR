@@ -12,17 +12,17 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     stop('ini_obj must be a regime_inipars object')
   }
   # data
-  Yt = ini_obj$tsregim_obj$Yt
-  Ut = cbind(ini_obj$tsregim_obj$Zt,ini_obj$tsregim_obj$Xt)
-  k = ini_obj$tsregim_obj$k
-  N = ini_obj$tsregim_obj$N
-  nu = ini_obj$tsregim_obj$nu
+  Yt = ini_obj$tsregime_obj$Yt
+  Ut = cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt)
+  k = ini_obj$tsregime_obj$k
+  N = ini_obj$tsregime_obj$N
+  nu = ini_obj$tsregime_obj$nu
   if (is.null(nu)) {nu = 0}
   # parameters
   r = ini_obj$pars$r
   l = ini_obj$pars$l
-  if (!is.null(ini_obj$orders)) {
-    stop('orders must be known (pars) to use mtarns')
+  if (!is.null(ini_obj$pars$orders)) {
+    stop('orders must be known and enter in list_model$pars$orders to use mtarns')
   }
   orders = ini_obj$pars$orders
   # code
@@ -44,7 +44,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     Xt = matrix(0,ncol = N,nrow = 1)
     qj = rep(0,l)
   }else{
-    Xt = t(ini_obj$tsregim_obj$Xt)
+    Xt = t(ini_obj$tsregime_obj$Xt)
   }
   eta = 1 + pj*k + qj*nu + dj
   # functions and values for r
@@ -403,7 +403,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     }else{
       Ri$sigma = sigma[[lj]]
     }
-    Rest[[lj]] = mtaregim(orders = list(p = p,q = q,d = d),cs = Ri$cs,
+    Rest[[lj]] = mtaregime(orders = list(p = p,q = q,d = d),cs = Ri$cs,
                           Phi = Ri$phi,Beta = Ri$beta,Delta = Ri$delta,
                           Sigma = Ri$sigma)
     Wj = listj$listaW[[lj]]

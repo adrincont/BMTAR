@@ -15,19 +15,32 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   if (!inherits(ini_obj, 'regime_inipars')) {
     stop('ini_obj must be a regime_inipars object')
   }
-  if (is.null(ini_obj$tsregim_obj$Zt)) {
+  if (is.null(ini_obj$tsregime_obj$Zt)) {
     stop('Threshold process must be enter in ini_obj for evaluate l0_max number of regimes')}
-  l0_min = ini_obj$l0_min
-  if (is.null(l0_min)) {l0_min = 2}
-  l0 = ini_obj$l0_max
-  if (is.null(l0)) {stop('If parameters are unknown enter l0_max maximum number of regimes in ini_obj')}
-  method = ini_obj$method
+  if (is.null(ini_obj$l0_min)) {
+    cat('l0_min NULL default 2')
+    l0_min = 2
+  }else{
+    l0_min = ini_obj$l0_min
+  }
+  if (is.null(ini_obj$l0_max)) {
+    cat('l0_max NULL default 3')
+    l0 = 3
+  }else{
+    l0 = ini_obj$l0_max
+  }
+  if (is.null(ini_obj$method)) {
+    cat('method NULL default KUO')
+    method = 'KUO'
+  }else{
+    method = ini_obj$method
+  }
   # data
-  Yt = ini_obj$tsregim_obj$Yt
-  Ut = cbind(ini_obj$tsregim_obj$Zt,ini_obj$tsregim_obj$Xt)
-  k = ini_obj$tsregim_obj$k
-  N = ini_obj$tsregim_obj$N
-  nu = ini_obj$tsregim_obj$nu
+  Yt = ini_obj$tsregime_obj$Yt
+  Ut = cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt)
+  k = ini_obj$tsregime_obj$k
+  N = ini_obj$tsregime_obj$N
+  nu = ini_obj$tsregime_obj$nu
   if (is.null(nu)) {nu = 0}
   maxpj = ifelse(is.null(ordersprev$maxpj),2,ordersprev$maxpj)
   maxqj = ifelse(is.null(ordersprev$maxqj),0,ordersprev$maxqj)
@@ -39,7 +52,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   if (nu == 0) {
     Xt = matrix(0,ncol = N,nrow = 1)
   }else{
-    Xt = t(ini_obj$tsregim_obj$Xt)
+    Xt = t(ini_obj$tsregime_obj$Xt)
   }
   rini = ini_obj$init$r
   a = ifelse(is.null(rini$za),min(Zt),stats::quantile(Zt,probs = rini$za))
@@ -171,7 +184,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
     i = 1
     ordersm = list(pj = rep(maxpj,m),qj = rep(maxqj,m),dj = rep(maxdj,m))
     etam = 1 + ordersm$pj*k + ordersm$qj*nu + ordersm$dj
-    ini_obj_m = mtarinipars(tsregim_obj = ini_obj$tsregim_obj,
+    ini_obj_m = mtarinipars(tsregime_obj = ini_obj$tsregime_obj,
                             list_model = list(pars = list('l' = m),orders = ordersm),method = method)
     #Parameters priori
     theta0Pm = lapply(ini_obj_m$init$Theta,function(x){x$theta0j})
@@ -500,7 +513,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
     }
   }
   if (NAIC) {
-    results = list(tsregim = ini_obj$tsregim_obj,list_m = listm)
+    results = list(tsregim = ini_obj$tsregime_obj,list_m = listm)
     for (i in l0_min:l0) {
       results$NAIC[[paste0('m',i)]] = mtarNAIC(listm[[paste0('m',i)]]$par)
     }
@@ -544,22 +557,22 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   names(vecm) = paste(namest[1:length(vecm)],paste0(round(vecm,2),'%'))
   vecm[1:length(vecm)] = ls[1:length(vecm)]
   if (chain_m & list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj,
+    results = list(tsregim = ini_obj$tsregime_obj,
                    list_m = listm ,m_chain = m_iter,
                    prop = pm_im,
                    estimates = vecm,final_m = vecm[[1]])
   }else if (chain_m & !list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj,
+    results = list(tsregim = ini_obj$tsregime_obj,
                    m_chain = m_iter,
                    prop = pm_im,
                    estimates = vecm,final_m = vecm[1])
   }else if (!chain_m & list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj,
+    results = list(tsregim = ini_obj$tsregime_obj,
                    list_m = listm,
                    prop = pm_im,
                    estimates = vecm,final_m = vecm[1])
   }else if (!chain_m & !list_m) {
-    results = list(tsregim = ini_obj$tsregim_obj,
+    results = list(tsregim = ini_obj$tsregime_obj,
                    prop = pm_im,
                    estimates = vecm,
                    final_m = vecm[1])

@@ -6,7 +6,7 @@
 Compute by Bayesian methodology a MTAR model for some data
 }
 \usage{
-auto_mtar(Yt, Zt = NULL, Xt = NULL, l0 = 3,
+auto_mtar(Yt, Zt = NULL, Xt = NULL, l0_min = 2, l0_max = 3,
 maxorders = list(pj = 2,qj = 0,dj = 0),
 niter = 3000, chain = FALSE, method = 'KUO',parallel = FALSE)
 }
@@ -15,7 +15,8 @@ niter = 3000, chain = FALSE, method = 'KUO',parallel = FALSE)
   \item{Yt}{matrix type object, observed process. Not NULL}
   \item{Zt}{matrix type object, threshold process. Default NULL}
   \item{Xt}{matrix type object, covariate process. Default NULL}
-  \item{l0}{numeric type between 2 and 4, number of regimes to consider. Default 3}
+  \item{l0_min}{numeric type between 1 and 4, number of regimes minimum to consider. Default 2}
+  \item{l0_max}{numeric type between 1 and 4, number of regimes maximum to consider. Default 3}
   \item{maxorders}{list type object with names (pj,qj,dj), maximum lags consider for the processes in each regime. Default pj = 2, qj = 0,dj = 0}
   \item{niter}{numeric type, number of runs for every estimation. Default 3000}
   \item{chain}{logical type, if return chains of estimations parameters and values (if missing)}
@@ -31,9 +32,9 @@ niter = 3000, chain = FALSE, method = 'KUO',parallel = FALSE)
 \value{
   Return list type object
 
-  \item{tsregim}{class ``tsregime'' object, if missing values completed with estimations}
-  \item{numreg}{numeric type, number of regimes estimated}
-  \item{pars}{class ``regime_model'' object with final estimations of parameters}
+  \item{tsregim}{class \dQuote{\code{tsregime}} object, if missing values completed with estimations}
+  \item{numreg}{class \dQuote{\code{regime_number}}, number of regimes estimated}
+  \item{pars}{class \dQuote{\code{regime_model}} object with final estimations of parameters}
 }
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate threshold autoregressive models with missing data}. Communications in Statistics-Theory and Methods, 46(1), 296-318.

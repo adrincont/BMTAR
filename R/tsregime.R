@@ -70,7 +70,7 @@ tsregime = function(Yt, Zt = NULL, Xt = NULL, r = NULL){
   }
   if (!is.null(r)) {
     list_result$r = r
-    # Calcular regimen que pertenecen las funciones
+    # Compute which regime belongs observations
     list_result$Ind = lists_ind(r,Zt,l)
     Table_r = data.frame('N_reg' = c(table(list_result$Ind)),
                          'Prop_reg' = 100*c(prop.table(table(list_result$Ind))))

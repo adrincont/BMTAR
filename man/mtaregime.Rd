@@ -1,12 +1,12 @@
-\name{mtaregim}
-\alias{mtaregim}
+\name{mtaregime}
+\alias{mtaregime}
 
-\title{Object class ``regime'' creation}
+\title{Object class \dQuote{\code{regime}} creation}
 \description{
-Create an object of class ``regime'' given nonstructural and structural parameters for regime i.
+Create an object of class \dQuote{\code{regime}} given nonstructural and structural parameters for each regime.
 }
 \usage{
-mtaregim(orders = list(p = 1,q = 0,d = 0), cs = NULL, Phi,
+mtaregime(orders = list(p = 1,q = 0,d = 0), cs = NULL, Phi,
 Beta = NULL, Delta = NULL, Sigma)
 }
 \arguments{
@@ -18,18 +18,17 @@ Beta = NULL, Delta = NULL, Sigma)
   \item{Sigma}{a positive-definite symmetric matrix \eqn{(kxk)}, specfication of errors covariate matrix. Not NULL}
 }
 \details{
-  Causes creation of the object class ``regime''. Sigma matrix corresponds to \eqn{\Sigma} (root of the covariance matrix). When cs is not specified or only matrices are delivered for some lags, the function assumes unspecified 0 (matrix). Rows number in the Phi, Beta and Delta matrix should be the same (k dimension of variables in Yt).
+  Causes creation of the object class \dQuote{\code{regime}}. Sigma matrix corresponds to \eqn{\Sigma} (root of the covariance matrix). When cs is not specified or only matrices are delivered for some lags, the function assumes unspecified 0 (matrix). Rows number in the Phi, Beta and Delta matrix should be the same (k dimension of variables in Yt).
 }
 \value{
-  Return list type object of class ``regime'' with the values of the arguments
+  Return list type object of class \dQuote{\code{regime}} with the values of the arguments
 }
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
-\seealso{\code{\link[MTAR]{mtaregim}}, \code{\link[MTAR]{mtarns}},
-  \code{\link[MTAR]{mtaregim}}}
+\seealso{\code{\link[MTAR]{mtarsim}}}
 
 \examples{
 # Creation of parameters for regimen with orders = c(2,1,1), nu = 1 y k = 2.
@@ -41,7 +40,7 @@ Delta = list(delta1 = matrix(c(0.6,1),2,1))
 Sigma = matrix(c(1,0.6,0.6,1.5),2,2,byrow = TRUE)
 cs = matrix(c(1,-1),nrow = 2)
 ## creacion de la clase regime
-Ri = mtaregim(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,
+Ri = mtaregime(orders = orders,Phi = Phi,Beta = Beta,Delta = Delta,
 Sigma = Sigma,cs = cs)
 class(Ri)
 }

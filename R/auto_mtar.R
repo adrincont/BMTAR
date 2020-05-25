@@ -2,7 +2,8 @@
 # Date:
 # Description:
 #==================================================================================================#
-auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,qj = 0,dj = 0),
+auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0_min = 2, l0_max = 3,
+                     maxorders = list(pj = 2,qj = 0,dj = 0),
                      niter = 3000, chain = FALSE, method = 'KUO', parallel = FALSE) {
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   if (!is.list(maxorders) | length(maxorders) != 3) {
@@ -41,16 +42,17 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
       data_temp$Xt[is.na(data_temp$Xt)] = meanX
     }
     data_temp = tsregime(data_temp$Yt,data_temp$Zt,data_temp$Xt)
-    initial = mtarinipars(tsregim_obj = data_temp,list_model = list(l0_max = l0),method = method)
+    initial = mtarinipars(tsregime_obj = data_temp,
+                          list_model = list(l0_max = l0_max,l0_min = l0_min),method = method)
     numregest_1 = mtarnumreg(ini_obj = initial,niter_m = niter,NAIC = TRUE,
                              ordersprev = list(maxpj = pjmax,maxqj = qjmax,maxdj = djmax),parallel = parallel)
     l_1 = numregest_1$NAIC_final_m
     estrucopt = numregest_1$list_m[[paste0('m',l_1)]]$par
-    initial = mtarinipars(tsregim_obj = data_temp,method = method,
+    initial = mtarinipars(tsregime_obj = data_temp,method = method,
                           list_model = list(pars = list(l = l_1),
                                             orders = list(pj = estrucopt$orders$pj,qj = estrucopt$orders$qj,dj = estrucopt$orders$dj)))
     est_1 = mtarstr(ini_obj = initial,niter = niter,chain = chain, parallel = parallel)
-    initial = mtarinipars(tsregim_obj = data_temp,
+    initial = mtarinipars(tsregime_obj = data_temp,
                           list_model = list(pars = list(l = l_1,r = est_1$r,
                                                         orders = list(pj = est_1$orders$pj, qj = est_1$orders$qj,dj = est_1$orders$dj))))
     missingest = mtarmissing(ini_obj = initial,niter = niter)
@@ -59,12 +61,13 @@ auto_mtar = function(Yt, Zt = NULL, Xt = NULL, l0 = 3, maxorders = list(pj = 2,q
   }else{
     data_complete = data
   }
-  initial = mtarinipars(tsregim_obj = data_complete,list_model = list(l0_max = l0),method = method)
+  initial = mtarinipars(tsregime_obj = data_complete,
+                        list_model = list(l0_max = l0_max,l0_min = l0_min),method = method)
   numregest_final = mtarnumreg(ini_obj = initial,niter_m = niter,chain_m = chain,list_m = TRUE,
                                ordersprev = list(maxpj = pjmax, maxqj = qjmax, maxdj = djmax), parallel = parallel)
   lf = numregest_final$final_m
   estrucopt = numregest_final$list_m[[paste0('m',lf)]]$par
-  initial = mtarinipars(tsregim_obj = data_complete,method = method,
+  initial = mtarinipars(tsregime_obj = data_complete,method = method,
                         list_model = list(pars = list(l = lf),
                                           orders = list(pj = estrucopt$orders$pj,
                                                         qj = estrucopt$orders$qj,dj = estrucopt$orders$dj)))

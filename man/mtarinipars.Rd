@@ -6,13 +6,13 @@
 Model specification of data, known or unknown parameters and its prior distributions
 }
 \usage{
-mtarinipars(tsregim_obj, list_model = list(pars = list(l = 2,
+mtarinipars(tsregime_obj, list_model = list(pars = list(l = 2,
 orders = list(pj = c(1,1), qj = c(0,0), dj = c(0,0)), r = NULL, Sigma = NULL),
 orders = NULL,l0_min = NULL,l0_max = NULL), method = NULL, theta_prior = NULL,
 sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
 }
 \arguments{
-  \item{tsregim_obj}{class ``tsregim'' object. Not NULL}
+  \item{tsregime_obj}{class \dQuote{\code{tsregime}} object. Not NULL}
   \item{list_model}{list type object with at least one of the names (pars, orders, l0).
 
   \{pars: list type object with one of the names (l, orders, r, Sigma) for parameters of the model known
@@ -52,10 +52,10 @@ sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
   \deqn{\r \sim U(za,zb) and its proposal for MH algorithm U(-val_rmh,val_rmh)}
 }
 \value{
-  Return a list type object of class ``regim_inipars''
-  \item{tsregim_obj}{ = tsregim_obj}
+  Return a list type object of class \dQuote{\code{regime_inipars}}
+  \item{tsregime_obj}{ = tsregime_obj}
   \item{pars}{= list_model$pars}
-  \item{orders}{ = list_model$orders}
+  \item{orders}{ = list_model$orders or list_model$pars$orders}
   \item{method}{ = method}
   \item{init$r}{ = r_prior}
   \item{init$Theta}{ = theta_prior}
@@ -70,34 +70,34 @@ sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
 
 \examples{
 data("datasim")
-tsregim_obj = datasim$Sim
+tsregime_obj = datasim$Sim
 # for estimate non-structural parameters:
 # mtarns: l always known,
 # Sigma = NULL = list(R1,R2) can be known, r = NULL can be known
 # Sigma and r known
 parameters = list(l = length(datasim$Reg),
 Sigma = list(R1 = datasim$Reg$R1$sigma,R2 = datasim$Reg$R2$sigma),
-r = tsregim_obj$r,
+r = tsregime_obj$r,
 orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
-initpars_Sr = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
+initpars_Sr = mtarinipars(tsregime_obj,list_model = list(pars = parameters))
 #only r known
-parameters = list(l = length(datasim$Reg),Sigma = NULL, r = tsregim_obj$r,
+parameters = list(l = length(datasim$Reg),Sigma = NULL, r = tsregime_obj$r,
 orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
-initpars_r = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
+initpars_r = mtarinipars(tsregime_obj,list_model = list(pars = parameters))
 #r and Sigma unknown
 parameters = list(l = length(datasim$Reg),Sigma = NULL, r = NULL,
 orders = list(pj = datasim$pj, qj = datasim$qj, dj = datasim$dj))
-initpars = mtarinipars(tsregim_obj,list_model = list(pars = parameters))
+initpars = mtarinipars(tsregime_obj,list_model = list(pars = parameters))
 # for estimate structural and non-structural parameters
 # mtarstr: l always known
 parameters = list(l = length(datasim$Reg))
 orders = list(pj = c(2,2),dj = c(1,1))
-initpars_KUO = mtarinipars(tsregim_obj,
+initpars_KUO = mtarinipars(tsregime_obj,
 list_model = list(pars = parameters,orders = orders),method = 'KUO')
-initpars_SSVS = mtarinipars(tsregim_obj,
+initpars_SSVS = mtarinipars(tsregime_obj,
 list_model = list(pars = parameters,orders = orders),method = 'SSVS')
 # mtarnumreg l0_min or l0_max and method always
-initpars_l = mtarinipars(tsregim_obj,list_model = list(l0_max = 3),method = 'KUO')
+initpars_l = mtarinipars(tsregime_obj,list_model = list(l0_max = 3),method = 'KUO')
 }
 
 \keyword{prior distribution}

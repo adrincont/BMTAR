@@ -3,14 +3,14 @@
 
 \title{Compute NAIC of a MTAR model}
 \description{
-Compute the Non-linear Akaike information criterion (NAIC) of a ``regime_model'' class object.
+Compute the Non-linear Akaike information criterion (NAIC) of a \dQuote{\code{regime_model}} class object.
 }
 \usage{
 mtarNAIC(regimemodel)
 }
 
 \arguments{
-  \item{regimemodel}{object of class ``regime_model''}
+  \item{regimemodel}{object of class \dQuote{\code{regime_model}}}
 }
 
 \details{
@@ -30,9 +30,9 @@ Estimation of thresholds was made before starting the Bayesian procedure via the
  }
 }
 \value{
-  Return a list type object
-  $AICj numeric type, AIC for each regime
-  $NAIC numeric type, NAIC value
+  Return a list type object:
+ \item{AICj}{numeric type, AIC for each regime}
+ \item{NAIC}{numeric type, NAIC value}
 }
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.

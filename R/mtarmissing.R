@@ -15,11 +15,11 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     x = (x + t(x)) / 2
     return(x)
   }
-  Yt = ini_obj$tsregim_obj$Yt
-  Ut = cbind(ini_obj$tsregim_obj$Zt,ini_obj$tsregim_obj$Xt)
-  k = ini_obj$tsregim_obj$k
-  N = ini_obj$tsregim_obj$N
-  nu = ini_obj$tsregim_obj$nu
+  Yt = ini_obj$tsregime_obj$Yt
+  Ut = cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt)
+  k = ini_obj$tsregime_obj$k
+  N = ini_obj$tsregime_obj$N
+  nu = ini_obj$tsregime_obj$nu
   if (is.null(nu)) {nu = 0}
   l = ini_obj$pars$l
   r = ini_obj$pars$r
@@ -42,7 +42,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     Xt = matrix(0,ncol = N,nrow = 1)
     qj = rep(0,l)
   }else{
-    Xt = t(ini_obj$tsregim_obj$Xt)
+    Xt = t(ini_obj$tsregime_obj$Xt)
   }
   etaj = 1 + k*pj + nu*qj + dj
   PosNAMat = PosNAvec = PosNAvecT = vector(mode = 'list',2)
@@ -65,7 +65,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     }
   }
   #Completar datos faltantes con o en Yt y permutar en Yt y Kt(OJO)
-  initialU = mtarinipars(tsregim(t(Ut)),list_model = list(pars = list(l = 1,orders = list(pj = b,qj = 0,dj = 0))))
+  initialU = mtarinipars(tsregime(t(Ut)),list_model = list(pars = list(l = 1,orders = list(pj = b,qj = 0,dj = 0))))
   cat('Estimating model (Zt,Xt) \n')
   modelU = mtarns(ini_obj = initialU,niter = 1000,chain = FALSE,burn = 1000)
   modelU = modelU$regime$R1
@@ -470,9 +470,9 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     rownames(Test_Xt) = Names_Xt[PosNAMat[[2]][-1,]]
   }
 
-  ini_obj$tsregim_obj$Yt[PosNAvec[[1]],] = matrix(Test_Yt[,2],ncol = k,byrow = T)
-  ini_obj$tsregim_obj$Zt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
-  ini_obj$tsregim_obj$Xt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
+  ini_obj$tsregime_obj$Yt[PosNAvec[[1]],] = matrix(Test_Yt[,2],ncol = k,byrow = T)
+  ini_obj$tsregime_obj$Zt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
+  ini_obj$tsregime_obj$Xt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
 
   if (chain) {Chains = vector('list')}
   if (any(is.na(Yt)) & any(is.na(Zt)) & any(is.na(Xt))) {
@@ -516,9 +516,9 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   compiler::enableJIT(0)
   if (chain) {
-    result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates, Chains = Chains)
+    result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates, Chains = Chains)
   }else{
-    result = list(tsregim = ini_obj$tsregim_obj, estimates = estimates)
+    result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates)
   }
   class(result) = 'regime_missing'
   return(result)

@@ -13,7 +13,7 @@ parallel = FALSE)
 }
 
 \arguments{
-  \item{ini_obj}{class ``regime_inipars'' object, here specificate only l0. Not NULL}
+  \item{ini_obj}{class \dQuote{\code{regime_inipars}} object, here specificate l0_min, l0_max and method. Not NULL. Default l0_min = 2, l0_max = 3, method = 'KUO'}
   \item{level}{numeric type, confident interval for estimations. Default 0.95}
   \item{burn_m}{numeric type, number of initial runs. Default NULL (10\% of niter)}
   \item{niter_m}{numeric type, number of runs of MCMC. Default 1000}
@@ -29,14 +29,14 @@ parallel = FALSE)
   Two proposals to identify or estimate the number of regimes l are implemented. Metropolised Carlin and Chib methodology takes into account the changing dimension in the parameter vector when the number of regimes changes, that proposal is  Bayesian model selection. Other methodology consists in calculating the information criterion NAIC.
 }
 \value{
-  Return a list type object of class ``regime_number''
+  Return a list type object of class \dQuote{\code{regime_number}}
   \item{tsregim}{ini_obj$tsregim_obj}
   \item{list_m}{if list_m TRUE list of models considered}
   \item{m_chain}{if chain_m TRUE chains of m}
   \item{estimates}{table of the proportions of m estimated}
   \item{final_m}{numeric type, final number of regimes estimated}
 
-  if NAIC TRUE
+  If NAIC TRUE
   \item{tsregim}{ini_obj$tsregim_obj}
   \item{list_m}{list of consider models}
   \item{NAIC}{list type of NAIC for each considered model}

@@ -11,7 +11,7 @@ burn = NULL, cU = 0.5, b = NULL)
 }
 
 \arguments{
-  \item{ini_obj}{class ``regime_inipars'' object, here specificate in pars: l, orders and r known. Not NULL}
+  \item{ini_obj}{class \dQuote{\code{regime_inipars}} object, here specificate in pars: l, orders and r known. Not NULL}
   \item{niter}{numeric type, number of runs of MCMC. Default 1000}
   \item{chain}{logical type, if return chains of parameters. Default FALSE}
   \item{level}{numeric type, confident interval for estimations. Default 0.95}
@@ -29,8 +29,8 @@ is written into a state space model with regime-switching where the matrices dep
 are Gaussian for simplicity. However, in the next updates, we are going to get flexibility at this point.
 }
 \value{
-  Return list type object of class ``regime_missing''
-  \item{tsregim}{ini_obj$tsregim_obj with estimated observations}
+  Return list type object of class \dQuote{\code{regime_missing}}
+  \item{tsregime}{ini_obj$tsregime_obj with estimated observations}
   \item{estimates}{confident interval and mean of estimated missing values}
   \item{Chain}{if chain TRUE, chains of the estimated missing values}
 }
@@ -49,9 +49,9 @@ posNA = sample(c(1:500),8)
 data_yt[c(posNA),] = c(NA,NA)
 posNA = sample(c(1:500),8)
 data_zt[c(posNA)] = NA
-data_final = tsregim(data_yt,data_zt,r = yt$r)
-autoplot.tsregim(data_final,1)
-autoplot.tsregim(data_final,2)
+data_final = tsregime(data_yt,data_zt,r = yt$r)
+autoplot.tsregime(data_final,1)
+autoplot.tsregime(data_final,2)
 
 initial = mtarinipars(tsregim_obj = data_final,
 list_model = list(pars = list(l = 2,r = datasim$Sim$r,
@@ -59,9 +59,9 @@ orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
 missingest = mtarmissing(ini_obj = initial,chain = TRUE,
 niter = 500,burn = 500)
 print(missingest)
-autoplot.regim_missing(missingest,1)
+autoplot.regime_missing(missingest,1)
 datasim$Sim$Yt[is.na(data_yt[,1]),]
-missingest$tsregim$Yt[is.na(data_yt[,1]),]
+missingest$tsregime$Yt[is.na(data_yt[,1]),]
 }
 
 \keyword{Bayesian estimation}

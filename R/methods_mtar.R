@@ -7,7 +7,7 @@ autoplot.regime_model = function(object, type = 1, ...) {
     if (!inherits(object, 'regime_model')) {
       stop('autoplot.regime_model requires a regime_model object')
     }}
-  if (!{type %in% c(1:5)}) {stop('type should take values in c (1,2,3,4)')}
+  if (!{type %in% c(1:5)}) {stop('type should tak|e values in c (1,2,3,4)')}
   if (is.null(object$Chain)) {stop('There are no chains to graph')}
   if (type == 1) {
     if (is.null(object$Chain$r)) {stop('r unknown')}
@@ -174,7 +174,7 @@ autoplot.tsregime = function(object, type = 1, ...) {
     stop('ggplot2 is needed for this function to work')
   }else {
     if (!inherits(object, 'tsregime')) {
-      stop('autoplot.tsregime requires a tsregim object')
+      stop('autoplot.tsregime requires a tsregime object')
     }}
   if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
   dats_Yt = as.data.frame(object$Yt)
@@ -253,5 +253,8 @@ print.regime_model = function(object, ...) {
   print(object$estimates)
 }
 print.regime_missing = function(object, ...) {
+  print(object$estimates)
+}
+print.regime_number = function(object, ...) {
   print(object$estimates)
 }

@@ -1,22 +1,22 @@
-\name{print.regim_model}
-\alias{print.regim_model}
+\name{print.regime_model}
+\alias{print.regime_model}
 
-\title{print regim_model object for the function outputs mtarns and mtastr}
+\title{print regime_model object for the function outputs mtarns and mtastr}
 
 \description{
 Print estimates for the results of the mtarns and mtarstr functions.
 }
 \usage{
-\method{print}{regim_model}(object, ...)
+\method{print}{regime_model}(object, ...)
 }
 
 \arguments{
-\item{object}{Object of class \dQuote{\code{regim_model}}. Not NULL}
+\item{object}{Object of class \dQuote{\code{regime_model}}. Not NULL}
 \item{...}{Other print parameters that affect.}
 }
 
 \details{
-Print estimates outputs corresponding to the functions \dQuote{\code{mtarns}} and \dQuote{\code{mtarstr}} which return an object of class \dQuote{\code{regim_model}}.
+Print estimates outputs corresponding to functions \dQuote{\code{mtarns}} and \dQuote{\code{mtarstr}} which return an object of class \dQuote{\code{regime_model}}.
 }
 \value{
   Return to console.
@@ -31,8 +31,8 @@ Print estimates outputs corresponding to the functions \dQuote{\code{mtarns}} an
 data("datasim")
 data = datasim$Sim$Zt
 parameters = list(l = 1,orders = list(pj = 1))
-initial = mtarinipars(tsregim_obj = tsregim(data),
+initial = mtarinipars(tsregim_obj = tsregime(data),
                       list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
-print.regim_model(estim1)
+print.regime_model(estim1)
 }

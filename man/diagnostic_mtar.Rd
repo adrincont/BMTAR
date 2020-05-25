@@ -6,10 +6,10 @@
 Tests to help evaluate some assumptions about the MTAR model. calculating some tests and graphs.
 }
 \usage{
-diagnostic_mtar(regim_model,lagmax = NULL,CusumSQ = NULL)
+diagnostic_mtar(regime_model,lagmax = NULL,CusumSQ = NULL)
 }
 \arguments{
- \item{regim_model}{Object of class \dQuote{\code{regim_model}}. Not NULL}
+ \item{regime_model}{Object of class \dQuote{\code{regime_model}}. Not NULL}
  \item{lagmax}{maximum lag at which to calculate the acf and pacf. Default NULL}
  \item{CusumSQ}{Critical Values of the One-Side Cusumsq Test.}
 }

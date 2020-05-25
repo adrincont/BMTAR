@@ -1,22 +1,22 @@
-\name{print.regim_missing}
-\alias{print.regim_missing}
+\name{print.regime_missing}
+\alias{print.regime_missing}
 
-\title{Print estimates of a regim_missing object of the function output mtarmissing}
+\title{Print estimates of a regime_missing object of the function output mtarmissing}
 
 \description{
 Print estimates output of mtarmissing function.
 }
 \usage{
-\method{print}{regim_missing}(object, ...)
+\method{print}{regime_missing}(object, ...)
 }
 
 \arguments{
-\item{object}{Object of class \dQuote{\code{regim_model}}. Not NULL}
+\item{object}{Object of class \dQuote{\code{regime_model}}. Not NULL}
 \item{...}{Other plotting parameters to affect the plot.}
 }
 
 \details{
-Print the estimates for the outputs corresponding to the function \dQuote{\code{mtarmissing}} which return an object of class \dQuote{\code{regim_missing}}.
+Print the estimates for the outputs corresponding to the function \dQuote{\code{mtarmissing}} which return an object of class \dQuote{\code{regime_missing}}.
 }
 \value{
   Return to console.
@@ -29,5 +29,5 @@ Print the estimates for the outputs corresponding to the function \dQuote{\code{
 
 \examples{
 data('missingest')
-print.regim_missing(missingest)
+print.regime_missing(missingest)
 }
