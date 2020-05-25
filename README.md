@@ -74,7 +74,6 @@ autoplot.regim_model(estruc,2)
 autoplot.regim_model(estruc,3)
 autoplot.regim_model(estruc,4)
 autoplot.regim_model(estruc,5)
-
 ```
 ## For more information
 You will find the theoretical basis of the method in the documents:
