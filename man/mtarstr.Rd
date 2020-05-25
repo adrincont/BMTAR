@@ -45,7 +45,7 @@ r_init = NULL, parallel = FALSE)
 data("datasim")
 data = datasim
 # KUO method
-initial = mtarinipars(tsregim_obj = data$Sim,method = 'KUO',
+initial = mtarinipars(tsregime_obj = data$Sim,method = 'KUO',
 list_model = list(pars = list(l = 2),orders = list(pj = c(2,2))))
 estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
 autoplot.regime_model(estruc,1)

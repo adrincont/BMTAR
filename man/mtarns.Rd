@@ -52,7 +52,7 @@ data = datasim
 parameters = list(l = 2,
                   orders = list(pj = c(1,1)),
                   r = data$Sim$r)
-initial = mtarinipars(tsregim_obj = data$Sim,
+initial = mtarinipars(tsregime_obj = data$Sim,
                       list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 print.regime_model(estim1)
@@ -63,7 +63,7 @@ diagnostic_mtar(estim1)
 
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1)))
-initial = mtarinipars(tsregim_obj = data$Sim,
+initial = mtarinipars(tsregime_obj = data$Sim,
 list_model = list(pars = parameters))
 estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
 print.regime_model(estim2)

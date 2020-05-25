@@ -32,7 +32,7 @@ library(ggplot2)
 data("datasim")
 data = datasim$Sim$Zt
 parameters = list(l = 1,orders = list(pj = 1))
-initial = mtarinipars(tsregim_obj = tsregim(data),
+initial = mtarinipars(tsregime_obj = tsregime(data),
                       list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
 diagnostic_mtar(estim1)

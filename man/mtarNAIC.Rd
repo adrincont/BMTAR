@@ -43,12 +43,12 @@ Estimation of thresholds was made before starting the Bayesian procedure via the
 data("datasim")
 data = datasim
 # Estimate number of regimes with NAIC
-initial1 = mtarinipars(tsregim_obj = data$Sim,
+initial1 = mtarinipars(tsregime_obj = data$Sim,
 list_model = list(pars = list(l = 2,
 orders = list(pj = c(1,1),dj = c(1,1)), r = 0.2)))
 estruc1 = mtarns(ini_obj = initial1,niter = 100,chain = TRUE,burn = 100)
 
-initial2 = mtarinipars(tsregim_obj = data$Sim,
+initial2 = mtarinipars(tsregime_obj = data$Sim,
 list_model = list(pars = list(l = 2,
 orders = list(pj = c(1,1),dj = c(1,1)), r = 0.3)))
 estruc2 = mtarns(ini_obj = initial2,niter = 100,chain = TRUE,burn = 100)

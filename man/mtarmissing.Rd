@@ -53,7 +53,7 @@ data_final = tsregime(data_yt,data_zt,r = yt$r)
 autoplot.tsregime(data_final,1)
 autoplot.tsregime(data_final,2)
 
-initial = mtarinipars(tsregim_obj = data_final,
+initial = mtarinipars(tsregime_obj = data_final,
 list_model = list(pars = list(l = 2,r = datasim$Sim$r,
 orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
 missingest = mtarmissing(ini_obj = initial,chain = TRUE,
