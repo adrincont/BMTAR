@@ -1,8 +1,10 @@
 ## Test environments
-* ─  using platform: x86_64-pc-linux-gnu (64-bit)
-  ─  using R version 3.6.3 (2020-02-29)
-  ─  using session charset: UTF-8
-* windows x64. R.3.6.0
+* -  using platform: x86_64-pc-linux-gnu (64-bit)
+  -  using R version 3.6.3 (2020-02-29)
+  -  using session charset: UTF-8
+* -  using R version 3.6.0 (2019-04-26)
+  -  using platform: x86_64-w64-mingw32 (64-bit)
+  -  using session charset: ISO8859-1
 * Rcloud
   - using R version 3.5.3 (2019-03-11)
   - using platform: x86_64-pc-linux-gnu (64-bit)

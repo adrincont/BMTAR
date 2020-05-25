@@ -17,11 +17,12 @@ devtools::install_github("adrincont/libreria-MTAR")
 
 ## Overview
 As mention in the first paragraph lets introduce the objects class and usage in the different functions.
+
 - `tsregim` return an object class 'tsregim' which is how the package manage data.
 - `mtaregim` return an object of class 'regime' use for simulation purposes and as standard presentation of the final estimations.
 - `mtarsim` return an object of class 'mtarsim' use in autoplot methods. Its practical to conditionate some functions for different known parameters.
 - `mtarinipars` return an object of class 'regim_inipars' that itself contains an object of class 'tsregim', it is the main object that save known parameters and parameters of the prior distributions for each parameter in a MTAR model. This object needs to be provided in every estimation function.
-- 'mtarns` and `mtarstr` return an object of class 'regime_model' use in print and autoplot methods, its an stardard presentation for estimations done in this functions. It is the object to introduce in `mtarNAIC`. 
+- `mtarns` and `mtarstr` return an object of class 'regime_model' use in print and autoplot methods, its an stardard presentation for estimations done in this functions. It is the object to introduce in `mtarNAIC`. 
 - `mtarmissing` return an object of class 'regim_missing' for print and autoplot methods.
 - `mtarnumreg` return an object of class 'regim_number'
 
@@ -88,6 +89,7 @@ autoplot.regim_model(estruc,5)
 
 ## For more information
 You will find the theoretical basis of the method in the documents:
+
   - https://www.tandfonline.com/doi/abs/10.1080/03610926.2014.990758
   - https://core.ac.uk/download/pdf/77274943.pdf
 

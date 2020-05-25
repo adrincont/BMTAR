@@ -350,7 +350,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     if (is.null(Sigma)) {
       sigma_iter[[lj]] = sigma_iter[[lj]][-c(1:other)]
       SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
-      # save chains of sigma^1/2
+      # save chains of sigma
       sigmachain[[lj]] = sapply(sigma_iter[[lj]][-c(1:burn)], ks::vec)
       # credibility intervals for sigma^1/2
       vecsigma = matrix(nrow = k*k,ncol = 3)
