@@ -63,6 +63,9 @@ autoplot.regim_model(estruc,2)
 autoplot.regim_model(estruc,3)
 autoplot.regim_model(estruc,4)
 autoplot.regim_model(estruc,5)
+cc = 1/2*(nrow(data$Yt)-2)-1
+# in the table of critical values for CusumSQ we have a value of 0.05333 for n = 500 and alpha = 0.05
+diagnostic_mtar(estruc,CusumSQ = 0.05333)
 
 
 initial = mtarinipars(tsregim_obj = data_temp,
