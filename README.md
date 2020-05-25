@@ -9,10 +9,10 @@ Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing D
 The R package *MTAR* implements parameter estimation using a Bayesian approach for MTAR models with missing data using Markov Chain Monte Carlo methods. This package performs the simulation of MTAR process (`mtarsim`). Estimation of matrix parameters and the threshold values conditional on the autoregressive orders and number of regimes (`mtarns`). Identification of the autoregressive orders using Bayesian variable selection, together with coefficients and covariance matrices and the threshold values conditional on the number of regimes (`mtarstr`). Identification of the number of regimes using Metropolised Carlin and Chib or via NAIC criteria (`mtarnumreg`), to calculate NAIC of any estimated model (`mtarNAIC`). Estimate missing values together with matrix parameters conditional to threshold values, autoregressive orders and numbers of regimes (`mtarmissing`). The diagnostic of the residuals in any estimated model can be done (`diagnostic_mtar`). The package manage several class objects for autoplot and print, functions like (`tsregime`),(`mtaregime`) and (`mtarinipars`) make its construction. Finally, (`auto_mtar`) its an automatic function that perfoms all above.
 
 ## Installation
-You can install the **development** version from [Github](https://github.com/adrincont/libreria-MTAR).
+You can install the **development** version from [Github](https://github.com/adrincont/MTAR).
 ```s
 install.packages("devtools")
-devtools::install_github("adrincont/libreria-MTAR")
+devtools::install_github("adrincont/MTAR")
 ```
 
 ## Overview
