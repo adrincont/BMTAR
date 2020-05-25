@@ -24,7 +24,7 @@ Print estimates outputs corresponding to functions \dQuote{\code{mtarns}} and \d
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\seealso{\code{\link[MTAR]{mtarns}}, \code{\link[MTAR]{mtarstr}}}
+\seealso{\code{\link[mtar]{mtarns}}, \code{\link[mtar]{mtarstr}}}
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{

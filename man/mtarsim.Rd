@@ -69,11 +69,11 @@ autoplot.tsregime(datasim$Sim,1)
 autoplot.tsregime(datasim$Sim,2)
 }
 \seealso{
-\code{\link[MTAR]{mtaregime}},
-\code{\link[MTAR]{mtarns}},
-\code{\link[MTAR]{mtarstr}},
-\code{\link[MTAR]{mtarmissing}},
-\code{\link[MTAR]{mtarnumreg}}
+\code{\link[mtar]{mtaregime}},
+\code{\link[mtar]{mtarns}},
+\code{\link[mtar]{mtarstr}},
+\code{\link[mtar]{mtarmissing}},
+\code{\link[mtar]{mtarnumreg}}
 }
 \keyword{MTAR}
 \keyword{Covariate process}

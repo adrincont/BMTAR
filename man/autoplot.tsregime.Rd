@@ -25,7 +25,7 @@ Graph for the stochastic processes of the object \ dQuote {\ code {tsregime}} fo
 \references{
   Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 }
-\seealso{\code{\link[MTAR]{tsregime}}}
+\seealso{\code{\link[mtar]{tsregime}}}
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{

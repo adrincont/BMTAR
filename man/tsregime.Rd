@@ -42,11 +42,9 @@ Missing data is allowed for processes \eqn{Y_t}, \eqn{X_t} and \eqn{Z_t} (can th
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \seealso{
-\code{\link[MTAR]{mtaregime}},
-\code{\link[MTAR]{mtarns}},
-\code{\link[MTAR]{mtarstr}},
-\code{\link[MTAR]{mtarmissing}},
-\code{\link[MTAR]{mtarnumreg}}
+\code{\link[mtar]{mtaregime}},
+\code{\link[mtar]{mtarinipars}},
+\code{\link[mtar]{mtarsim}}
 }
 \examples{
 data("datasim")
