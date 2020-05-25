@@ -1,17 +1,19 @@
 ## Test environments
-* local OS X install, R 3.1.2
-* ubuntu 12.04 (on travis-ci), R 3.1.2
-* win-builder (devel and release)
+* ─  using platform: x86_64-pc-linux-gnu (64-bit)
+  ─  using R version 3.6.3 (2020-02-29)
+  ─  using session charset: UTF-8
+* windows x64. R.3.6.0
+* Rcloud
+  - using R version 3.5.3 (2019-03-11)
+  - using platform: x86_64-pc-linux-gnu (64-bit)
+  - using session charset: UTF-8
+* local OS X install, R 3.6.3
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
+0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
-There was 1 NOTE:
-
-* checking dependencies in R code ... NOTE
-  Namespace in Imports field not imported from: 'R6'
-
-  R6 is a build-time dependency.
+## Time spending 
+Because of the nature of MCMC methods, to run all examples when checking its done on Rcloud was: Duration: 1h 35s.
 
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of httr 
