@@ -22,7 +22,7 @@ library(ggplot2)
 
 data(datasim_miss)
 
-data = tsregim(datasim_miss$Yt,datasim_miss$Zt,ddatasim_miss$Xt)
+data = tsregim(datasim_miss$Yt,datasim_miss$Zt,datasim_miss$Xt)
 autoplot.tsregim(data,1)
 autoplot.tsregim(data,2)
 autoplot.tsregim(data,3)
@@ -44,7 +44,7 @@ estim_nr = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 50
 ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2))
 print(estim_nr)
 
-nitial = mtarinipars(tsregim_obj = data_temp,method = 'KUO',
+initial = mtarinipars(tsregim_obj = data_temp,method = 'KUO',
 list_model = list(pars = list(l = estim_nr$final_m),orders = list(pj = c(2,2))))
 estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
 autoplot.regim_model(estruc,1)
@@ -66,7 +66,7 @@ estim_nr = mtarnumreg(ini_obj = initial,iterprev = 500,niter_m = 500,burn_m = 50
 ordersprev = list(maxpj = 2,maxqj = 2,maxdj = 2))
 print(estim_nr)
 
-nitial = mtarinipars(tsregim_obj = data_c,method = 'KUO',
+initial = mtarinipars(tsregim_obj = data_c,method = 'KUO',
 list_model = list(pars = list(l = estim_nr$final_m),orders = list(pj = c(2,2))))
 estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
 autoplot.regim_model(estruc,1)
