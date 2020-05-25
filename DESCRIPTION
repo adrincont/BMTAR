@@ -1,4 +1,4 @@
-Package: MTAR
+Package: mtar
 Type: Package
 Date: 2020-04-22
 Title: Bayesian approach for MTAR models with missing data

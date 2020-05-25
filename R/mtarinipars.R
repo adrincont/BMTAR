@@ -128,7 +128,7 @@ mtarinipars = function(tsregime_obj,
         }
         cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
         listf = list(tsregime_obj = tsregime_obj, l0_min = list_model$l0_min,l0_max = list_model$l0_max,method = method,init = list(r = r_prior))
-        class(listf) = 'regim_inipars'
+        class(listf) = 'regime_inipars'
         return(listf)
       }
     }
