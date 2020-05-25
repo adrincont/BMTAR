@@ -27,9 +27,10 @@ autoplot.tsregim(data,1)
 autoplot.tsregim(data,2)
 autoplot.tsregim(data,3)
 
-Y_temp = datasim_miss$Yt
-meanY = apply(Y_temp,2,mean,na.rm = T)
+Y_temp = t(datasim_miss$Yt)
+meanY = apply(Y_temp,1,mean,na.rm = T)
 Y_temp[apply(Y_temp,2,is.na)] = meanY
+Y_temp = t(Y_temp)
 X_temp = datasim_miss$Xt
 meanX = mean(X_temp,na.rm = T)
 X_temp[apply(X_temp,2,is.na)] = meanX
