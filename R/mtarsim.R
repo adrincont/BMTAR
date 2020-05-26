@@ -25,8 +25,8 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL){
     Xt = t(Xt)
   }
   Ut = rbind(Zt,Xt)
+  if (is.null(Ut)) {nu = 0}else{nu = nrow(Ut) - 1}
   k = nrow(Rg[[1]]$sigma)
-  nu = nrow(Ut) - 1
   l = length(Rg)
   if (l == 1) {
     rj = matrix(c(-Inf,Inf),nrow = 2,ncol = l)
