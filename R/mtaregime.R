@@ -10,12 +10,12 @@ mtaregime = function(orders = list(p = 1,q = 0,d = 0), cs = NULL,
                     Phi, Beta = NULL, Delta = NULL, Sigma){
   if (is.numeric(Sigma) & !is.matrix(Sigma)) {Sigma = as.matrix(Sigma)}
   if (is.numeric(cs) & !is.matrix(cs)) {cs = as.matrix(cs)}
-  if (!is.list(orders) | length(orders) != 3) {
-    stop('orders must be a list of length 3 list(p, q, d)')
-  }else if (sum(names(orders) %in% c('p','q','d')) != 3) {
-    stop('orders must be a list of length 3 list(p, q, d)')
+  if (!is.list(orders)) {
+    stop('orders must be a list with names p (Not NULL), q or d')
+  }else if (!any(names(orders) %in% c('p','q','d'))) {
+    stop('orders must be a list with names p (Not NULL), q or d')
   }
-  if (is.null(orders$p)) {stop('the list should have orders$p a positive integer')}
+  if (is.null(orders$p)) {stop('orders must have orders$p a positive integer')}
   p = orders$p
   q = ifelse(is.null(orders$q),0,orders$q)
   d = ifelse(is.null(orders$d),0,orders$d)
@@ -106,7 +106,7 @@ mtaregime = function(orders = list(p = 1,q = 0,d = 0), cs = NULL,
     stop('Sigma must be a real positive matrix of dimension kxk')
   }
   # Create a list of regimes
-  Ri = list()
+  Ri = vector('list')
   if (is.numeric(cs) & !is.matrix(cs)) {Sigma = as.matrix(cs)}
   if (!is.null(cs)) {
     cs = cs
