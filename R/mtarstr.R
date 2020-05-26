@@ -534,9 +534,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   estimates$Theta = thetaest
   estimates$Gamma = gamest
   estimates$Sigma = sigmaest
-  data = vector('list')
-  data$Yt = t(Yt)
-  data$Ut = t(Ut)
+  data = ini_obj$tsregime_obj
   orders = vector('list')
   orders$pj = pf
   orders$qj = qf
