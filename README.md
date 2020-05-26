@@ -122,7 +122,7 @@ MTAR is a general model were it is possible to specificated other kind of models
 
 This can be useful when you have missing data in one of this types of models and use **mtar package** for its estimation based on a bayesian approach.
 
-- AR
+- AR (with covariates)
 
 If in the MTAR model specification with k = 1, l = 1 and d = 0 we have:
 
@@ -154,7 +154,7 @@ labs(title = 'forecast package'),ncol = 2)
 diagnostic_mtar(estim1)
 ```
 
-- VAR
+- VAR (with covariates)
 
 If in the MTAR model specification with l = 1 and d = 0 we have:
 
@@ -181,7 +181,7 @@ autoplot(estim1,5)
 diagnostic_mtar(estim1)
 ```
 
-- TAR
+- TAR (with covariates)
 
 If in the MTAR model specification with k = 1 we have:
 
