@@ -7,6 +7,15 @@ Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing D
 ![version](https://img.shields.io/badge/version-0.1.0-blue)
 
 The R package *MTAR* implements parameter estimation using a Bayesian approach for MTAR models with missing data using Markov Chain Monte Carlo methods. This package performs the simulation of MTAR process (`mtarsim`). Estimation of matrix parameters and the threshold values conditional on the autoregressive orders and number of regimes (`mtarns`). Identification of the autoregressive orders using Bayesian variable selection, together with coefficients and covariance matrices and the threshold values conditional on the number of regimes (`mtarstr`). Identification of the number of regimes using Metropolised Carlin and Chib or via NAIC criteria (`mtarnumreg`), to calculate NAIC of any estimated model (`mtarNAIC`). Estimate missing values together with matrix parameters conditional to threshold values, autoregressive orders and numbers of regimes (`mtarmissing`). The diagnostic of the residuals in any estimated model can be done (`diagnostic_mtar`). The package manage several class objects for autoplot and print, functions like (`tsregime`),(`mtaregime`) and (`mtarinipars`) make its construction. Finally, (`auto_mtar`) its an automatic function that perfoms all above.
+## MTAR model
+Let <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\mathrm{Y}_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\mathrm{Y}_{t}\right\}" title="\left\{\mathrm{Y}_{t}\right\}" /></a> and <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\mathrm{X}_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\mathrm{X}_{t}\right\}" title="\left\{\mathrm{X}_{t}\right\}" /></a> be stochastic processes such that <a href="https://www.codecogs.com/eqnedit.php?latex=\mathrm{Y}_{t}=\left(\mathrm{Y}_{1&space;t},&space;\ldots,&space;\mathrm{Y}_{k&space;t}\right)^{\prime},&space;\mathrm{X}_{t}=\left(\mathrm{X}_{1&space;t},&space;\ldots,&space;\mathrm{X}_{v&space;t}\right)^{\prime}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\mathrm{Y}_{t}=\left(\mathrm{Y}_{1&space;t},&space;\ldots,&space;\mathrm{Y}_{k&space;t}\right)^{\prime},&space;\mathrm{X}_{t}=\left(\mathrm{X}_{1&space;t},&space;\ldots,&space;\mathrm{X}_{v&space;t}\right)^{\prime}" title="\mathrm{Y}_{t}=\left(\mathrm{Y}_{1 t}, \ldots, \mathrm{Y}_{k t}\right)^{\prime}, \mathrm{X}_{t}=\left(\mathrm{X}_{1 t}, \ldots, \mathrm{X}_{v t}\right)^{\prime}" /></a> and <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\mathrm{Z}_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\mathrm{Z}_{t}\right\}" title="\left\{\mathrm{Z}_{t}\right\}" /></a> is a univariate process. <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\mathrm{Y}_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\mathrm{Y}_{t}\right\}" title="\left\{\mathrm{Y}_{t}\right\}" /></a> follows a MTAR model with threshold variable <a href="https://www.codecogs.com/eqnedit.php?latex=\mathrm{Z}_{t}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\mathrm{Z}_{t}" title="\mathrm{Z}_{t}" /></a> if:
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\small&space;\mathrm{Y}_{t}=\phi_{0}^{(j)}&plus;\sum_{i=1}^{p_{j}}&space;\phi_{i}^{(j)}&space;\mathrm{Y}_{t-i}&plus;\sum_{i=1}^{q_{j}}&space;\boldsymbol{\beta}_{i}^{(j)}&space;\mathrm{X}_{t-i}&plus;\sum_{i=1}^{d_{j}}&space;\boldsymbol{\delta}_{i}^{(j)}&space;\mathrm{Z}_{t-i}&plus;\mathbf{\Sigma}_{(j)}^{1&space;/&space;2}&space;\varepsilon_{t}&space;\text&space;{&space;if&space;}&space;r_{j-1}<\mathrm{Z}_{t}&space;\leq&space;r_{j}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\small&space;\mathrm{Y}_{t}=\phi_{0}^{(j)}&plus;\sum_{i=1}^{p_{j}}&space;\phi_{i}^{(j)}&space;\mathrm{Y}_{t-i}&plus;\sum_{i=1}^{q_{j}}&space;\boldsymbol{\beta}_{i}^{(j)}&space;\mathrm{X}_{t-i}&plus;\sum_{i=1}^{d_{j}}&space;\boldsymbol{\delta}_{i}^{(j)}&space;\mathrm{Z}_{t-i}&plus;\mathbf{\Sigma}_{(j)}^{1&space;/&space;2}&space;\varepsilon_{t}&space;\text&space;{&space;if&space;}&space;r_{j-1}<\mathrm{Z}_{t}&space;\leq&space;r_{j}" title="\small \mathrm{Y}_{t}=\phi_{0}^{(j)}+\sum_{i=1}^{p_{j}} \phi_{i}^{(j)} \mathrm{Y}_{t-i}+\sum_{i=1}^{q_{j}} \boldsymbol{\beta}_{i}^{(j)} \mathrm{X}_{t-i}+\sum_{i=1}^{d_{j}} \boldsymbol{\delta}_{i}^{(j)} \mathrm{Z}_{t-i}+\mathbf{\Sigma}_{(j)}^{1 / 2} \varepsilon_{t} \text { if } r_{j-1}<\mathrm{Z}_{t} \leq r_{j}" /></a>
+
+where <a href="https://www.codecogs.com/eqnedit.php?latex=j=1,&space;\ldots,&space;l,&space;l&space;\in\{2,3,&space;\ldots\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?j=1,&space;\ldots,&space;l,&space;l&space;\in\{2,3,&space;\ldots\}" title="j=1, \ldots, l, l \in\{2,3, \ldots\}" /></a> is the number of regimes, <a href="https://www.codecogs.com/eqnedit.php?latex=-\infty=r_{0}<r_{1}<\cdots<&space;r_{l-1}<r_{l}=\infty" target="_blank"><img src="https://latex.codecogs.com/gif.latex?-\infty=r_{0}<r_{1}<\cdots<&space;r_{l-1}<r_{l}=\infty" title="-\infty=r_{0}<r_{1}<\cdots< r_{l-1}<r_{l}=\infty" /></a> are the thresholds, which define the regimes.
+<a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\mathrm{Y}_{t}\right\},\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\mathrm{Y}_{t}\right\},\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" title="\left\{\mathrm{Y}_{t}\right\},\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" /></a> are called output covariates and threshold processes respectively.
+
+Additionally, the innovation process <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\varepsilon_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\varepsilon_{t}\right\}" title="\left\{\varepsilon_{t}\right\}" /></a> follows a multivariate independent Gaussian zero-mean process with covariance identity matrix <a href="https://www.codecogs.com/eqnedit.php?latex=I_{k}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?I_{k}" title="I_{k}" /></a> it is mutually independent of <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" title="\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" /></a>.
 
 ## Installation
 You can install the **development** version from [Github](https://github.com/adrincont/MTAR).
@@ -114,6 +123,11 @@ MTAR is a general model were it is possible to specificated other kind of models
 This can be useful when you have missing data in one of this types of models and use **mtar package** for its estimation based on a bayesian approach.
 
 - AR
+
+If in the MTAR model specification with k = 1, l = 1 and d = 0 we have:
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=y_{t}=\phi_{0}&plus;\sum_{i=1}^{p}&space;\phi_{i}&space;y_{t-i}&plus;\sum_{i=1}^{q}&space;\beta_{i}&space;x_{t-i}&plus;\sigma^{1&space;/&space;2}&space;\varepsilon_{t}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?y_{t}=\phi_{0}&plus;\sum_{i=1}^{p}&space;\phi_{i}&space;y_{t-i}&plus;\sum_{i=1}^{q}&space;\beta_{i}&space;x_{t-i}&plus;\sigma^{1&space;/&space;2}&space;\varepsilon_{t}" title="y_{t}=\phi_{0}+\sum_{i=1}^{p} \phi_{i} y_{t-i}+\sum_{i=1}^{q} \beta_{i} x_{t-i}+\sigma^{1 / 2} \varepsilon_{t}" /></a>
+
 ```s
 library(mtar)
 library(ggplot2)
@@ -141,6 +155,9 @@ diagnostic_mtar(estim1)
 ```
 
 - VAR
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=Y_{t}=\phi_{0}&plus;\sum_{i=1}^{p}&space;\phi_{i}&space;Y_{t-i}&plus;\sum_{i=1}^{q}&space;\beta_{i}&space;X_{t-i}&plus;\Sigma_{}^{1&space;/&space;2}&space;\varepsilon_{t}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Y_{t}=\phi_{0}&plus;\sum_{i=1}^{p}&space;\phi_{i}&space;Y_{t-i}&plus;\sum_{i=1}^{q}&space;\beta_{i}&space;X_{t-i}&plus;\Sigma_{}^{1&space;/&space;2}&space;\varepsilon_{t}" title="Y_{t}=\phi_{0}+\sum_{i=1}^{p} \phi_{i} Y_{t-i}+\sum_{i=1}^{q} \beta_{i} X_{t-i}+\Sigma_{}^{1 / 2} \varepsilon_{t}" /></a>
+
 ```s
 library(mtar)
 library(ggplot2)
@@ -163,6 +180,9 @@ diagnostic_mtar(estim1)
 ```
 
 - TAR
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=y_{t}=\phi_{0}^{(j)}&plus;\sum_{i=1}^{p_{j}}&space;\phi_{i}^{(j)}&space;y_{t-i}&plus;\sum_{i=1}^{q_{j}}&space;\beta_{i}^{(j)}&space;X_{t-i}&plus;\sum_{i=1}^{d_{j}}&space;\delta_{i}^{(j)}&space;z_{t-i}&plus;\sigma_{(j)}^{1&space;/&space;2}&space;\varepsilon_{t}&space;\text&space;{&space;if&space;}&space;r_{j-1}<z_{t}&space;\leq&space;r_{j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?y_{t}=\phi_{0}^{(j)}&plus;\sum_{i=1}^{p_{j}}&space;\phi_{i}^{(j)}&space;y_{t-i}&plus;\sum_{i=1}^{q_{j}}&space;\beta_{i}^{(j)}&space;X_{t-i}&plus;\sum_{i=1}^{d_{j}}&space;\delta_{i}^{(j)}&space;z_{t-i}&plus;\sigma_{(j)}^{1&space;/&space;2}&space;\varepsilon_{t}&space;\text&space;{&space;if&space;}&space;r_{j-1}<z_{t}&space;\leq&space;r_{j}" title="y_{t}=\phi_{0}^{(j)}+\sum_{i=1}^{p_{j}} \phi_{i}^{(j)} y_{t-i}+\sum_{i=1}^{q_{j}} \beta_{i}^{(j)} X_{t-i}+\sum_{i=1}^{d_{j}} \delta_{i}^{(j)} z_{t-i}+\sigma_{(j)}^{1 / 2} \varepsilon_{t} \text { if } r_{j-1}<z_{t} \leq r_{j}" /></a>
+
 ```s
 # Example 1, TAR model with 2 regimes
 Z = arima.sim(n = 500,list(ar = c(0.5)))
