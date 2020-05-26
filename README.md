@@ -156,6 +156,8 @@ diagnostic_mtar(estim1)
 
 - VAR
 
+If in the MTAR model specification with l = 1 and d = 0 we have:
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=Y_{t}=\phi_{0}&plus;\sum_{i=1}^{p}&space;\phi_{i}&space;Y_{t-i}&plus;\sum_{i=1}^{q}&space;\beta_{i}&space;X_{t-i}&plus;\Sigma_{}^{1&space;/&space;2}&space;\varepsilon_{t}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Y_{t}=\phi_{0}&plus;\sum_{i=1}^{p}&space;\phi_{i}&space;Y_{t-i}&plus;\sum_{i=1}^{q}&space;\beta_{i}&space;X_{t-i}&plus;\Sigma_{}^{1&space;/&space;2}&space;\varepsilon_{t}" title="Y_{t}=\phi_{0}+\sum_{i=1}^{p} \phi_{i} Y_{t-i}+\sum_{i=1}^{q} \beta_{i} X_{t-i}+\Sigma_{}^{1 / 2} \varepsilon_{t}" /></a>
 
 ```s
@@ -180,6 +182,8 @@ diagnostic_mtar(estim1)
 ```
 
 - TAR
+
+If in the MTAR model specification with k = 1 we have:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=y_{t}=\phi_{0}^{(j)}&plus;\sum_{i=1}^{p_{j}}&space;\phi_{i}^{(j)}&space;y_{t-i}&plus;\sum_{i=1}^{q_{j}}&space;\beta_{i}^{(j)}&space;X_{t-i}&plus;\sum_{i=1}^{d_{j}}&space;\delta_{i}^{(j)}&space;z_{t-i}&plus;\sigma_{(j)}^{1&space;/&space;2}&space;\varepsilon_{t}&space;\text&space;{&space;if&space;}&space;r_{j-1}<z_{t}&space;\leq&space;r_{j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?y_{t}=\phi_{0}^{(j)}&plus;\sum_{i=1}^{p_{j}}&space;\phi_{i}^{(j)}&space;y_{t-i}&plus;\sum_{i=1}^{q_{j}}&space;\beta_{i}^{(j)}&space;X_{t-i}&plus;\sum_{i=1}^{d_{j}}&space;\delta_{i}^{(j)}&space;z_{t-i}&plus;\sigma_{(j)}^{1&space;/&space;2}&space;\varepsilon_{t}&space;\text&space;{&space;if&space;}&space;r_{j-1}<z_{t}&space;\leq&space;r_{j}" title="y_{t}=\phi_{0}^{(j)}+\sum_{i=1}^{p_{j}} \phi_{i}^{(j)} y_{t-i}+\sum_{i=1}^{q_{j}} \beta_{i}^{(j)} X_{t-i}+\sum_{i=1}^{d_{j}} \delta_{i}^{(j)} z_{t-i}+\sigma_{(j)}^{1 / 2} \varepsilon_{t} \text { if } r_{j-1}<z_{t} \leq r_{j}" /></a>
 
