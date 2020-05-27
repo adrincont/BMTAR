@@ -76,10 +76,7 @@ autoplot.regime_model(estruc,2)
 autoplot.regime_model(estruc,3)
 autoplot.regime_model(estruc,4)
 autoplot.regime_model(estruc,5)
-cc = 1/2*(nrow(data$Yt)-2)-1
-## in the table of critical values for CusumSQ we have a value of 
-## 0.05333 for n = 500 and alpha = 0.05
-diagnostic_mtar(estruc,CusumSQ = 0.05333)
+diagnostic_mtar(estruc)
 
 # With the known structural parameters we estimate the missing data
 list_model = list(pars = list(l = estim_nr$final_m,r = estruc$estimates$r[,2],orders = estruc$orders))
@@ -104,15 +101,15 @@ autoplot.regime_model(estruc,2)
 autoplot.regime_model(estruc,3)
 autoplot.regime_model(estruc,4)
 autoplot.regime_model(estruc,5)
-diagnostic_mtar(estruc,CusumSQ = 0.05333)
+diagnostic_mtar(estruc)
 ```
 
 ## Other useful examples
-MTAR is a general model were it is possible to specificated other kind of models we are familiar with, like:
+MTAR is a general model were it is possible to specificated other kind of models we are familiar with, like 
 
-- Basic auto-regressive model AR(p): 
-- Vector auto-regressive model VAR(p): 
-- Threshold auto-regressive model TAR(l,p,q): 
+- Basic auto-regressive model AR(p)
+- Vector auto-regressive model VAR(p) 
+- Threshold auto-regressive model TAR(l,pj).
 
 | spec/Model | AR | VAR | TAR |
 | :---  | :---: | :---: | :---: |
@@ -167,11 +164,12 @@ library(ggplot2)
 library(vars)
 library(BVAR)
 R1 = mtaregime(orders = list(p = 1,q = 0,d = 0),
-              Phi = list(phi1 = matrix(c(0.3,0.2,0.1,0.4),2,2)),Sigma = matrix(c(1,0.5,0.5,1),2,2))
+              Phi = list(phi1 = matrix(c(0.3,0.2,0.1,0.4),2,2)),
+              Sigma = matrix(c(1,0.5,0.5,1),2,2))
 data = mtarsim(100,list(R1))
 autoplot(data$Sim)
 var1 = vars::VAR(y = data$Sim$Yt,p = 1)
-BVAR::bvar(data = data$Sim$Yt,lags = 1)
+var2 = BVAR::bvar(data = data$Sim$Yt,lags = 1)
 parameters = list(l = 1,orders = list(pj = 1))
 initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
@@ -235,5 +233,5 @@ You will find the theoretical basis of the method in the documents:
 This package is free and open source software, licensed under GPL-3.
 
 ## References
- * Calderón Villanueva, S. A. (2014). Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing Data (Doctoral dissertation, Universidad Nacional de Colombia).
+ * Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
 

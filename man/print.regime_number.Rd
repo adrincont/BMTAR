@@ -28,11 +28,6 @@ Print estimates outputs corresponding to function \dQuote{\code{mtarnumreg}} whi
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{
-data("datasim")
-data = datasim$Sim$Zt
-parameters = list(l = 1,orders = list(pj = 1))
-initial = mtarinipars(tsregime_obj = tsregime(data),
-                      list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 500,chain = TRUE,burn = 500)
-print.regime_model(estim1)
+data("datasim_numreg")
+print.regime_number(datasim_numreg)
 }

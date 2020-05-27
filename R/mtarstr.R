@@ -407,7 +407,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     listj = lists(0)
   }
   SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
-  logLikj = vector(mode = "numeric")
+  logLikj = vector(mode = 'numeric')
   pf = qf = df = vector('numeric')
   for (lj in 1:l) {
     theta_iter[[lj]] = theta_iter[[lj]][,-c(1:other)]
@@ -503,7 +503,12 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       }
     }
     Ri$sigma = ks::invvec(sigmaest[[lj]][,2],ncol = k,nrow = k)
-    pf[lj] = max(as.numeric(sapply(names(Ri$phi),substr,4,4)))
+    if (!is.null(Ri$phi)) {
+      pf[lj] = max(as.numeric(sapply(names(Ri$phi),substr,4,4)))
+    }else{
+      pf[lj] = 1
+      Ri$phi = list(phi1 = matrix(0,k,k))
+    }
     if (!is.null(Ri$beta)) {
       qf[lj] = max(as.numeric(sapply(names(Ri$beta),substr,5,5)))
     }else{qf[lj] = 0}
