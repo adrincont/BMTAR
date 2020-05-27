@@ -233,5 +233,5 @@ You will find the theoretical basis of the method in the documents:
 This package is free and open source software, licensed under GPL-3.
 
 ## References
- * Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
+ * Calderon V, S. A., & Nieto, F. H. (2017). Bayesian analysis of multivariate threshold autoregressive models with missing data. Communications in Statistics-Theory and Methods, 46(1), 296-318.
 
