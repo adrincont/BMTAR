@@ -3,7 +3,7 @@
 
 \title{Estimation of missing values of observed, covariate and threshold processes}
 \description{
-Estimation using Bayesian methology of missing values in observed(output), covariate and threshold processes.
+Estimation using Bayesian methodology of missing values in observed(output), covariate and threshold processes.
 }
 \usage{
 mtarmissing(ini_obj,niter = 1000, chain = FALSE, level = 0.95,

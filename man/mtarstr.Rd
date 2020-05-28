@@ -21,7 +21,7 @@ r_init = NULL, parallel = FALSE)
 }
 
 \details{
-  If the number of regimes \eqn{l} is known or fixed, we can estimate other structural parameters of the MTAR model: Thresholds(\eqn{r_1,\cdots,r_{l-1}}), and autoregressive orders(\eqn{p_j,q_j,d_j}). Of course, the non-structural parameters are also estimated. The problem of estimation the autoregressive orders is addressed to the problem of Bayesian variable selection in regression using Gibss Variable selection(GVS) or Kuo and Mallick Methodologies. Samples of the full conditional distribution for Threshold values are extracted using Random Walk Metropolis-Hastings Algorithm.
+  If the number of regimes \eqn{l} is known or fixed, we can estimate other structural parameters of the MTAR model: Thresholds(\eqn{r_1,\cdots,r_{l-1}}), and autoregressive orders(\eqn{p_j,q_j,d_j}). Of course, the non-structural parameters are also estimated. The problem of estimation the autoregressive orders is addressed to the problem of Bayesian variable selection in regression using Gibbs Variable selection(GVS) or Kuo and Mallick Methodologies. Samples of the full conditional distribution for Threshold values are extracted using Random Walk Metropolis-Hastings Algorithm.
 }
 \value{
   Return a list type object of class \dQuote{\code{regime_model}}

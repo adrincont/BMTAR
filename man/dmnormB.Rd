@@ -1,6 +1,6 @@
 \name{dmnormB}
 \alias{dmnormB}
-\title{Multivarate normal density using Brobdingnag class}
+\title{Multivariate normal density using Brobdingnag class}
 \usage{
 dmnormB(x,mean,sigma)
 }
