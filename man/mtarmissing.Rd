@@ -16,7 +16,7 @@ burn = NULL, cU = 0.5, b = NULL)
   \item{chain}{logical type, if return chains of parameters. Default FALSE}
   \item{level}{numeric type, confident interval for estimations. Default 0.95}
   \item{burn}{numeric type, number of initial runs. Default NULL (10\% of niter)}
-  \item{cU}{numeric type, coeficient of the diagonal covariance matrix of process Ut = (Zt,Xt). Default 0.5}
+  \item{cU}{numeric type, coefficient of the diagonal covariance matrix of process Ut = (Zt,Xt). Default 0.5}
   \item{b}{numeric type greater or equal 1, autoregressive order of Ut = (Zt,Xt). Default NULL meaning 1}
 }
 
@@ -35,7 +35,7 @@ are Gaussian for simplicity. However, in the next updates, we are going to get f
   \item{Chain}{if chain TRUE, chains of the estimated missing values}
 }
 \references{
-  Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
+Calderón, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:10.1080/03610926.2014.990758.
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 

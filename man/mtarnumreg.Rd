@@ -30,20 +30,20 @@ parallel = FALSE)
 }
 \value{
   Return a list type object of class \dQuote{\code{regime_number}}
-  \item{tsregim}{ini_obj$tsregim_obj}
+  \item{tsregime}{ini_obj$tsregim_obj}
   \item{list_m}{if list_m TRUE list of models considered}
   \item{m_chain}{if chain_m TRUE chains of m}
   \item{estimates}{table of the proportions of m estimated}
   \item{final_m}{numeric type, final number of regimes estimated}
 
   If NAIC TRUE
-  \item{tsregim}{ini_obj$tsregim_obj}
+  \item{tsregime}{ini_obj$tsregim_obj}
   \item{list_m}{list of consider models}
   \item{NAIC}{list type of NAIC for each considered model}
   \item{NAIC_final_m}{numeric type, final number of regimes by this criteria}
 }
 \references{
-  Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
+Calderón, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:10.1080/03610926.2014.990758.
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderón \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 

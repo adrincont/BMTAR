@@ -1,6 +1,6 @@
 \name{missingest}
 \alias{missingest}
-\title{Datos simulados}
+\title{simulated data}
 \description{
 results example missing data estimation process for a mtar process
 }
@@ -8,6 +8,7 @@ results example missing data estimation process for a mtar process
 \format{Object whit class \code{mtar_missing}}
 \source{R Simulation}
 \references{
-  Calderon V, S. A., & Nieto, F. H. (2017).  \emph{Bayesian analysis of multivariate       threshold autoregressive models with missing data}. Communications in Statistics-Theory   and Methods, 46(1), 296-318.
+Calderón, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:
+10.1080/03610926.2014.990758.
 }
 \keyword{datasets}

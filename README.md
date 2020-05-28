@@ -31,7 +31,7 @@ As mention in the first paragraph lets introduce the objects class and usage in 
 - `mtaregime` return an object of class 'regime' use for simulation purposes and as standard presentation of the final estimations.
 - `mtarsim` return an object of class 'mtarsim' use in autoplot methods. Its practical to conditionate some functions for different known parameters.
 - `mtarinipars` return an object of class 'regime_inipars' that itself contains an object of class 'tsregime', it is the main object that save known parameters and parameters of the prior distributions for each parameter in a MTAR model. This object needs to be provided in every estimation function.
-- `mtarns` and `mtarstr` return an object of class 'regime_model' use in print and autoplot methods, its an stardard presentation for estimations done in this functions. It is the object to introduce in `mtarNAIC`. 
+- `mtarns` and `mtarstr` return an object of class 'regime_model' use in print and autoplot methods, its an standard presentation for estimations done in this functions. It is the object to introduce in `mtarNAIC`. 
 - `mtarmissing` return an object of class 'regime_missing' for print and autoplot methods.
 - `mtarnumreg` return an object of class 'regime_number'
 
@@ -105,7 +105,7 @@ diagnostic_mtar(estruc)
 ```
 
 ## Other useful examples
-MTAR is a general model were it is possible to specificated other kind of models we are familiar with, like 
+MTAR is a general model were it is possible to specificate other kind of models we are familiar with, like 
 
 - Basic auto-regressive model AR(p)
 - Vector auto-regressive model VAR(p) 
@@ -251,5 +251,6 @@ You will find the theoretical basis of the method in the documents:
 This package is free and open source software, licensed under GPL-3.
 
 ## References
- * Calderon V, S. A., & Nieto, F. H. (2017). Bayesian analysis of multivariate threshold autoregressive models with missing data. Communications in Statistics-Theory and Methods, 46(1), 296-318.
+ * Calderón, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:10.1080/03610926.2014.990758.
+
 
