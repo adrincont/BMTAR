@@ -65,13 +65,13 @@ diagnostic_mtar(estim1)
 parameters = list(l = 2,orders = list(pj = c(1,1)))
 initial = mtarinipars(tsregime_obj = data$Sim,
 list_model = list(pars = parameters))
-estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
-print.regime_model(estim2)
-autoplot.regime_model(estim2,1)
-autoplot.regime_model(estim2,2)
-autoplot.regime_model(estim2,3)
-autoplot.regime_model(estim2,5)
-diagnostic_mtar(estim2)
+#estim2 = mtarns(ini_obj = initial,niter = 500,chain = TRUE)
+#print.regime_model(estim2)
+#autoplot.regime_model(estim2,1)
+#autoplot.regime_model(estim2,2)
+#autoplot.regime_model(estim2,3)
+#autoplot.regime_model(estim2,5)
+#diagnostic_mtar(estim2)
 }
 
 \keyword{Bayesian estimation}
