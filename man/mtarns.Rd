@@ -54,12 +54,12 @@ parameters = list(l = 2,
                   r = data$Sim$r)
 initial = mtarinipars(tsregime_obj = data$Sim,
                       list_model = list(pars = parameters))
-estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
-print.regime_model(estim1)
-autoplot.regime_model(estim1,2)
-autoplot.regime_model(estim1,3)
-autoplot.regime_model(estim1,5)
-diagnostic_mtar(estim1)
+#estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
+#print.regime_model(estim1)
+#autoplot.regime_model(estim1,2)
+#autoplot.regime_model(estim1,3)
+#autoplot.regime_model(estim1,5)
+#diagnostic_mtar(estim1)
 
 #r unknown
 parameters = list(l = 2,orders = list(pj = c(1,1)))
