@@ -1,6 +1,6 @@
 \name{repM}
 \alias{repM}
-\title{Function to create list of matrix objets}
+\title{Function to create list of matrix objects}
 \usage{
 repM(M,r)
 }

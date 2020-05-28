@@ -15,7 +15,7 @@ Beta = NULL, Delta = NULL, Sigma)
   \item{Phi}{list type object with names (phi1, ..., phip), each one a matrix \eqn{(kxk)} type object autoregressive specification. Not NULL}
   \item{Beta}{list type object with names (beta1, ..., betaq), each one a matrix \eqn{(kx\nu)} type object covariate parameters specification Default NULL}
   \item{Delta}{list type object with names (delta1, ..., deltad), each one a matrix \eqn{(kx1)} type object parameter specification of Threshold process. Default NULL}
-  \item{Sigma}{a positive-definite symmetric matrix \eqn{(kxk)}, specfication of errors covariate matrix. Not NULL}
+  \item{Sigma}{a positive-definite symmetric matrix \eqn{(kxk)}, specification of errors covariate matrix. Not NULL}
 }
 \details{
   Causes creation of the object class \dQuote{\code{regime}}. Sigma matrix corresponds to \eqn{\Sigma} (root of the covariance matrix). When cs is not specified or only matrices are delivered for some lags, the function assumes unspecified 0 (matrix). Rows number in the Phi, Beta and Delta matrix should be the same (k dimension of variables in Yt).

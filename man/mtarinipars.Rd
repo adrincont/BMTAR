@@ -31,7 +31,7 @@ sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
 
   l0_max: numeric type, number maximum of regimes to consider for the model if not known. Default NULL\}
   }
-  \item{method}{character type object, if orders not known or enter l0 it must be one ``KUO'' or ``SSVS'', when known it is not necesary. Default NULL}
+  \item{method}{character type object, if orders not known or enter l0 it must be one ``KUO'' or ``SSVS'', when known it is not necessary. Default NULL}
   \item{theta_prior}{list type object with names (R1, ..., Rl), each one a list type object with at least one of the names (theta0j,cov0j)(if method ``SSVS'' (theta0j,cov0j,Cij,Tauij,R)),specification of mean and covariate matrix of the prior distribution for \eqn{\theta} parameter. Default NULL}
   \item{sigma_prior}{list type object with names (R1, ..., Rl), each one a list type object with at least one of the names (S0j,nu0j) specification of matrix and degrees of freedom of the prior distribution for \eqn{\Sigma} parameter. Default NULL}
   \item{gamma_prior}{list type object with names (R1, ..., Rl), each one a vector of prior probabilities for \eqn{\gamma} parameter. Default NULL}
