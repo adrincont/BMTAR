@@ -18,10 +18,10 @@ where <a href="https://www.codecogs.com/eqnedit.php?latex=j=1,&space;\ldots,&spa
 Additionally, the innovation process <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\varepsilon_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\varepsilon_{t}\right\}" title="\left\{\varepsilon_{t}\right\}" /></a> follows a multivariate independent Gaussian zero-mean process with covariance identity matrix <a href="https://www.codecogs.com/eqnedit.php?latex=I_{k}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?I_{k}" title="I_{k}" /></a> it is mutually independent of <a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" title="\left\{\mathrm{X}_{t}\right\},\left\{\mathrm{Z}_{t}\right\}" /></a>.
 
 ## Installation
-You can install the **development** version from [Github](https://github.com/adrincont/MTAR).
+You can install the **development** version from [Github](https://github.com/adrincont/BMTAR).
 ```s
 install.packages("devtools")
-devtools::install_github("adrincont/mtar")
+devtools::install_github("adrincont/BMTAR")
 ```
 
 ## Overview
