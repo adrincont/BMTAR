@@ -1,4 +1,4 @@
-MTAR <img src="man/figures/logoMTAR.png" align="right" />
+BMTAR <img src="man/figures/logoMTAR.png" align="right" />
 ======================
 Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing Data
 
