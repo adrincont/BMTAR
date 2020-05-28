@@ -56,12 +56,12 @@ autoplot.tsregime(data_final,2)
 initial = mtarinipars(tsregime_obj = data_final,
 list_model = list(pars = list(l = 2,r = datasim$Sim$r,
 orders = list(pj = c(1,1), qj = c(0,0),dj = c(0,0)))))
-missingest = mtarmissing(ini_obj = initial,chain = TRUE,
-niter = 500,burn = 500)
-print(missingest)
-autoplot.regime_missing(missingest,1)
-datasim$Sim$Yt[is.na(data_yt[,1]),]
-missingest$tsregime$Yt[is.na(data_yt[,1]),]
+# missingest = mtarmissing(ini_obj = initial,chain = TRUE,
+# niter = 500,burn = 500)
+# print(missingest)
+# autoplot.regime_missing(missingest,1)
+# datasim$Sim$Yt[is.na(data_yt[,1]),]
+# missingest$tsregime$Yt[is.na(data_yt[,1]),]
 }
 
 \keyword{Bayesian estimation}
