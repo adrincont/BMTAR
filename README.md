@@ -163,19 +163,37 @@ library(ggplot2)
 # VAR = MTAR k > 1, l = 1, Zt = NO
 library(vars)
 library(BVAR)
+library(tsDyn)
 R1 = mtaregime(orders = list(p = 1,q = 0,d = 0),
               Phi = list(phi1 = matrix(c(0.3,0.2,0.1,0.4),2,2)),
               Sigma = matrix(c(1,0.5,0.5,1),2,2))
 data = mtarsim(100,list(R1))
-autoplot(data$Sim)
+data2 = tsDyn::VAR.sim(B = matrix(c(0.3,0.2,0.1,0.4),2,2),n = 100,lag = 1,include = c('none'),varcov = matrix(c(1,0.5,0.5,1),2,2))
+ggpubr::ggarrange(
+autoplot(data$Sim) + labs(title = 'mtar package'),
+forecast::autoplot(ts(data2),facets = TRUE) + theme_bw() +
+labs(title = 'tsDyn package'),ncol = 2
+)
+var0 = tsDyn::lineVar(data$Sim$Yt,lag = 1,include = 'none',model = 'VAR')
 var1 = vars::VAR(y = data$Sim$Yt,p = 1)
 var2 = BVAR::bvar(data = data$Sim$Yt,lags = 1)
 parameters = list(l = 1,orders = list(pj = 1))
-initial = mtarinipars(tsregim_obj = data$Sim,list_model = list(pars = parameters))
+initial = mtarinipars(tsregime_obj = data$Sim,list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 estim1$regime
+var0
+var1$varresult
+apply(var2$beta[,,1],2,mean)
+apply(var2$beta[,,2],2,mean)
+apply(var2$sigma[,,1],2,mean)
+apply(var2$sigma[,,2],2,mean)
 print.regime_model(estim1)
-autoplot(estim1,5)
+ggpubr::ggarrange(
+autoplot(estim1,5) + theme(legend.position = 'none') + 
+labs(title = 'mtar package'),
+forecast::autoplot(ts(data$Sim$Yt),facets = TRUE) + theme_bw() +
+labs(title = 'tsDyn package') + forecast::autolayer(ts(var0$fitted.values)) +
+labs(title = 'tsDyn package') + theme(legend.position = 'none'),ncol = 2)
 diagnostic_mtar(estim1)
 ```
 
