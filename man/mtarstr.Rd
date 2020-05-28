@@ -47,12 +47,12 @@ data = datasim
 # KUO method
 initial = mtarinipars(tsregime_obj = data$Sim,method = 'KUO',
 list_model = list(pars = list(l = 2),orders = list(pj = c(2,2))))
-estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
-autoplot.regime_model(estruc,1)
-autoplot.regime_model(estruc,2)
-autoplot.regime_model(estruc,3)
-autoplot.regime_model(estruc,4)
-autoplot.regime_model(estruc,5)
+#estruc = mtarstr(ini_obj = initial,niter = 500,chain = TRUE)
+#autoplot.regime_model(estruc,1)
+#autoplot.regime_model(estruc,2)
+#autoplot.regime_model(estruc,3)
+#autoplot.regime_model(estruc,4)
+#autoplot.regime_model(estruc,5)
 # method can also be 'SSVS'
 }
 

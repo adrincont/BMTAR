@@ -42,9 +42,9 @@ Calderon, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate thresh
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \seealso{
-\code{\link[mtar]{mtaregime}},
-\code{\link[mtar]{mtarinipars}},
-\code{\link[mtar]{mtarsim}}
+\code{\link[BMTAR]{mtaregime}},
+\code{\link[BMTAR]{mtarinipars}},
+\code{\link[BMTAR]{mtarsim}}
 }
 \examples{
 data("datasim")

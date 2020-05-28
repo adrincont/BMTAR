@@ -28,7 +28,7 @@ Calderon, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate thresh
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
-\seealso{\code{\link[mtar]{mtarsim}}}
+\seealso{\code{\link[BMTAR]{mtarsim}}}
 
 \examples{
 # Creation of parameters for regimen with orders = c(2,1,1), nu = 1 y k = 2.

@@ -1,4 +1,4 @@
-Package: mtar
+Package: BMTAR
 Type: Package
 Date: 2020-04-22
 Title: Bayesian approach for MTAR models with missing data
@@ -6,8 +6,7 @@ Version: 0.1.0
 Author: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
         Sergio Alejandro Calderon Villanueva <sacalderonv@unal.edu.co>
         Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
-Maintainer: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
-            Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
+Maintainer: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>
 Depends: R (>= 3.6.0)
 Description: The package implements parameter estimation using a Bayesian approach for MTAR models with missing data using Markov Chain Monte Carlo methods. This package performs the simulation of MTAR processes (`mtarsim''), estimation of matrix parameters and the threshold values (`mtarns''),  identification of the autoregressive orders using Bayesian variable selection (`mtarstr''), identification of the number of regimes using Metropolised Carlin and Chib (`mtarnumreg'') and estimate missing data, coefficients and covariance matrices conditional on the autoregressive orders, the threshold values and the number of regimes  together (`mtarmissing'').
 License: GPL (>= 2)

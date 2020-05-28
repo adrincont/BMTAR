@@ -24,7 +24,7 @@ Print estimates outputs corresponding to function \dQuote{\code{mtarnumreg}} whi
 \references{
 Calderon, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:10.1080/03610926.2014.990758.
 }
-\seealso{\code{\link[mtar]{mtarnumreg}}}
+\seealso{\code{\link[BMTAR]{mtarnumreg}}}
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
 
 \examples{

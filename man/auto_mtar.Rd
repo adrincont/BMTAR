@@ -32,7 +32,7 @@ niter = 3000, chain = FALSE, method = 'KUO',parallel = FALSE)
 \value{
   Return list type object
 
-  \item{tsregim}{class \dQuote{\code{tsregime}} object, if missing values completed with estimations}
+  \item{tsregime}{class \dQuote{\code{tsregime}} object, if missing values completed with estimations}
   \item{numreg}{class \dQuote{\code{regime_number}}, number of regimes estimated}
   \item{pars}{class \dQuote{\code{regime_model}} object with final estimations of parameters}
 }
