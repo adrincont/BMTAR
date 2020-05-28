@@ -49,7 +49,7 @@ sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
   \deqn{\theta_j \sim N(\theta_0j,\Sigma_0j) in Regime j and \theta_j = vec(A_j) A_j = [\Phi_0 \Phi_1:p \beta_1:q \delta_1:d]}
   \deqn{\Sigma_j \sim W(S_0j,\nu_0j)}
   \deqn{\gamma_ij \sim Ber(p_ij0) where i = 1,..., k*p_j + nu*q_j + d}
-  \deqn{\r \sim U(za,zb) and its proposal for MH algorithm U(-val_rmh,val_rmh)}
+  \deqn{ r \sim U(za,zb) and its proposal for MH algorithm U(-val_rmh,val_rmh)}
 }
 \value{
   Return a list type object of class \dQuote{\code{regime_inipars}}
