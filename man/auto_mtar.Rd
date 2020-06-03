@@ -44,7 +44,7 @@ Calderon, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate thresh
 \examples{
   data('datasim')
   data = datasim$Sim
-  # auto = auto_mtar(Yt = data$Yt, Zt = data$Zt,niter = 1000)
+  \donttest{auto = auto_mtar(Yt = data$Yt, Zt = data$Zt,niter = 1000)}
 }
 
 \keyword{Bayesian estimation}
