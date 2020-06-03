@@ -23,24 +23,24 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   if (is.null(nu)) {nu = 0}
   # parameters
   if (is.null(ini_obj$pars$l)) {
-    cat('l NULL default 2 \n')
+    message('l NULL default 2 \n')
     l = 2
   }else{
     l = ini_obj$pars$l
   }
   if (names(ini_obj$pars) %in% c('orders','r','Sigma')) {
-    cat('Parameters different of l in list_model$pars will be ignored \n')
+    message('Parameters different of l in list_model$pars will be ignored \n')
   }
   # method
   if (is.null(ini_obj$method)) {
-    cat('Method NULL default KUO \n')
+    message('Method NULL default KUO \n')
     method = 'KUO'
   }else{
     method = ini_obj$method
   }
   # unknown
   if (is.null(ini_obj$orders)) {
-    cat('orders NULL default por each regime pj = 2,qj = 0,dj = 0 \n')
+    message('orders NULL default por each regime pj = 2,qj = 0,dj = 0 \n')
     orders = list(pj = rep(2,l),qj = rep(0,l),dj = rep(0,l))
   }else{
     orders = ini_obj$orders
@@ -366,7 +366,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   iter_str = compiler::cmpfun(iter_str)
   # iterations: gibbs and metropolis sampling
   acep = 0
-  cat('Estimating threshold(s), structural and non-structural parameters ...','\n')
+  message('Estimating threshold(s), structural and non-structural parameters ...','\n')
   pb = utils::txtProgressBar(min = 2, max = niter + burn + other,style = 3)
   for (i in 2:{niter + burn + other}) {
     iter_i = iter_str(i,list_m)
@@ -375,7 +375,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   }
   if (parallel) {parallel::stopCluster(micluster)}
   close(pb)
-  cat('Saving results ... \n')
+  message('Saving results ... \n')
   if (l > 2) {
     r_iter = list_m$r_iter[,-c(1:{other + burn})]
   }else if (l == 2) {

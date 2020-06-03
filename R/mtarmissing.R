@@ -66,7 +66,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   #Completar datos faltantes con o en Yt y permutar en Yt y Kt(OJO)
   initialU = mtarinipars(tsregime(t(Ut)),list_model = list(pars = list(l = 1,orders = list(pj = b,qj = 0,dj = 0))))
-  cat('Estimating model (Zt,Xt) \n')
+  message('Estimating model (Zt,Xt) \n')
   modelU = mtarns(ini_obj = initialU,niter = 1000,chain = FALSE,burn = 1000)
   modelU = modelU$regime$R1
   #functions
@@ -85,7 +85,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       rj[,l] = c(rev(r)[1],Inf)
     }
     if (l > 2) {for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}}
-    # indicator variable for the regime
+    # indimessageor variable for the regime
     Ind = vector(mode = 'numeric',length = N)
     for (j in 1:l) {
       Ind[Zt > rj[1,j] & Zt <= rj[2,j]] = j
@@ -208,7 +208,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       rj[,l] = c(rev(r)[1],Inf)
     }
     if (l > 2) {for (i2 in 2:{l - 1}) {rj[,i2] = c(r[i2 - 1],r[i2])}}
-    # indicator variable for the regime
+    # indimessageor variable for the regime
     Ind = vector(mode = 'numeric',length = N)
     for (j in 1:l) {
       Ind[Zt > rj[1,j] & Zt <= rj[2,j]] = j
@@ -292,7 +292,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   sersalY = Ytr
   # Sampling
-  cat('Estimating missing data ...\n')
+  message('Estimating missing data ...\n')
   pb = utils::txtProgressBar(min = 2, max = niter + burn, style = 3)
   for (i in 2:{niter + burn}) {
     #State space model
@@ -407,7 +407,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     utils::setTxtProgressBar(pb,i)
   }
   close(pb)
-  cat('Saving results ... \n')
+  message('Saving results ... \n')
   # exits
   # names
   Names_Yt = paste0("(",1:N,",",1,")")

@@ -18,19 +18,19 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   if (is.null(ini_obj$tsregime_obj$Zt)) {
     stop('Threshold process must be enter in ini_obj for evaluate l0_max number of regimes')}
   if (is.null(ini_obj$l0_min)) {
-    cat('l0_min NULL default 2 \n')
+    message('l0_min NULL default 2 \n')
     l0_min = 2
   }else{
     l0_min = ini_obj$l0_min
   }
   if (is.null(ini_obj$l0_max)) {
-    cat('l0_max NULL default 3 \n')
+    message('l0_max NULL default 3 \n')
     l0 = 3
   }else{
     l0 = ini_obj$l0_max
   }
   if (is.null(ini_obj$method)) {
-    cat('method NULL default KUO \n')
+    message('method NULL default KUO \n')
     method = 'KUO'
   }else{
     method = ini_obj$method
@@ -489,7 +489,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   }
   prodA = compiler::cmpfun(prodA)
   # Previous runs
-  cat('Running previous chains ... \n')
+  message('Running previous chains ... \n')
   listm = vector('list')
   if (parallel) {
     micluster = parallel::makeCluster(parallel::detectCores())
@@ -526,7 +526,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   m_iter[1] = sample(l0_min:l0,1)
   acepm = 0
   pm_im = matrix(nrow = l0,ncol = niter_m + burn_m - 1)
-  cat('Estimating number of regimes ... \n')
+  message('Estimating number of regimes ... \n')
   pb = utils::txtProgressBar(min = 2, max = niter_m + burn_m,style = 3)
   for (im in 2:{niter_m + burn_m}) {
     m_iter[im] = rdunif(m_iter[im - 1],l0)
@@ -548,7 +548,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
     utils::setTxtProgressBar(pb,im)
   }
   close(pb)
-  cat('Saving results ... \n')
+  message('Saving results ... \n')
   # exits
   m_iter = m_iter[-c(1:burn_m)]
   vecm = sort(table(m_iter)/length(m_iter)*100,decreasing = TRUE)

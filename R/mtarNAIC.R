@@ -25,6 +25,6 @@ mtarNAIC = function(regimemodel){
   logLikj = as.numeric(regimemodel$logLikj)
   AICj = as.numeric(Nj*logLikj + 2*k*etaj,nrow = 1,row.names = NULL)
   NAIC = sum(AICj)/sum(Nj)
-  cat('NAIC=',round(NAIC,4),'\n')
+  message('NAIC=',round(NAIC,4),'\n')
   return(list(AICj = AICj,NAIC = NAIC))
 }

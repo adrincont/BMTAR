@@ -213,7 +213,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   }
   # iterations gibbs and metropolis for r unknown
   if (is.null(r)) {
-    cat('Estimating non-structural parameters and threshold(s) ...','\n')
+    message('Estimating non-structural parameters and threshold(s) ...','\n')
     pb = utils::txtProgressBar(min = 2, max = niter + burn + other, style = 3)
     acep = 0
     for (i in 2:{niter + burn + other}) {
@@ -261,7 +261,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       utils::setTxtProgressBar(pb,i)
     }
     close(pb)
-    cat('\n')
+    message('\n')
   }else{#r known
     listj = lists(r)
     for (lj in 1:l) {
@@ -271,7 +271,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       yj = c(Yj)
       theta0j = itheta0j[[lj]]
       sigma0j = icov0j[[lj]]
-      cat('Estimating non-structural parameters with threshold(s) known ...',paste0('Reg_',lj),'\n')
+      message('Estimating non-structural parameters with threshold(s) known ...',paste0('Reg_',lj),'\n')
       pb = utils::txtProgressBar(min = 2, max = niter + burn + other, style = 3)
       for (i in 2:{niter + burn + other}) {
         if (!is.null(Sigma)) {
@@ -290,11 +290,11 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
         }
         utils::setTxtProgressBar(pb,i)
       }
-      cat('\n')
+      message('\n')
     }
     close(pb)
   }
-  cat('Saving results ... \n')
+  message('Saving results ... \n')
   # objects for chains and info in each regime
   Rest = thetaest = thetachain = vector('list', l)
   names(Rest) = names(thetaest) = names(thetachain) = paste0('R',1:l)

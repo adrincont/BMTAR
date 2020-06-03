@@ -17,11 +17,11 @@ mtarinipars = function(tsregime_obj,
   if (is.null(nu)) {nu = 0}
   if (!is.list(list_model)) {
     stop('list_model must be a list type object with pars, orders, l0_min or l0_max')
-    cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
+    message('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
   }else{
     if (sum(names(list_model) %in% c('pars','orders','l0_min','l0_max')) == 0) {
       stop('list_model must be a list type object with pars, orders, l0_min or l0_max')
-      cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
+      message('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
     }else{
       if (!is.null(list_model$orders)) {
         if (!is.list(list_model$orders)) {stop('list_model$orders must be a list type object with names pj(Not NULL),qj,dj')
@@ -126,7 +126,7 @@ mtarinipars = function(tsregime_obj,
           r_prior$zb = NULL
           r_prior$val_rmh = 0.00375
         }
-        cat('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
+        message('If pars are unknown use mtarnumreg with l0_max maximum number of regimes','\n')
         listf = list(tsregime_obj = tsregime_obj, l0_min = list_model$l0_min,l0_max = list_model$l0_max,method = method,init = list(r = r_prior))
         class(listf) = 'regime_inipars'
         return(listf)
@@ -143,7 +143,7 @@ mtarinipars = function(tsregime_obj,
   if (is.null(list_model$l0_min) & is.null(list_model$l0_max)) {
     if (!is.null(list_model$pars$orders)) {
       orders = list_model$pars$orders
-      if (!is.null(method)) {cat('For orders known, method is not necesary','\n')}
+      if (!is.null(method)) {message('For orders known, method is not necesary','\n')}
       method = 'ns'
     }else{
       if (!is.null(list_model$orders)) {orders = list_model$orders}else{
@@ -153,7 +153,7 @@ mtarinipars = function(tsregime_obj,
     }
   }else{
     orders = list(pj = NULL,qj = NULL,dj = NULL)
-    cat('For l unknown, orders are not necesary')
+    message('For l unknown, orders are not necesary')
   }
   if (!is.list(orders) | length(orders) != 3) {
     stop('orders must be a list with names pj (Not NULL), qj or dj')
