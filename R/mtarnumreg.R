@@ -492,7 +492,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   message('Running previous chains ... \n')
   listm = vector('list')
   if (parallel) {
-    micluster = parallel::makeCluster(parallel::detectCores())
+    micluster = parallel::makeCluster(2)
     doParallel::registerDoParallel(micluster)
     funcParallel = function(i,iterprev){return(fill(m = i,iter = iterprev, burn = round(0.3*iterprev)))}
     parallel::clusterEvalQ(micluster, library(mtar))

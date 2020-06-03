@@ -268,7 +268,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   list_m = list(r_iter = r_iter,theta_iter = theta_iter,sigma_iter = sigma_iter,gam_iter = gam_iter)
   # iterations function
   if (parallel) {
-    nclus = parallel::detectCores()
+    nclus = 2
     micluster = parallel::makeCluster(nclus)
     doParallel::registerDoParallel(micluster)
     funcParallel = function(ik,iterprev,reg,i,listj,theta_iter,sigma_iter,gam_iter){
