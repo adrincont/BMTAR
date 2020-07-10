@@ -2,10 +2,11 @@ BMTAR <img src="man/figures/logoMTAR.png" align="right" />
 ======================
 Bayesian Analysis of Multivariate Threshold Autoregressive Models with Missing Data
 
-
-![coverage](https://img.shields.io/badge/coverage-90%25-yellowgreen)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/BMTAR)](https://cran.r-project.org/package=BMTAR)
 ![version](https://img.shields.io/badge/version-0.1.0-blue)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/BMTAR)](https://cran.r-project.org/package=BMTAR)
+[![cran checks](https://cranchecks.info/badges/worst/BMTAR)](https://cran.r-project.org/web/checks/check_results_forecast.html)
+[![Downloads](https://cranlogs.r-pkg.org/badges/BMTAR)](https://cran.r-project.org/package=BMTAR)
+[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 The R package *BMTAR* implements parameter estimation using a Bayesian approach for MTAR models with missing data using Markov Chain Monte Carlo methods. This package performs the simulation of MTAR process (`mtarsim`). Estimation of matrix parameters and the threshold values conditional on the autoregressive orders and number of regimes (`mtarns`). Identification of the autoregressive orders using Bayesian variable selection, together with coefficients and covariance matrices and the threshold values conditional on the number of regimes (`mtarstr`). Identification of the number of regimes using Metropolised Carlin and Chib or via NAIC criteria (`mtarnumreg`), to calculate NAIC of any estimated model (`mtarNAIC`). Estimate missing values together with matrix parameters conditional to threshold values, autoregressive orders and numbers of regimes (`mtarmissing`). The diagnostic of the residuals in any estimated model can be done (`diagnostic_mtar`). The package manage several class objects for autoplot and print, functions like (`tsregime`),(`mtaregime`) and (`mtarinipars`) make its construction. Finally, (`auto_mtar`) its an automatic function that performs all above.
 ## MTAR model
