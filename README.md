@@ -82,7 +82,7 @@ diagnostic_mtar(estruc)
 
 # With the known structural parameters we estimate the missing data
 list_model = list(pars = list(l = estim_nr$final_m,r = estruc$estimates$r[,2],orders = estruc$orders))
-initial = mtarinipars(tsregime_obj = data_temp,list_model = list_model)
+initial = mtarinipars(tsregime_obj = datasim_miss,list_model = list_model)
 missingest = mtarmissing(ini_obj = initial,chain = TRUE, niter = 500,burn = 500)
 print(missingest)
 autoplot.regime_missing(missingest,1)
