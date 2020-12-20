@@ -39,7 +39,7 @@ As mention in the first paragraph lets introduce the objects class and usage in 
 
 ## Example of use
 ```s
-library(mtar)
+library(BMTAR)
 library(ggplot2)
 
 data(datasim_miss)
