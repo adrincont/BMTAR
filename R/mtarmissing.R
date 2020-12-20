@@ -17,6 +17,9 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   Yt = ini_obj$tsregime_obj$Yt
   Ut = cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt)
+  if (!is.na(sum(Ut))) {
+    stop('ini_obj$tsregime_obj contains no missing data')
+  }
   k = ini_obj$tsregime_obj$k
   N = ini_obj$tsregime_obj$N
   nu = ini_obj$tsregime_obj$nu
@@ -430,7 +433,6 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   Yt_chains = Yt_iter[,-c(1:burn)]
   if (nu == 0) {Ut_chains = as.matrix(Ut_iter[,-c(1:burn)])
   }else{Ut_chains = Ut_iter[,-c(1:burn)]}
-
   Test_Yt = matrix(nrow = nrow(Yt_iter),ncol = 3)
   Test_Ut = matrix(nrow = nrow(Ut_iter),ncol = 3)
   colnames(Test_Yt) = colnames(Test_Ut) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
@@ -452,51 +454,52 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     Test_Zt = matrix(nrow = length(Names_Zt[PosNAMat[[2]][1,]]),ncol = 3)
   }
   colnames(Test_Zt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-  Test_Zt[,1] = matrix(Test_Ut[,1],ncol = nu + 1,byrow = T)[,1]
-  Test_Zt[,2] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
-  Test_Zt[,3] = matrix(Test_Ut[,3],ncol = nu + 1,byrow = T)[,1]
   if (nu == 0) {
-    rownames(Test_Zt) = Names_Zt[PosNAMat[[2]]]
+    tab_name_Zt = Names_Zt[PosNAMat[[2]]]
   }else{
-    rownames(Test_Zt) = Names_Zt[PosNAMat[[2]][1,]]
+    tab_name_Zt = Names_Zt[PosNAMat[[2]][1,]]
   }
-
+  Test_Zt[,1] = Test_Ut[tab_name_Zt,1]
+  Test_Zt[,2] = Test_Ut[tab_name_Zt,2]
+  Test_Zt[,3] = Test_Ut[tab_name_Zt,3]
+  rownames(Test_Zt) = tab_name_Zt
   if (nu != 0) {
     Test_Xt = matrix(nrow = length(Names_Xt[PosNAMat[[2]][-1,]]),ncol = 3)
     colnames(Test_Xt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
-    Test_Xt[,1] = matrix(Test_Ut[,1],ncol = nu + 1,byrow = T)[,-1]
-    Test_Xt[,2] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
-    Test_Xt[,3] = matrix(Test_Ut[,3],ncol = nu + 1,byrow = T)[,-1]
-    rownames(Test_Xt) = Names_Xt[PosNAMat[[2]][-1,]]
+    tab_name_Xt = Names_Xt[PosNAMat[[2]][-1,]]
+    Test_Xt[,1] = Test_Ut[tab_name_Xt,1]
+    Test_Xt[,2] = Test_Ut[tab_name_Xt,1]
+    Test_Xt[,3] = Test_Ut[tab_name_Xt,1]
+    rownames(Test_Xt) = tab_name_Xt
   }
-
   ini_obj$tsregime_obj$Yt[PosNAvec[[1]],] = matrix(Test_Yt[,2],ncol = k,byrow = T)
   ini_obj$tsregime_obj$Zt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
   ini_obj$tsregime_obj$Xt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
-
   if (chain) {Chains = vector('list')}
   if (any(is.na(Yt)) & any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Zt = Test_Zt, Xt = Test_Xt)
     if (chain) {
       Chains$Yt = Yt_chains
-      Chains$Ut = Ut_chains
+      Chains$Zt = Ut_chains[1:sum(PosNAMat[[2]][1,]),]
+      Chains$Xt = Ut_chains[-c(1:sum(PosNAMat[[2]][1,])),]
     }
   }else if (any(is.na(Yt)) & any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Zt = Test_Zt)
     if (chain) {
       Chains$Yt = Yt_chains
-      Chains$Ut = Ut_chains
+      Chains$Zt = Ut_chains
     }
   }else if (any(is.na(Yt)) & !any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Xt = Test_Xt)
     if (chain) {
       Chains$Yt = Yt_chains
-      Chains$Ut = Ut_chains
+      Chains$Xt = Ut_chains
     }
   }else if (!any(is.na(Yt)) & any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Zt = Test_Zt, Xt = Test_Xt)
     if (chain) {
-      Chains$Ut = Ut_chains
+      Chains$Zt = Ut_chains[1:sum(PosNAMat[[2]][1,]),]
+      Chains$Xt = Ut_chains[-c(1:sum(PosNAMat[[2]][1,])),]
     }
   }else if (any(is.na(Yt)) & !any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt)
@@ -506,12 +509,12 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }else if (!any(is.na(Yt)) & any(is.na(Zt)) & !any(is.na(Xt))) {
     estimates = list(Zt = Test_Zt)
     if (chain) {
-      Chains$Ut = Ut_chains
+      Chains$Zt = Ut_chains
     }
   }else if (!any(is.na(Yt)) & !any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Xt = Test_Xt)
     if (chain) {
-      Chains$Ut = Ut_chains
+      Chains$Xt = Ut_chains
     }
   }
   compiler::enableJIT(0)

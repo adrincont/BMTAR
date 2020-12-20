@@ -55,7 +55,7 @@ diagnostic_mtar = function(regime_model, lagmax = NULL, alpha = '0.05'){
   if (is.null(regime_model$data$Zt)) {
     Ind = rep(1,regime_model$data$N)
   }else{
-    Ind = lists_ind(regime_model$r[1],regime_model$data$Zt,regime_model$data$l)$Ind
+    Ind = lists_ind(regime_model$r[1],regime_model$data$Zt,length(regime_model$r[1]) + 1)$Ind
   }
   etaj = 1 + regime_model$orders$pj*k + regime_model$orders$qj*nu + regime_model$orders$dj
   ff = 1/2*(regime_model$data$N - etaj[Ind]) - 1

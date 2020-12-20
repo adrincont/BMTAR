@@ -274,7 +274,7 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     funcParallel = function(ik,iterprev,reg,i,listj,theta_iter,sigma_iter,gam_iter){
       return(rgamber(pos = ik,reg,i = i,listj = listj,theta_iter,sigma_iter,gam_iter))
     }
-    parallel::clusterEvalQ(micluster, library(mtar))
+    parallel::clusterEvalQ(micluster, library(BMTAR))
     obj_S = list('method','dmnormB','k','eta','Rj','rgamber','fycond','lists','l','N','eta',
                  'pij')
     parallel::clusterExport(cl = micluster,varlist = obj_S,envir = environment())
