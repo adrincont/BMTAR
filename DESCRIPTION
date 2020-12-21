@@ -2,7 +2,7 @@ Package: BMTAR
 Type: Package
 Date: 2020-05-28
 Title: Bayesian Approach for MTAR Models with Missing Data
-Version: 0.1.0
+Version: 0.1.1
 Author: Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
         Sergio Alejandro Calderon Villanueva <sacalderonv@unal.edu.co>
         Andrey Duvan Rincon Torres <adrincont@unal.edu.co>
