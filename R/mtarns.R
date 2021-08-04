@@ -214,7 +214,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
   # iterations gibbs and metropolis for r unknown
   if (is.null(r)) {
     message('Estimating non-structural parameters and threshold(s) ...','\n')
-    pb = utils::txtProgressBar(min = 2, max = niter + burn + other, style = 3)
+    pb = pbapply::timerProgressBar(min = 2, max = niter + burn + other, style = 1)
     acep = 0
     for (i in 2:{niter + burn + other}) {
       listj = lists(r_iter[,i - 1])
@@ -258,7 +258,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
         r_iter[,i] = r_iter[,i - 1]
         acep = acep
       }
-      utils::setTxtProgressBar(pb,i)
+      pbapply::setTimerProgressBar(pb,i)
     }
     close(pb)
     message('\n')
@@ -272,7 +272,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       theta0j = itheta0j[[lj]]
       sigma0j = icov0j[[lj]]
       message('Estimating non-structural parameters with threshold(s) known ...',paste0('Reg_',lj),'\n')
-      pb = utils::txtProgressBar(min = 2, max = niter + burn + other, style = 3)
+      pb = pbapply::timerProgressBar(min = 2, max = niter + burn + other, style = 1)
       for (i in 2:{niter + burn + other}) {
         if (!is.null(Sigma)) {
           Vj = solve(Wj %*% t(Wj) %x% solve(sigma[[lj]] %*% sigma[[lj]]) + solve(sigma0j))
@@ -288,7 +288,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
           Sj = (Yj - Hj %*% Wj) %*% t(Yj - Hj %*% Wj)
           sigma_iter[[lj]][[i]] = MCMCpack::riwish(v = Nj + nu0j,S = Sj + S0j)
         }
-        utils::setTxtProgressBar(pb,i)
+        pbapply::setTimerProgressBar(pb,i)
       }
       message('\n')
     }

@@ -136,20 +136,20 @@ R1 = mtaregime(orders = list(p = 2),Phi = list(phi1 = 0.4,phi2 = 0.3),Sigma = 2)
 data = mtarsim(100,list(R1))
 ardata = arima.sim(list(ar = c(0.4,0.3),sd = 2),100)
 ggpubr::ggarrange(
-autoplot(tsregime(ardata)) + ggplot2::labs(title = 'base package'),
-autoplot(data$Sim) + ggplot2::labs(title = 'mtar package'),ncol = 2)
+  autoplot(tsregime(ardata)) + ggplot2::labs(title = 'base package'),
+  autoplot(data$Sim) + ggplot2::labs(title = 'mtar package'),ncol = 2)
 arima1 = arima(ts(data$Sim$Yt),c(2,0,0))
 parameters = list(l = 1,orders = list(pj = 2))
 initial = mtarinipars(tsregime_obj = data$Sim,list_model = list(pars = parameters))
 estim1 = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 print.regime_model(estim1)
 ggpubr::ggarrange(
-autoplot(estim1,5) + theme(legend.position = 'none') + 
-labs(title = 'mtar package'),
-ggplot(data = NULL,aes(x = 1:100,y = data$Sim$Yt)) + 
-geom_line(col = 'black') + geom_line(data = NULL,
-aes(x = 1:100,y = fitted(arima1)),col = "blue") + theme_bw() + 
-labs(title = 'forecast package'),ncol = 2)
+  autoplot.regime_model(estim1,5) + theme(legend.position = 'none') + 
+    labs(title = 'mtar package'),
+  ggplot(data = NULL,aes(x = 1:100,y = data$Sim$Yt)) + 
+    geom_line(col = 'black') + geom_line(data = NULL,
+                                         aes(x = 1:100,y = fitted(arima1)),col = "blue") + theme_bw() + 
+    labs(title = 'forecast package'),ncol = 2)
 diagnostic_mtar(estim1)
 ```
 
@@ -167,14 +167,14 @@ library(vars)
 library(BVAR)
 library(tsDyn)
 R1 = mtaregime(orders = list(p = 1,q = 0,d = 0),
-              Phi = list(phi1 = matrix(c(0.3,0.2,0.1,0.4),2,2)),
-              Sigma = matrix(c(1,0.5,0.5,1),2,2))
+               Phi = list(phi1 = matrix(c(0.3,0.2,0.1,0.4),2,2)),
+               Sigma = matrix(c(1,0.5,0.5,1),2,2))
 data = mtarsim(100,list(R1))
 data2 = tsDyn::VAR.sim(B = matrix(c(0.3,0.2,0.1,0.4),2,2),n = 100,lag = 1,include = c('none'),varcov = matrix(c(1,0.5,0.5,1),2,2))
 ggpubr::ggarrange(
-autoplot(data$Sim) + labs(title = 'mtar package'),
-forecast::autoplot(ts(data2),facets = TRUE) + theme_bw() +
-labs(title = 'tsDyn package'),ncol = 2
+  autoplot.tsregime(data$Sim) + labs(title = 'mtar package'),
+  forecast::autoplot(ts(data2),facets = TRUE) + theme_bw() +
+    labs(title = 'tsDyn package'),ncol = 2
 )
 var0 = tsDyn::lineVar(data$Sim$Yt,lag = 1,include = 'none',model = 'VAR')
 var1 = vars::VAR(y = data$Sim$Yt,p = 1)
@@ -191,11 +191,11 @@ apply(var2$sigma[,,1],2,mean)
 apply(var2$sigma[,,2],2,mean)
 print.regime_model(estim1)
 ggpubr::ggarrange(
-autoplot(estim1,5) + theme(legend.position = 'none') + 
-labs(title = 'mtar package'),
-forecast::autoplot(ts(data$Sim$Yt),facets = TRUE) + theme_bw() +
-labs(title = 'tsDyn package') + forecast::autolayer(ts(var0$fitted.values)) +
-labs(title = 'tsDyn package') + theme(legend.position = 'none'),ncol = 2)
+  autoplot.regime_model(estim1,5) + theme(legend.position = 'none') + 
+    labs(title = 'mtar package'),
+  forecast::autoplot(ts(data$Sim$Yt),facets = TRUE) + theme_bw() +
+    labs(title = 'tsDyn package') + forecast::autolayer(ts(var0$fitted.values)) +
+    labs(title = 'tsDyn package') + theme(legend.position = 'none'),ncol = 2)
 diagnostic_mtar(estim1)
 ```
 
@@ -207,20 +207,21 @@ If in the MTAR model specification with k = 1 we have:
 
 ```s
 # Example 1, TAR model with 2 regimes
+library(TAR)
 Z = arima.sim(n = 500,list(ar = c(0.5)))
 l = 2;r = 0;K = c(2,1)
 theta = matrix(c(1,-0.5,0.5,-0.7,-0.3,NA), nrow = l)
 H = c(1, 1.5)
 X = simu.tar.norm(Z,l,r,K,theta,H)
-Yt = tsregim(Yt = X,Zt = Z,r = r)
-R1 = mtaregim(orders = list(p = 2),cs = 1,Phi = list(phi1 = -0.5,phi2 = 0.5),
+Yt = tsregime(Yt = X,Zt = Z,r = r)
+R1 = mtaregime(orders = list(p = 2),cs = 1,Phi = list(phi1 = -0.5,phi2 = 0.5),
               Sigma = 1)
-R2 = mtaregim(orders = list(p = 1),cs = -0.7,Phi = list(phi1 = -0.3),
+R2 = mtaregime(orders = list(p = 1),cs = -0.7,Phi = list(phi1 = -0.3),
               Sigma = sqrt(1.5))
 YtSim = mtarsim(500,list(R1,R2),r,Zt = Z)
 ggpubr::ggarrange(
-autoplot(Yt) + ggplot2::labs(title = 'TAR package'),
-autoplot(YtSim$Sim) + ggplot2::labs(title = 'mtar package'),ncol = 2)
+  autoplot.tsregime(Yt) + ggplot2::labs(title = 'TAR package'),
+  autoplot.tsregime(YtSim$Sim) + ggplot2::labs(title = 'mtar package'),ncol = 2)
 # number of regimes
 res = reg.thr.norm(Z,X)
 res$L.est
@@ -234,7 +235,7 @@ res2 = ARorder.norm(Z,X,l,r)
 res2$K.est
 res2$K.prob
 initial = mtarinipars(Yt,list_model = list(pars = list(l = 2),
-orders = list(pj = c(2,2),dj = c(1,1))),method = 'KUO')
+                                           orders = list(pj = c(2,2),dj = c(1,1))),method = 'KUO')
 res2mtar = mtarstr(initial)
 res2mtar$orders
 # non-structural parameters

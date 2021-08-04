@@ -296,7 +296,8 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   sersalY = Ytr
   # Sampling
   message('Estimating missing data ...\n')
-  pb = utils::txtProgressBar(min = 2, max = niter + burn, style = 3)
+
+  pb = pbapply::timerProgressBar(min = 2, max = niter + burn, style = 1)
   for (i in 2:{niter + burn}) {
     #State space model
     PtC = AlphatC = vector('list',N)
@@ -407,7 +408,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       K_zt[[lj]] = listmatrix$K
       M_zt[[lj]] = listmatrix$M
     }
-    utils::setTxtProgressBar(pb,i)
+    pbapply::setTimerProgressBar(pb,i)
   }
   close(pb)
   message('Saving results ... \n')
