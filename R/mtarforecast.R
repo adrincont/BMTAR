@@ -6,12 +6,12 @@
 # Function:
 mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, modelU){
   # validaciones
-  if (class(regimemodel) != "regime-model") {
-    stop("regimemodel must be an object of type (regime-model)")
+  if (class(regimemodel) != "regime_model") {
+    stop("regimemodel must be an object of type (regime_model)")
   }
   # objetos necesarios
-  Yt = t(regimemodel$data$yt)
-  Ut = t(regimemodel$data$Ut)
+  Yt = t(regimemodel$data$Yt)
+  Ut = t(cbind(regimemodel$data$Zt,regimemodel$data$Xt))
   nu = nrow(Ut) - 1
   l = length(regimemodel$regime)
   k = nrow(Yt)
@@ -92,7 +92,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   }
   ### Tratamiento para los tiempos
   maxj = max(pj,qj,dj,b)
-  if (min(newdata$time) < maxj) {
+  if (min(newdata$time) <= maxj) {
     Ti = maxj
     Yp = cbind(matrix(0,nrow = k,ncol = maxj),Yt)
     Up = cbind(matrix(0,nrow = nu + 1,ncol = maxj),Ut)
@@ -134,15 +134,27 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   estimUt[,2] = apply(ChainUt,2,mean)
   estimUt[,3] = apply(ChainUt,2,quantile,probs = (1 + level)/2)
   estimUt[,4] = apply(ChainUt,2,sd)
+  UF = YF = vector('numeric',h)
+  j = 1
+  for (i4 in seq(1,(nu + 1)*h,nu + 1)) {
+    UF[j] = norm(cov(ks::invvec(ChainUt[,i4:(i4 + nu)],nrow = niter,ncol = nu + 1)),type = 'F')
+    j = j + 1
+  }
   estimYt[,1] = apply(ChainYt,2,quantile,probs = (1 - level)/2)
   estimYt[,2] = apply(ChainYt,2,mean)
   estimYt[,3] = apply(ChainYt,2,quantile,probs = (1 + level)/2)
   estimYt[,4] = apply(ChainYt,2,sd)
+  j = 1
+  for (i5 in seq(1,k*h,k)) {
+    YF[j] = norm(cov(ks::invvec(ChainYt[,i5:(i5 + k - 1)],nrow = niter,ncol = k)),type = 'F')
+    j = j + 1
+  }
+  
   row.names(estimYt) = namesYT
   row.names(estimUt) = namesUT
   ## Salidas
   if (min(newdata$time) >= maxj & length(newdata$time) != ncol(Yt)) {
-    estimUt = estimUt[paste(newdata$time %x% rep(1,k), (1:k),sep = "."),]
+    estimUt = estimUt[paste(newdata$time %x% rep(1,(nu + 1)), (1:(nu + 1)),sep = "."),]
     estimYt = estimYt[paste(newdata$time %x% rep(1,k), (1:k),sep = "."),] 
   }
   Yth = ks::invvec(estimYt[,2],ncol = length(newdata$time),nrow = k)
@@ -155,6 +167,8 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   results$forecast$estim$Yt = estimYt
   results$forecast$Uth = Uth
   results$forecast$Yth = Yth
+  results$FNDP$Yt = YF
+  results$FNDP$Ut = UF
   if (chain) {
     results$forecast$chain$Ut = ChainUt
     results$forecast$chain$Yt = ChainYt
@@ -163,15 +177,22 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
 }
 
 # Example data(yt,ut):
-yt = datasim
-estimyt = mtarns(Yt = yt$Yt,Ut = Ut,l = 2,orders = list(pj = yt$pj,dj = yt$dj,qj = yt$qj)
-                 ,r = qnorm(0.4),niter = 1000,chain = TRUE)
+data = datasim
+parameters = list(l = 2,
+                  orders = list(pj = c(1,1)),
+                  r = data$Sim$r)
+initial = mtarinipars(tsregime_obj = data$Sim,
+                      list_model = list(pars = parameters))
 
-estimyt = mtarstr(Yt = yt$Yt,Ut = Ut,l = 2,orders = list(pjmax = c(2,2),
-                 qjmax = c(1,1),djmax = c(1,1)),niter = 1000,method = 'KUO',chain = T)
+estimyt = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 
-Ut = Ut
-estimut = mtarns(Yt = Ut,orders = list(pj = 1,qj = 0,dj = 0),niter = 1000)
+Ut = tsregime(datasim$Sim$Zt)
+parameters = list(l = 1,
+                  orders = list(pj = 1))
+initial = mtarinipars(tsregime_obj = Ut,
+                      list_model = list(pars = parameters))
+estimut = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 
 newdata = data.frame(time = 1:1000)
-pred1 = mtarforecast(regimemodel = estimyt,niter = 500,newdata = newdata,modelU = estimut)
+pred1 = mtarforecast(regimemodel = estimyt,niter = 500,
+                     newdata = newdata,modelU = estimut)
