@@ -227,6 +227,8 @@ autoplot.tsregime = function(object, type = 1, ...) {
       for (i in c(object$r)) {
         p2 = p2 + ggplot2::geom_hline(yintercept = i,linetype = 'dashed',color = 'blue')
       }
+    }else{
+      p2 = p2 + ggplot2::labs(title = 'Threshold process')
     }
   }
   if (!is.null(object$Xt)) {
