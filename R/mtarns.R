@@ -335,17 +335,21 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     vectheta[,2] = apply(thetachain[[lj]],1,mean)
     thetaest[[lj]] = vectheta
     if (nu != 0 & qj[lj] != 0 & dj[lj] != 0) {
-      rownames(vectheta) =
-        rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),rep(paste0('beta',1:qj[lj]),each = nu),paste0('delta',1:dj[lj])),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),rep(paste0('beta',1:qj[lj]),each = nu),paste0('delta',1:dj[lj])),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pj[lj]*k+qj[lj]*nu+dj[lj]),c('',rep(1:k,pj[lj]),rep(1:nu,qj[lj]),rep(1,dj[lj])))
+      rownames(vectheta) = paste0(temp_name,temp_num)
     }else if (nu != 0 & qj[lj] != 0 & dj[lj] == 0) {
-      rownames(vectheta) =
-        rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),rep(paste0('beta',1:qj[lj]),each = nu)),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),rep(paste0('beta',1:qj[lj]),each = nu)),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pj[lj]*k+qj[lj]*nu+dj[lj]),c('',rep(1:k,pj[lj]),rep(1:nu,qj[lj])))
+      rownames(vectheta) = paste0(temp_name,temp_num)
     }else if (qj[lj] == 0 & dj[lj] != 0) {
-      rownames(vectheta) =
-        rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),paste0('delta',1:dj[lj])),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),paste0('delta',1:dj[lj])),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pj[lj]*k+qj[lj]*nu+dj[lj]),c('',rep(1:k,pj[lj]),rep(1,dj[lj])))
+      rownames(vectheta) = paste0(temp_name,temp_num)
     }else if (qj[lj] == 0 & dj[lj] == 0) {
-      rownames(vectheta) =
-        rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k)),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k)),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pj[lj]*k+qj[lj]*nu+dj[lj]),c('',rep(1:k,pj[lj])))
+      rownames(vectheta) = paste0(temp_name,temp_num)
     }
     if (is.null(Sigma)) {
       sigma_iter[[lj]] = sigma_iter[[lj]][-c(1:other)]

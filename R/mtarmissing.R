@@ -17,7 +17,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   Yt = ini_obj$tsregime_obj$Yt
   Ut = cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt)
-  if (!is.na(sum(Ut))) {
+  if (!is.na(sum(Ut) + sum(Yt))) {
     stop('ini_obj$tsregime_obj contains no missing data')
   }
   k = ini_obj$tsregime_obj$k
@@ -469,13 +469,17 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     colnames(Test_Xt) =  c(paste('lower limit ',(1 - level)/2*100,'%',sep = ''),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ''))
     tab_name_Xt = Names_Xt[PosNAMat[[2]][-1,]]
     Test_Xt[,1] = Test_Ut[tab_name_Xt,1]
-    Test_Xt[,2] = Test_Ut[tab_name_Xt,1]
-    Test_Xt[,3] = Test_Ut[tab_name_Xt,1]
+    Test_Xt[,2] = Test_Ut[tab_name_Xt,2]
+    Test_Xt[,3] = Test_Ut[tab_name_Xt,3]
     rownames(Test_Xt) = tab_name_Xt
   }
-  ini_obj$tsregime_obj$Yt[PosNAvec[[1]],] = matrix(Test_Yt[,2],ncol = k,byrow = T)
-  ini_obj$tsregime_obj$Zt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,1]
-  ini_obj$tsregime_obj$Xt[PosNAvec[[2]],] = matrix(Test_Ut[,2],ncol = nu + 1,byrow = T)[,-1]
+  temp_y = t(ini_obj$tsregime_obj$Yt)
+  temp_y[PosNAMat[[1]]] = c(Test_Yt[,2])
+  ini_obj$tsregime_obj$Yt = t(temp_y)
+  temp_x = t(cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt))
+  temp_x[PosNAMat[[2]]] = c(Test_Ut[,2])
+  ini_obj$tsregime_obj$Zt = t(temp_x)[,1]
+  ini_obj$tsregime_obj$Xt = t(temp_x)[,-1]
   if (chain) {Chains = vector('list')}
   if (any(is.na(Yt)) & any(is.na(Zt)) & any(is.na(Xt))) {
     estimates = list(Yt = Test_Yt, Zt = Test_Zt, Xt = Test_Xt)
@@ -520,7 +524,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   compiler::enableJIT(0)
   if (chain) {
-    result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates, Chains = Chains)
+    result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates, Chains = Chains,pos_na = PosNAMat)
   }else{
     result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates)
   }

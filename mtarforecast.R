@@ -1,7 +1,7 @@
 # Date: 18/07/2019
 # Description:
 #-> Por ahora depende de kernel sea normal y sola da el orden de este
-#   Hay que buscar un diccionario grande de distribuciones y quedarnos hay 
+#   Hay que buscar un diccionario grande de distribuciones y quedarnos hay
 #-> Comentar que hacemos si r desconocido en este caso
 # Function:
 mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, modelU){
@@ -71,7 +71,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
       cov = ks::invvec(sigma_iter[[Ind]][,i2])
     }else{cov = regimemodel$regime[[Ind]]$sigma}
     if (!is.null(regimemodel$Chain$Gamma)) {
-      mean = {t(wtj) %x% diag(k)} %*% (gam_iter[[Ind]][,i2]*theta_iter[[Ind]][,i2]) 
+      mean = {t(wtj) %x% diag(k)} %*% (gam_iter[[Ind]][,i2]*theta_iter[[Ind]][,i2])
     }else{
       mean = {t(wtj) %x% diag(k)} %*% (theta_iter[[Ind]][,i2])
     }
@@ -100,7 +100,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
     namesYT = paste((1:h) %x% rep(1,k),rep(1,h) %x% (1:k),sep = ".")
     namesUT = paste((1:h) %x% rep(1,nu + 1),rep(1,h) %x% (1:{nu + 1}),sep = ".")
   }else{
-    Ti = ifelse(min(newdata$time) < ncol(Yt),min(newdata$time) - 1,ncol(Yt)) 
+    Ti = ifelse(min(newdata$time) < ncol(Yt),min(newdata$time) - 1,ncol(Yt))
     h =  max(newdata) - Ti
     Yp = Yt
     Up = Ut
@@ -128,7 +128,7 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
   ### Calculo de estimaciones y intervalos
   estimYt = matrix(nrow = k*h,ncol = 4)
   estimUt = matrix(nrow = (nu + 1)*h,ncol = 4)
-  colnames(estimUt) = colnames(estimYt) = 
+  colnames(estimUt) = colnames(estimYt) =
     c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""),"RVPD")
   estimUt[,1] = apply(ChainUt,2,quantile,probs = (1 - level)/2)
   estimUt[,2] = apply(ChainUt,2,mean)
@@ -149,13 +149,13 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
     YF[j] = norm(cov(ks::invvec(ChainYt[,i5:(i5 + k - 1)],nrow = niter,ncol = k)),type = 'F')
     j = j + 1
   }
-  
+
   row.names(estimYt) = namesYT
   row.names(estimUt) = namesUT
   ## Salidas
   if (min(newdata$time) >= maxj & length(newdata$time) != ncol(Yt)) {
     estimUt = estimUt[paste(newdata$time %x% rep(1,(nu + 1)), (1:(nu + 1)),sep = "."),]
-    estimYt = estimYt[paste(newdata$time %x% rep(1,k), (1:k),sep = "."),] 
+    estimYt = estimYt[paste(newdata$time %x% rep(1,k), (1:k),sep = "."),]
   }
   Yth = ks::invvec(estimYt[,2],ncol = length(newdata$time),nrow = k)
   Uth = ks::invvec(estimUt[,2],ncol = length(newdata$time),nrow = nu + 1)

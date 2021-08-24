@@ -80,5 +80,6 @@ tsregime = function(Yt, Zt = NULL, Xt = NULL, r = NULL){
   list_result$N = N
   list_result$k = k
   class(list_result) = 'tsregime'
-  return(list_result)
+  list_result
 }
+

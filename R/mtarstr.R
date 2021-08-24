@@ -424,17 +424,21 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
       c(paste0('lower limit ',(1 - level)/2*100,'%'),'mean',paste0('upper limit ',(1 + level)/2*100,'%'))
     rownames(vecsigma) = c(sapply(1:k, function(x){paste0(1:k,x)}))
     if (nu != 0 & qjmax[lj] != 0 & djmax[lj] != 0) {
-      rownames(vectheta) = rownames(vecgamma) =
-        rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),rep(paste0('beta',1:qjmax[lj]),each = nu),paste0('delta',1:djmax[lj])),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),rep(paste0('beta',1:qjmax[lj]),each = nu),paste0('delta',1:djmax[lj])),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pjmax[lj]*k+qjmax[lj]*nu+djmax[lj]),c('',rep(1:k,pjmax[lj]),rep(1:nu,qjmax[lj]),rep(1,djmax[lj])))
+      rownames(vectheta) = rownames(vecgamma) = paste0(temp_name,temp_num)
     }else if (nu != 0 & qjmax[lj] != 0 & djmax[lj] == 0) {
-      rownames(vectheta) = rownames(vecgamma) =
-        rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),rep(paste0('beta',1:qjmax[lj]),each = nu)),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),rep(paste0('beta',1:qjmax[lj]),each = nu)),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pjmax[lj]*k+qjmax[lj]*nu+djmax[lj]),c('',rep(1:k,pjmax[lj]),rep(1:nu,qjmax[lj])))
+      rownames(vectheta) = rownames(vecgamma) = paste0(temp_name,temp_num)
     }else if (qjmax[lj] == 0 & djmax[lj] != 0) {
-      rownames(vectheta) = rownames(vecgamma) =
-        rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),paste0('delta',1:djmax[lj])),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k),paste0('delta',1:djmax[lj])),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pjmax[lj]*k+qjmax[lj]*nu+djmax[lj]),c('',rep(1:k,pjmax[lj]),rep(1,djmax[lj])))
+      rownames(vectheta) = rownames(vecgamma) = paste0(temp_name,temp_num)
     }else if (qjmax[lj] == 0 & djmax[lj] == 0) {
-      rownames(vectheta) = rownames(vecgamma) =
-        rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k)),k)
+      temp_name = rep(c('phi0',rep(paste0('phi',1:pjmax[lj]),each = k)),k)
+      temp_num = paste0('.',rep(1:k,each = 1+pjmax[lj]*k+qjmax[lj]*nu+djmax[lj]),c('',rep(1:k,pjmax[lj])))
+      rownames(vectheta) = rownames(vecgamma) = paste0(temp_name,temp_num)
     }
     rownames(vecsigma) = c(sapply(1:k, function(x){paste0(1:k,x)}))
     vectheta[,1] = apply(thetachain[[lj]],1,stats::quantile,probs = (1 - level)/2)

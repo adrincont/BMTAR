@@ -1,5 +1,4 @@
 autoplot = function(object, ...) UseMethod("autoplot")
-
 autoplot.regime_model = function(object, type = 1, ...) {
   if (!requireNamespace('ggplot2', quietly = TRUE)) {
     stop('ggplot2 is needed for this function to work')
@@ -13,15 +12,15 @@ autoplot.regime_model = function(object, type = 1, ...) {
     if (is.null(object$Chain$r)) {stop('r unknown')}
     Chain_r = t(object$Chain$r)
     time = seq(1,nrow(Chain_r))
-    dat2 = data.frame(name = 'r1',time = time,value = Chain_r[,1])
+    dat2 = data.frame(name = 'r.1',time = time,value = Chain_r[,1])
     if (ncol(Chain_r) > 1) {
       for (i in 2:ncol(Chain_r)) {
-        dat2 = rbind(dat2,data.frame(name = paste0('r',i),
+        dat2 = rbind(dat2,data.frame(name = paste0('r.',i),
                                      time = time,value = Chain_r[,i]))
       }
     }
     p = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat2)
-    p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free')
+    p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::ggtitle('Threshold variable chains')
     p = p + ggplot2::theme_bw() + ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE))
     return(p)
     }
@@ -67,18 +66,24 @@ autoplot.regime_model = function(object, type = 1, ...) {
     }
     time = seq(1,ncol(Chain_Theta$R1))
     for (j in names(Chain_Theta)) {
-      dat3 = data.frame(comp = '1',time = time,value = Chain_Theta[[j]][1,])
-      if (ncol(Chain_Theta[[j]]) > 1) {
-        for (i in 2:nrow(Chain_Theta[[j]])) {
-          dat3 = rbind(dat3,data.frame(comp = as.character(i),
-                                       time = time,value = Chain_Theta[[j]][i,]))
-        }
+      dat3 = NULL
+      for (i in 1:nrow(Chain_Theta[[j]])) {
+        dat3 = rbind(dat3,data.frame(comp = rownames(object$estimates$Theta[[j]])[i],
+                                     time = time,value = Chain_Theta[[j]][i,]))
       }
-      p4[[j]] = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat3) +
-        ggplot2::theme_bw() +
-        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
-        ggplot2::labs(title = paste('Theta chains',j)) +
-        ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE))
+      dat3$name = sub('\\..*','',dat3$comp)
+      dat3$num = sub('.*\\.','',dat3$comp)
+      dat3$name2 = gsub('[0-9]+','', dat3$name)
+      dat3$name2[dat3$name == 'phi0'] = 'c'
+      p4[[j]] = vector(mode = 'list',length = length(unique(dat3$name2)))
+      names(p4[[j]]) = unique(dat3$name2)
+      for (nn in unique(dat3$name2)) {
+        p4[[j]][[nn]] = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat3[dat3$name2 == nn,]) +
+          ggplot2::theme_bw() +
+          ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
+          ggplot2::labs(title = paste(nn,'chains',j)) +
+          ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE))
+       }
       }
     return(p4)
   }
@@ -93,18 +98,25 @@ autoplot.regime_model = function(object, type = 1, ...) {
     names(p5) = names(Chain_Gamma)
     time = seq(1,ncol(Chain_Gamma$R1))
     for (j in names(Chain_Gamma)) {
-      dat3 = data.frame(comp = '1',time = time,value = Chain_Gamma[[j]][1,])
-      if (ncol(Chain_Gamma[[j]]) > 1) {
-        for (i in 2:nrow(Chain_Gamma[[j]])) {
-          dat3 = rbind(dat3,data.frame(comp = as.character(i),
-                                       time = time,value = Chain_Gamma[[j]][i,]))
-        }
+      dat3 = NULL
+      for (i in 1:nrow(Chain_Gamma[[j]])) {
+        dat3 = rbind(dat3,data.frame(comp = rownames(object$estimates$Gamma[[j]])[i],
+                                     time = time,value = Chain_Gamma[[j]][i,]))
       }
-      p5[[j]] = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat3) +
-        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
-        ggplot2::theme_bw() +
-        ggplot2::labs(title = paste('Gamma chains',j)) +
-        ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE))
+      dat3$name = sub('\\..*','',dat3$comp)
+      dat3$num = sub('.*\\.','',dat3$comp)
+      dat3$name2 = gsub('[0-9]+','', dat3$name)
+      dat3$name2[dat3$name == 'phi0'] = 'c'
+      p5[[j]] = vector(mode = 'list',length = length(unique(dat3$name2)))
+      names(p5[[j]]) = unique(dat3$name2)
+      for (nn in unique(dat3$name2)) {
+        p5[[j]][[nn]] = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat3[dat3$name2 == nn,]) +
+          ggplot2::theme_bw() +
+          ggplot2::geom_area() + ggplot2::facet_grid(comp~.,scales = 'free') +
+          ggplot2::labs(title = paste('Gamma chains',nn,j)) +
+          ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) +
+          ggplot2::theme(axis.ticks.y = ggplot2::element_blank(),axis.text.y = ggplot2::element_blank())
+      }
     }
     return(p5)
   }
@@ -139,7 +151,7 @@ autoplot.regime_missing = function(object, type = 1, ...) {
         stop('autoplot.regime_missing requires a regime_missing object')
       }}
     if (is.null(object$Chains$Y)) {stop('There are no chains to graph')}
-    if (!{type %in% c(1:3)}) {stop('type should take values in c (1,2,3)')}
+    if (!{type %in% c(1:4)}) {stop('type should take values in c (1,2,3,4)')}
     if (type == 1) {
       if (is.null(object$estimates$Yt)) {stop('Yt has no missing data')}
       Chain_Yt = t(object$Chains$Yt)
@@ -187,6 +199,89 @@ autoplot.regime_missing = function(object, type = 1, ...) {
       p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::theme_bw()
       p = p +  ggplot2::labs(title = 'Missing data (Xt) chains')
       return(p)
+    }
+    if (type == 4) {
+      list_plots_miss = list()
+      time = seq(1,object$tsregime$N)
+      if ('Yt' %in% names(object$estimates)) {
+        dats_Yt = t(object$tsregime$Yt)
+        dats_Yt[object$pos_na[[1]]] = NA
+        dats_Yt = t(dats_Yt)
+        dats_Yt_NA_mean = t(dats_Yt*NA)
+        dats_Yt_NA_mean[object$pos_na[[1]]] = object$estimates$Yt[,2]
+        dats_Yt_NA_up = t(dats_Yt*NA)
+        dats_Yt_NA_up[object$pos_na[[1]]] = object$estimates$Yt[,3]
+        dats_Yt_NA_low = t(dats_Yt*NA)
+        dats_Yt_NA_low[object$pos_na[[1]]] = object$estimates$Yt[,1]
+        dat = data.frame(name = 'Series.1',time = time,
+                         value = dats_Yt[,1],mean_miss = dats_Yt_NA_mean[1,],up_miss = dats_Yt_NA_up[1,],low_miss = dats_Yt_NA_low[1,])
+        if (ncol(dats_Yt) > 1) {
+          for (i in 2:ncol(dats_Yt)) {
+            dat = rbind(dat,data.frame(name = paste0('Series.',i),time = time,value = dats_Yt[,i],
+                                       mean_miss = dats_Yt_NA_mean[i,],up_miss = dats_Yt_NA_up[i,],low_miss = dats_Yt_NA_low[i,]))
+          }
+        }
+        p = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)
+        p = p + ggplot2::geom_line() + ggplot2::theme_bw()
+        p = p + ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~low_miss, ymax =  ~up_miss),width = 0.2,color = 'blue')
+        p = p + ggplot2::geom_point(ggplot2::aes_(x = ~time,y = ~mean_miss),color = 'blue')
+        p = p + ggplot2::labs(title = 'Output process')
+        p = p + ggplot2::facet_grid(name~.,scales = 'free_y')
+        list_plots_miss[[1]] = p
+      }
+      if (!is.null(object$tsregime$Zt) & ('Zt' %in% names(object$estimates))) {
+        dats_Zt = object$tsregime$Zt
+        dats_Zt[object$pos_na[[2]][1,]] = NA
+        dats_Zt_NA_mean = dats_Zt*NA
+        dats_Zt_NA_mean[object$pos_na[[2]][1,]] = object$estimates$Zt[,2]
+        dats_Zt_NA_up =  dats_Zt*NA
+        dats_Zt_NA_up[object$pos_na[[2]][1,]] = object$estimates$Zt[,3]
+        dats_Zt_NA_low =  dats_Zt*NA
+        dats_Zt_NA_low[object$pos_na[[2]][1,]] = object$estimates$Zt[,1]
+        dat = data.frame(time = time,
+                         value = dats_Zt,mean_miss = dats_Zt_NA_mean,up_miss = dats_Zt_NA_up,low_miss = dats_Zt_NA_low)
+        p2 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)
+        p2 = p2 + ggplot2::geom_line() + ggplot2::theme_bw()
+        p2 = p2 + ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~low_miss, ymax =  ~up_miss),width = 0.2,color = 'blue')
+        p2 = p2 + ggplot2::geom_point(ggplot2::aes_(x = ~time,y = ~mean_miss),color = 'blue')
+        if (!is.null(object$r)) {
+          Nrg_plot = paste0(paste0(paste0('Reg_',1:object$l),'='),object$Summary_r$Prop_reg,'%')
+          p2 = p2 + ggplot2::labs(title = 'Threshold process',subtitle = paste0('(',paste(Nrg_plot,collapse = ','),')'))
+          for (i in c(object$r)) {
+            p2 = p2 + ggplot2::geom_hline(yintercept = i,linetype = 'dashed',color = 'blue')
+          }
+        }else{
+          p2 = p2 + ggplot2::labs(title = 'Threshold process')
+        }
+        list_plots_miss[[2]] = p2
+      }
+      if (!is.null(object$tsregime$Xt) & ('Xt' %in% names(object$estimates))) {
+        dats_Xt = t(object$tsregime$Xt)
+        dats_Xt[object$pos_na[[2]][-1,]] = NA
+        dats_Xt = t(dats_Xt)
+        dats_Xt_NA_mean = t(dats_Xt*NA)
+        dats_Xt_NA_mean[object$pos_na[[2]][-1,]] = object$estimates$Xt[,2]
+        dats_Xt_NA_up = t(dats_Xt*NA)
+        dats_Xt_NA_up[object$pos_na[[2]][-1,]] = object$estimates$Xt[,3]
+        dats_Xt_NA_low = t(dats_Xt*NA)
+        dats_Xt_NA_low[object$pos_na[[2]][-1,]] = object$estimates$Xt[,1]
+        dat = data.frame(name = 'Series.1',time = time,
+                         value = dats_Xt[,1],mean_miss = dats_Xt_NA_mean[1,],up_miss = dats_Xt_NA_up[1,],low_miss = dats_Xt_NA_low[1,])
+        if (ncol(dats_Xt) > 1) {
+          for (i in 2:ncol(dats_Yt)) {
+            dat = rbind(dat,data.frame(name = paste0('Series.',i),time = time,value = dats_Xt[,i],
+                                       mean_miss = dats_Xt_NA_mean[i,],up_miss = dats_Xt_NA_up[i,],low_miss = dats_Xt_NA_low[i,]))
+          }
+        }
+        p3 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)
+        p3 = p3 + ggplot2::geom_line() + ggplot2::theme_bw()
+        p3 = p3 + ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~low_miss, ymax =  ~up_miss),width = 0.2,color = 'blue')
+        p3 = p3 + ggplot2::geom_point(ggplot2::aes_(x = ~time,y = ~mean_miss),color = 'blue')
+        p3 = p3 + ggplot2::labs(title = 'Covariates process')
+        p3 = p3 + ggplot2::facet_grid(name~.,scales = 'free_y')
+        list_plots_miss[[3]] = p3
+      }
+      return(list_plots_miss)
     }
   }
 autoplot.tsregime = function(object, type = 1, ...) {
@@ -242,7 +337,7 @@ autoplot.tsregime = function(object, type = 1, ...) {
     }
     dat_NA = c()
     for (i in 1:object$nu) {
-      xl = c(1:N)[is.na(dats_Yt[,i])]
+      xl = c(1:N)[is.na(dats_Xt[,i])]
       dat_NA = rbind(dat_NA,data.frame(name = rep(paste0('Series.',i),length(xl)),xl = xl))
     }
     p3 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat2)
@@ -265,31 +360,68 @@ autoplot.tsregime = function(object, type = 1, ...) {
     return(p3)
   }
 }
-
-print = function(object, ...) UseMethod('print')
-
+# print = function(object, ...) UseMethod('print')
 print.tsregime = function(object, ...){
-  cat('Threshold time series:\n','N =',object$N,'\n')
+  cat('Threshold time series:\n',
+      'N =',object$N,
+      'k =',ifelse(is.null(object$k),0,object$k),
+      'nu = ',ifelse(is.null(object$nu),0,object$nu),'\n')
   dats = object
   class(dats) = NULL
+  cat('======================','\n')
+  if (!is.null(object$Yt)){
+    if (is.na(sum(object$Yt))) {
+      cat('Missing data in Yt:','\n')
+      nas_Yt = apply(is.na(object$Yt),2,sum)
+      names(nas_Yt) = paste0('Yt.',1:dim(object$Yt)[2])
+      print(nas_Yt)
+    }
+  }
+  if (!is.null(object$Zt)){
+    if (is.na(sum(object$Zt))) {
+      cat('Missing data in Zt:','\n')
+      nas_Zt = apply(is.na(object$Zt),2,sum)
+      names(nas_Zt) = paste0('Zt.',1:dim(object$Zt)[2])
+      print(nas_Zt)
+    }
+  }
+  if (!is.null(object$Xt)){
+    if (is.na(sum(object$Xt))) {
+      cat('Missing data in Xt:','\n')
+      nas_Xt = apply(is.na(object$Xt),2,sum)
+      names(nas_Xt) = paste0('Xt.',1:dim(object$Xt)[2])
+      print(nas_Xt)
+    }
+  }
   if (!is.null(object$r)) {
     cat('======================','\n')
     cat('r = ',object$r,'\n')
     print(object$Summary_r)
-    cat('======================','\n')
   }else{
     if (!is.null(object$Zt)) {
       cat('Unknown threshold values','\n')
+    }else{
+      cat('Non-existent threshold variable','\n')
     }
   }
+  cat('======================','\n')
   utils::str(dats)
+}
+print.regime_number = function(object, ...) {
+  print(object$estimates)
+  for (i in 1:length(object$list_m)) {
+    cat(names(object$list_m)[[i]],'===============================|','\n')
+    m_j = length(object$list_m[[i]]$orders$pj)
+    nai_mj = c(object$NAIC[[i]]$AICj,object$NAIC[[i]]$NAIC)
+    names(nai_mj) = c(paste0('AIC(R',1:m_j,')'),'NAIC')
+    print(nai_mj,3)
+    cat('\n')
+    print(object$list_m[[i]]$par$estimates$r)
+  }
 }
 print.regime_model = function(object, ...) {
   print(object$estimates)
 }
 print.regime_missing = function(object, ...) {
-  print(object$estimates)
-}
-print.regime_number = function(object, ...) {
   print(object$estimates)
 }
