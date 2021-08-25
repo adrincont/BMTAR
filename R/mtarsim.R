@@ -94,7 +94,10 @@ mtarsim = function(N, Rg, r = NULL, Xt = NULL, Zt = NULL, seed = NULL){
     At = as.matrix(as.data.frame(Ri$phi))
     if (q != 0) {
       Bt = as.matrix(as.data.frame(Ri$beta))
-    }else{Bt = matrix(0,nrow = k,ncol = 1)}
+    }else{
+      if (nu == 0) {Bt = matrix(0,nrow = k,ncol = 1)
+      }else{Bt = matrix(0,nrow = k,ncol = nu)}
+      }
     if (d != 0) {
       Dt = as.matrix(as.data.frame(Ri$delta))
     }else{Dt = matrix(0,nrow = k,ncol = 1)}
