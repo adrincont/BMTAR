@@ -268,11 +268,11 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   # iterations function
   if (parallel) {
     n_dis = parallel::detectCores()
-    if (l0 > {n_dis - 1}) {
+    if (l > {n_dis - 1}) {
       parallel = FALSE
-      message('Cannot use paralell (l0_max > n_dis) ... \n')
+      message('Cannot use paralell (l > n_dis) ... \n')
     }else {
-      nclus = l0
+      nclus = l
     }
   }
   if (parallel) {
