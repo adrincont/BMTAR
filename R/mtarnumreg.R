@@ -6,7 +6,7 @@
 #==================================================================================================#
 mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
                       iterprev = 500, chain_m = FALSE, list_m = FALSE, NAIC = FALSE,
-                      ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = FALSE){
+                      ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = TRUE){
   compiler::enableJIT(3)
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
     if (!is.logical(parallel)) {stop('paralell must be a logical object')}
@@ -181,6 +181,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   fycond = compiler::cmpfun(fycond)
   ### Previous iterations
   fill = function(m, iter = 500, burn = 1000, ...){
+    cat('m =',m,'... \n')
     i = 1
     ordersm = list(pj = rep(maxpj,m),qj = rep(maxqj,m),dj = rep(maxdj,m))
     etam = 1 + ordersm$pj*k + ordersm$qj*nu + ordersm$dj
@@ -492,7 +493,16 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   message('Running previous chains ... \n')
   listm = vector('list')
   if (parallel) {
-    n_cores = parallel::detectCores() - 1
+    n_dis = parallel::detectCores()
+    if (l0 > {n_dis - 1}) {
+      parallel = FALSE
+      message('Cannot use paralell (l0_max > n_dis) ... \n')
+    }else {
+      n_cores = l0
+    }
+  }
+  if (parallel) {
+    cat('Using parallel','\n')
     cat('Number of CPU cores used:',n_cores,'\n')
     micluster = parallel::makeCluster(n_cores)
     doParallel::registerDoParallel(micluster)

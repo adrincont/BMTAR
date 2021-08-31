@@ -149,7 +149,6 @@ mtarforecast = function(regimemodel,niter,newdata,level = 0.95, chain = FALSE, m
     YF[j] = norm(cov(ks::invvec(ChainYt[,i5:(i5 + k - 1)],nrow = niter,ncol = k)),type = 'F')
     j = j + 1
   }
-
   row.names(estimYt) = namesYT
   row.names(estimUt) = namesUT
   ## Salidas

@@ -360,6 +360,39 @@ autoplot.tsregime = function(object, type = 1, ...) {
     return(p3)
   }
 }
+autoplot.regime_number = function(object, type = 1, ...){
+  if (!requireNamespace('ggplot2', quietly = TRUE)) {
+    stop('ggplot2 is needed for this function to work')
+  }else {
+    if (!inherits(object,'regime_number')) {
+      stop('autoplot.regime_number requires a regime_number object')
+    }}
+  if (!{type %in% c(1:2)}) {stop('type should take values in c (1,2)')}
+  if (type == 1){
+    plot1_list = list()
+    for (m_i in names(estim_nr$list_m)) {
+      tex_aux = paste(round(rev(rev(estim_nr$list_m[[m_i]]$par$r)[-1]),3),collapse=" | ")
+      plot1_list[[m_i]] = autoplot.regime_model(estim_nr$list_m[[m_i]]$par,1) +
+        ggplot2::ggtitle(paste0('Threshold variable chains (r = ',tex_aux,')')) +
+        ggplot2::geom_smooth()
+    }
+    return(plot1_list)
+  }
+  if (type == 2){
+    plot2_list = list()
+    for (m_i in names(estim_nr$list_m)) {
+      tex_aux = paste(round(rev(rev(estim_nr$list_m[[m_i]]$par$r)[-1]),3),collapse=" | ")
+      data_i = estim_nr$list_m[[m_i]]
+      r_i = rev(rev(data_i$par$r)[-1])
+      tsregime_i = tsregime(Yt = data_i$par$data$Yt,Zt = data_i$par$data$Zt,Xt = data_i$par$data$Xt,r = r_i)
+      plot2_list[[m_i]] = autoplot.tsregime(tsregime_i,2) +
+        ggplot2::ggtitle(paste0('Threshold variable chains (r = ',tex_aux,')'))
+      cat(paste(m_i,'===========================|','\n'))
+      print(tsregime_i$Summary_r)
+    }
+    return(plot2_list)
+  }
+}
 # print = function(object, ...) UseMethod('print')
 print.tsregime = function(object, ...){
   cat('Threshold time series:\n',

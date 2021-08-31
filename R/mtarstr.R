@@ -7,7 +7,7 @@
 # Function:
 #==================================================================================================#
 mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL,
-                   parallel = FALSE){
+                   parallel = TRUE){
   # Just-In-Time (JIT)
   compiler::enableJIT(3)
   # checking
@@ -100,7 +100,6 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
     }
     sigma_iter[[lj]][[1]] = MCMCpack::riwish(v = inu0j[[lj]],S = iS0j[[lj]])
   }
-  #
   # objects for save regimes, chains and credibility intervals
   Rest = thetaest = thetachain =
     gamest = gamchain = sigmaest = sigmachain = vector('list', l)
@@ -268,7 +267,17 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   list_m = list(r_iter = r_iter,theta_iter = theta_iter,sigma_iter = sigma_iter,gam_iter = gam_iter)
   # iterations function
   if (parallel) {
-    nclus = 2
+    n_dis = parallel::detectCores()
+    if (l0 > {n_dis - 1}) {
+      parallel = FALSE
+      message('Cannot use paralell (l0_max > n_dis) ... \n')
+    }else {
+      nclus = l0
+    }
+  }
+  if (parallel) {
+    cat('Using parallel','\n')
+    cat('Number of CPU cores used:',nclus,'\n')
     micluster = parallel::makeCluster(nclus)
     doParallel::registerDoParallel(micluster)
     funcParallel = function(ik,iterprev,reg,i,listj,theta_iter,sigma_iter,gam_iter){

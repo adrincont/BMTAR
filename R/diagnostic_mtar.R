@@ -22,7 +22,13 @@ diagnostic_mtar = function(regime_model, lagmax = NULL, alpha = '0.05'){
   tablac = data.frame('0.10' = 0.850,'0.05' = 0.948,'0.025' = 1.036,'0.01' = 1.143,'0.005' = 1.217)
   e_k = tsregime(as.matrix(regime_model$residuals))
   p1 = autoplot.tsregime(e_k) + ggplot2::geom_hline(yintercept = 0,color = "red") +
-    ggplot2::ggtitle('Residual serie plot')
+    ggplot2::ggtitle('Residuals serie plot')
+  e_k2 = tsregime(scale(e_k2))
+  p1_sd = autoplot.tsregime(e_k2) +
+    ggplot2::geom_ribbon(ggplot2::aes_(ymin=-2, ymax=2),fill = "grey70") +
+    ggplot2::geom_hline(yintercept = 0,color = "red") +
+    ggplot2::ggtitle('Standardized residuals serie plot')
+
   e_data = as.data.frame(e_k$Yt)
   time = seq(1,nrow(e_data))
   dat = data.frame(label = 'Series.1',time = time,value = e_data[,1],
@@ -86,5 +92,5 @@ diagnostic_mtar = function(regime_model, lagmax = NULL, alpha = '0.05'){
   ci = stats::qnorm((as.numeric(alpha))/2)/sqrt(nrow(regime_model$residuals))
   p5 = p5 + ggplot2::geom_ribbon(ggplot2::aes(ymax = ci ,ymin = -ci),color = NA,fill = "blue",alpha = 0.2)
   p5 = p5 + ggplot2::ggtitle('ACF and PACF plots for residuals series') + ggplot2::theme_bw()
-  return(list(p1,p2,p3,p4,p5))
+  return(list(p1,p1_sd,p2,p3,p4,p5))
 }
