@@ -2,8 +2,7 @@
 \alias{mtarforecast}
 
 \title{Forecast for MTAR model}
-\description{
-Bayesian method to compute forecasts of a MTAR model}
+\description{Bayesian method to compute forecasts of a MTAR model}
 \usage{
 mtarforecast(regimemodel,niter = 500,newdata,level = 0.95, chain = FALSE, modelU)
 }
@@ -51,16 +50,16 @@ Calderon, S., & Nieto, F. H. (2021). \emph{Forecasting with Multivariate Thresho
                     r = data$Sim$r)
   initial = mtarinipars(tsregime_obj = data$Sim,
                         list_model = list(pars = parameters))
-  
+
   estimyt = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
-  
+
   Ut = tsregime(datasim$Sim$Zt)
   parameters = list(l = 1,
                     orders = list(pj = 1))
   initial = mtarinipars(tsregime_obj = Ut,
                         list_model = list(pars = parameters))
   estimut = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
-  
+
   newdata = data.frame(time = 1:1000)
   pred1 = mtarforecast(regimemodel = estimyt,niter = 500,
                        newdata = newdata,modelU = estimut)

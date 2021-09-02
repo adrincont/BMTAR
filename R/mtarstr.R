@@ -6,7 +6,7 @@
 # finally threshold metropolis-hasting with uniform proposal
 # Function:
 #==================================================================================================#
-mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FALSE, r_init = NULL,
+mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = TRUE, r_init = NULL,
                    parallel = TRUE){
   # Just-In-Time (JIT)
   compiler::enableJIT(3)
@@ -597,11 +597,11 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = FAL
   if (chain) {
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
-                   logLikj = logLikj,data = data,r = rvec,orders = orders)
+                   logLikj = logLikj,data = data,r = rvec,orders = orders,initial = initial)
   }else{
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
-                   logLikj = logLikj,data = data,r = rvec,orders = orders)
+                   logLikj = logLikj,data = data,r = rvec,orders = orders,initial = initial)
   }
   compiler::enableJIT(0)
   class(results) = 'regime_model'

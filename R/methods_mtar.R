@@ -393,6 +393,133 @@ autoplot.regime_number = function(object, type = 1, ...){
     return(plot2_list)
   }
 }
+autoplot.regime_forecast = function(object, type = 1, ...){
+  if (!requireNamespace('ggplot2', quietly = TRUE)) {
+    stop('ggplot2 is needed for this function to work')
+  }else {
+    if (!inherits(object, 'regime_forecast')) {
+      stop('autoplot.regime_forecast requires a regime_forecast object')
+    }}
+  if (!{type %in% c(1:2)}) {stop('type should take values in c (1,2)')}
+  if (is.null(object$forecast$chain)) {stop('There are no chains to graph')}
+  if (type == 1) {
+    plot1_list = list()
+    for (name_chain in names(object$forecast$estim)) {
+      dat3 = NULL
+      if (name_chain %in% c('Xt','Zt')) {
+        if ('Xt' %in% c('Xt','Zt')){
+          if (name_chain == 'Xt') {
+            id_names = !{rownames(object$forecast$estim_Ut) %in% rownames(object$forecast$estim$Zt)}
+          }else{
+            id_names = rownames(object$forecast$estim_Ut) %in% rownames(object$forecast$estim$Zt)
+          }
+          Chain_t = t(object$forecast$chain$Ut)[id_names,]
+          time = seq(1,ncol(Chain_t))
+          for (i in 1:nrow(Chain_t)) {
+            dat3 = rbind(dat3,data.frame(comp = rownames(object$forecast$estim[[name_chain]])[i],
+                                         time = time,value = Chain_t[i,]))
+          }
+        }else{
+          Chain_t = t(object$forecast$chain$Ut)
+          time = seq(1,ncol(Chain_t))
+          for (i in 1:nrow(Chain_t)) {
+            dat3 = rbind(dat3,data.frame(comp = rownames(object$forecast$estim[[name_chain]])[i],
+                                         time = time,value = Chain_t[i,]))
+          }
+        }
+      }
+      if (name_chain == 'Yt') {
+        Chain_t = t(object$forecast$chain[[name_chain]])
+        time = seq(1,ncol(Chain_t))
+        for (i in 1:nrow(Chain_t)) {
+          dat3 = rbind(dat3,data.frame(comp = rownames(object$forecast$estim[[name_chain]])[i],
+                                       time = time,value = Chain_t[i,]))
+        }
+      }
+      plot1_list[[name_chain]] = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat3) +
+        ggplot2::theme_bw() +
+        ggplot2::geom_line() + ggplot2::facet_grid(comp~.,scales = 'free') +
+        ggplot2::labs(title = paste0('Chains forecast ',name_chain))
+    }
+    return(plot1_list)
+  }
+  if (type == 2) {
+    plot2_list = list()
+    dats_Yt = as.data.frame(object$tsregime$Yt)
+    aux_vec = dats_Yt*NA
+    forecast_mean = aux_vec
+    forecast_mean[as.numeric(colnames(object$forecast$Yth)),] =  t(object$forecast$Yth)
+    forecast_low = aux_vec
+    forecast_low[as.numeric(colnames(object$forecast$Yth)),] = t(ks::invvec(object$forecast$estim$Yt[,1],ncol = length(colnames(object$forecast$Yth)),nrow = object$tsregime$k))
+    forecast_Up = aux_vec
+    forecast_Up[as.numeric(colnames(object$forecast$Yth)),] = t(ks::invvec(object$forecast$estim$Yt[,3],ncol = length(colnames(object$forecast$Yth)),nrow = object$tsregime$k))
+    time = seq(1,nrow(dats_Yt))
+    dat = NULL
+    for (i in 1:ncol(dats_Yt)) {
+      dat = rbind(dat,data.frame(name = paste0('Series.',i),time = time,
+                                 value = dats_Yt[,i],low = forecast_low[,i],up = forecast_Up[,i],mean = forecast_mean[,i]))
+    }
+    p1 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)
+    p1 = p1 + ggplot2::geom_line() + ggplot2::theme_bw()
+    p1 = p1 + ggplot2::geom_ribbon(ggplot2::aes_(ymin = ~low,ymax = ~up),fill = 'blue',alpha = 0.4)
+    p1 = p1 + ggplot2::geom_line(ggplot2::aes_(x = ~time,y = ~mean),color = 'blue')
+    p1 = p1 + ggplot2::labs(title = 'Output process and forecast')
+    p1 = p1 + ggplot2::facet_grid(name~.,scales = 'free_y')
+    plot2_list[['Yt']] = p1
+    if (!is.null(object$tsregime$Zt)){
+      dats_Zt = as.data.frame(object$tsregime$Zt)
+      aux_vec = dats_Zt*NA
+      forecast_mean = aux_vec
+      forecast_mean[as.numeric(names(object$forecast$Zth)),] =  c(object$forecast$Zth)
+      forecast_low = aux_vec
+      forecast_low[as.numeric(names(object$forecast$Zth)),] = c(object$forecast$estim$Zt[,1])
+      forecast_Up = aux_vec
+      forecast_Up[as.numeric(names(object$forecast$Zth)),] = c(object$forecast$estim$Zt[,3])
+      time = seq(1,nrow(dats_Zt))
+      dat = data.frame(time = c(time),value = dats_Zt[,1],low = forecast_low[,1],up = forecast_Up[,1],mean = forecast_mean[,1])
+      p2 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)
+      p2 = p2 + ggplot2::geom_line() + ggplot2::theme_bw()
+      p2 = p2 + ggplot2::geom_ribbon(ggplot2::aes_(ymin = ~low,ymax = ~up),fill = 'blue',alpha = 0.4)
+      p2 = p2 + ggplot2::geom_line(ggplot2::aes_(x = ~time,y = ~mean),color = 'blue')
+      Nrg_plot = paste0(paste0(paste0('Reg_',1:object$tsregime$l),'='),object$tsregime$Summary_r$Prop_reg,'%')
+      p2 = p2 + ggplot2::labs(title = 'Threshold process and forecast',
+                              subtitle = paste0('(',paste(Nrg_plot,collapse = ','),')'))
+      for (i in c(object$tsregime$r)) {
+        p2 = p2 + ggplot2::geom_hline(yintercept = i,linetype = 'dashed',color = 'blue')
+      }
+      plot2_list[['Zt']] = p2
+    }
+    if (!is.null(object$tsregime$Xt)) {
+      if (object$tsregime$nu == 1) {
+        names_xt = as.numeric(names(object$forecast$Xth))
+      }else{
+        names_xt = as.numeric(colnames(object$forecast$Xth))
+      }
+      dats_Xt = as.data.frame(object$tsregime$Xt)
+      aux_vec = dats_Xt*NA
+      forecast_mean = aux_vec
+      forecast_mean[names_xt,] = t(ks::invvec(object$forecast$estim$Xt[,2],ncol = length(names_xt),nrow = object$tsregime$nu))
+      forecast_low = aux_vec
+      forecast_low[names_xt,] = t(ks::invvec(object$forecast$estim$Xt[,1],ncol = length(names_xt),nrow = object$tsregime$nu))
+      forecast_Up = aux_vec
+      forecast_Up[names_xt,] = t(ks::invvec(object$forecast$estim$Xt[,3],ncol = length(names_xt),nrow = object$tsregime$nu))
+      time = seq(1,nrow(dats_Xt))
+      dat = NULL
+      for (i in 1:ncol(dats_Xt)) {
+        dat = rbind(dat,data.frame(name = paste0('Series.',i),time = time,
+                                   value = dats_Xt[,i],low = forecast_low[,i],up = forecast_Up[,i],mean = forecast_mean[,i]))
+      }
+      p3 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)
+      p3 = p3 + ggplot2::geom_line() + ggplot2::theme_bw()
+      p3 = p3 + ggplot2::geom_ribbon(ggplot2::aes_(ymin = ~low,ymax = ~up),fill = 'blue',alpha = 0.4)
+      p3 = p3 + ggplot2::geom_line(ggplot2::aes_(x = ~time,y = ~mean),color = 'blue')
+      p3 = p3 + ggplot2::labs(title = 'Covariates process and forecast')
+      p3 = p3 + ggplot2::facet_grid(name~.,scales = 'free_y')
+      plot2_list[['Xt']] = p3
+    }
+    return(plot2_list)
+  }
+}
 # print = function(object, ...) UseMethod('print')
 print.tsregime = function(object, ...){
   cat('Threshold time series:\n',
@@ -457,4 +584,7 @@ print.regime_model = function(object, ...) {
 }
 print.regime_missing = function(object, ...) {
   print(object$estimates)
+}
+print.regime_forecast = function(object, ...) {
+  print(pred1$forecast$estim)
 }
