@@ -5,7 +5,7 @@
 #-> When r is unknown, a metropolis-hasting algorithm is used for its posteriori with an uniform proposal
 # Function:
 #==================================================================================================#
-mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALSE, r_init = NULL){
+mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = TRUE, r_init = NULL){
   if (!is.logical(chain)) {stop('chain must be a logical object')}
   # checking
   if (!inherits(ini_obj, 'regime_inipars')) {
@@ -333,7 +333,6 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
     vectheta[,1] = apply(thetachain[[lj]],1,stats::quantile,probs = (1 - level)/2)
     vectheta[,3] = apply(thetachain[[lj]],1,stats::quantile,probs = (1 + level)/2)
     vectheta[,2] = apply(thetachain[[lj]],1,mean)
-    thetaest[[lj]] = vectheta
     if (nu != 0 & qj[lj] != 0 & dj[lj] != 0) {
       temp_name = rep(c('phi0',rep(paste0('phi',1:pj[lj]),each = k),rep(paste0('beta',1:qj[lj]),each = nu),paste0('delta',1:dj[lj])),k)
       temp_num = paste0('.',rep(1:k,each = 1+pj[lj]*k+qj[lj]*nu+dj[lj]),c('',rep(1:k,pj[lj]),rep(1:nu,qj[lj]),rep(1,dj[lj])))
@@ -351,6 +350,7 @@ mtarns = function(ini_obj, level = 0.95, burn = NULL, niter = 1000, chain = FALS
       temp_num = paste0('.',rep(1:k,each = 1+pj[lj]*k+qj[lj]*nu+dj[lj]),c('',rep(1:k,pj[lj])))
       rownames(vectheta) = paste0(temp_name,temp_num)
     }
+    thetaest[[lj]] = vectheta
     if (is.null(Sigma)) {
       sigma_iter[[lj]] = sigma_iter[[lj]][-c(1:other)]
       SigmaPrep = function(x){return(c(expm::sqrtm(matrix(x,k,k))))}
