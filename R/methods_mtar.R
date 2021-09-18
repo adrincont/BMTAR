@@ -268,7 +268,7 @@ autoplot.regime_missing = function(object, type = 1, ...) {
         dat = data.frame(name = 'Series.1',time = time,
                          value = dats_Xt[,1],mean_miss = dats_Xt_NA_mean[1,],up_miss = dats_Xt_NA_up[1,],low_miss = dats_Xt_NA_low[1,])
         if (ncol(dats_Xt) > 1) {
-          for (i in 2:ncol(dats_Yt)) {
+          for (i in 2:ncol(dats_Xt)) {
             dat = rbind(dat,data.frame(name = paste0('Series.',i),time = time,value = dats_Xt[,i],
                                        mean_miss = dats_Xt_NA_mean[i,],up_miss = dats_Xt_NA_up[i,],low_miss = dats_Xt_NA_low[i,]))
           }
@@ -470,11 +470,11 @@ autoplot.regime_forecast = function(object, type = 1, ...){
       dats_Zt = as.data.frame(object$tsregime$Zt)
       aux_vec = dats_Zt*NA
       forecast_mean = aux_vec
-      forecast_mean[as.numeric(names(object$forecast$Zth)),] =  c(object$forecast$Zth)
+      forecast_mean[as.numeric(colnames(object$forecast$Zth)),] =  c(object$forecast$Zth)
       forecast_low = aux_vec
-      forecast_low[as.numeric(names(object$forecast$Zth)),] = c(object$forecast$estim$Zt[,1])
+      forecast_low[as.numeric(colnames(object$forecast$Zth)),] = c(object$forecast$estim$Zt[,1])
       forecast_Up = aux_vec
-      forecast_Up[as.numeric(names(object$forecast$Zth)),] = c(object$forecast$estim$Zt[,3])
+      forecast_Up[as.numeric(colnames(object$forecast$Zth)),] = c(object$forecast$estim$Zt[,3])
       time = seq(1,nrow(dats_Zt))
       dat = data.frame(time = c(time),value = dats_Zt[,1],low = forecast_low[,1],up = forecast_Up[,1],mean = forecast_mean[,1])
       p2 = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat)

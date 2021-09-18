@@ -23,9 +23,9 @@ diagnostic_mtar = function(regime_model, lagmax = NULL, alpha = '0.05'){
   e_k = tsregime(as.matrix(regime_model$residuals))
   p1 = autoplot.tsregime(e_k) + ggplot2::geom_hline(yintercept = 0,color = "red") +
     ggplot2::ggtitle('Residuals serie plot')
-  e_k2 = tsregime(scale(e_k2))
+  e_k2 = tsregime(scale(e_k$Yt))
   p1_sd = autoplot.tsregime(e_k2) +
-    ggplot2::geom_ribbon(ggplot2::aes_(ymin=-2, ymax=2),fill = "grey70") +
+    ggplot2::geom_ribbon(ggplot2::aes_(ymin=-2, ymax=2),fill = "grey70",alpha = 0.5) +
     ggplot2::geom_hline(yintercept = 0,color = "red") +
     ggplot2::ggtitle('Standardized residuals serie plot')
 

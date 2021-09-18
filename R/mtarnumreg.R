@@ -46,7 +46,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   maxqj = ifelse(is.null(ordersprev$maxqj),0,ordersprev$maxqj)
   maxdj = ifelse(is.null(ordersprev$maxdj),0,ordersprev$maxdj)
   # Code
-  burn_m = ifelse(is.null(burn_m),round(0.1*niter_m),burn_m)
+  burn_m = ifelse(is.null(burn_m),round(0.3*niter_m),burn_m)
   Yt = t(Yt)
   Zt = Ut[,1]
   if (nu == 0) {

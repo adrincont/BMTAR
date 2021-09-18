@@ -204,7 +204,11 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
   estimUt[,4] = apply(ChainUt[-c(1:burn),],2,sd)
   j = 1
   for (i4 in seq(1,(nu + 1)*h,nu + 1)) {
-    UF[j] = norm(cov(ChainUt[-c(1:burn),i4:(i4 + nu)]),type = 'F')
+    if (nu == 0){
+      UF[j] = norm(cov(as.matrix(ChainUt[-c(1:burn),i4:(i4 + nu)])),type = 'F')
+    }else{
+      UF[j] = norm(cov(ChainUt[-c(1:burn),i4:(i4 + nu)]),type = 'F')
+    }
     j = j + 1
   }
   row.names(estimUt) = namesUT
@@ -216,8 +220,10 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
     # Estimaciones de Zt
     estimZt = estimUt[namesZT,]
     # Estimaciones de Xt
-    estimXt = estimUt[namesXt,]
-    row.names(estimXt) = namesXt_def
+    if(nu != 0) {
+      estimXt = estimUt[namesXt,]
+      row.names(estimXt) = namesXt_def
+      }
   }
   ## Salidas
   if (min(newdata$time) >= maxj & length(newdata$time) != ncol(Yt)) {
@@ -227,8 +233,10 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
       estimZt = estimUt
     }else{
       estimZt = estimUt[namesZT,]
-      estimXt = estimUt[namesXt,]
-      row.names(estimXt) = namesXt_def
+      if (nu != 0){
+        estimXt = estimUt[namesXt,]
+        row.names(estimXt) = namesXt_def
+        }
     }
   }
   Yth = ks::invvec(estimYt[,2],ncol = length(newdata$time),nrow = k)
@@ -238,23 +246,23 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
   results$forecast$Yth = Yth
   results$forecast$estim$Yt = estimYt
   if(!is.null(regimemodel$data$Zt)){
-    if(!is.null(regimemodel$data$Xt)){
+    if(nu != 0){
       Zth = Uth[1,]
       Xth = Uth[-1,]
-      results$forecast$estim$Zt = estimZt
       results$forecast$estim$Xt = estimXt
+      results$forecast$estim$Zt = estimZt
       results$forecast$Zth = Zth
       results$forecast$Xth = Xth
       if(nu == 1){
         ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = c(Ut[1,],Uth[1,]),Xt = c(Ut[-1,],Uth[-1,]),r = rev(rev(regimemodel$r)[-1]))
       }else{
-        ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = c(Ut[1,],Uth[1,]),Xt = t(cbind(Ut[-1,],Uth[-1,])),r = rev(rev(regimemodel$r)[-1]))
+          ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = c(Ut[1,],Uth[1,]),Xt = t(cbind(Ut[-1,],Uth[-1,])),r = rev(rev(regimemodel$r)[-1]))
       }
     }else{
       Zth = Uth
       results$forecast$estim$Zt = estimUt
       results$forecast$Zth = Uth
-      ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = cbind(Ut,Uth),r = rev(rev(regimemodel$r)[-1]))
+      ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = t(cbind(Ut,Uth)),r = rev(rev(regimemodel$r)[-1]))
     }
   }else{
     ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)))

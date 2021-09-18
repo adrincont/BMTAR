@@ -50,14 +50,20 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   etaj = 1 + k*pj + nu*qj + dj
   PosNAMat = PosNAvec = PosNAvecT = vector(mode = 'list',2)
   PosNAMat[[1]] = apply(Yt,2,is.na)
-  PosNAvec[[1]] = c(1:ncol(Yt))[apply(PosNAMat[[1]],2,any)]
+  if (k == 1) {
+    PosNAvec[[1]] = c(1:ncol(Yt))[PosNAMat[[1]]]
+  }else{PosNAvec[[1]] = c(1:ncol(Yt))[apply(PosNAMat[[1]],2,any)]}
   PosNAvecT[[1]] = matrix(rep(c(1:N),k),nrow = k,ncol = N,byrow = T)[PosNAMat[[1]]]
   if (nu == 0) {
     PosNAMat[[2]] = t(as.matrix(apply(Ut,2,is.na)))
     PosNAvec[[2]] = c(1:ncol(Ut))[PosNAMat[[2]]]
   }else{
     PosNAMat[[2]] = apply(Ut,2,is.na)
-    PosNAvec[[2]] = c(1:ncol(Ut))[apply(PosNAMat[[2]],2,any)]
+    if(dim(Ut)[1] == 1){
+      PosNAvec[[2]] = c(1:ncol(Ut))[PosNAMat[[2]]]
+    }else{
+      PosNAvec[[2]] = c(1:ncol(Ut))[apply(PosNAMat[[2]],2,any)]
+    }
   }
   PosNAvecT[[2]] = matrix(rep(c(1:N),nu + 1),nrow = nu + 1,ncol = N,byrow = T)[PosNAMat[[2]]]
   #Completamos Ut faltantes con promedios Ut
@@ -163,13 +169,13 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     q = qj[reg]
     d = dj[reg]
     Aj = ks::invvec(theta[[reg]][,iSS],nrow = k, ncol = etaj[reg])
-    Ajf = Aj[,-1]
-    if (p >= 1) {phis = Ajf[,1:(k*p)]}else{phis = NULL}
+    Ajf = matrix(Aj[,-1],nrow = k, ncol = etaj[reg] - 1)
+    if (p >= 1) {phis = matrix(Ajf[,1:(k*p)],nrow = k,ncol = p*k)}else{phis = NULL}
     if (q > 0) {
-      betas = Ajf[,(k*p + 1):(k*p + nu*q)]
+      betas = matrix(Ajf[,(k*p + 1):(k*p + nu*q)],nrow = k,ncol = nu*q)
     }else{betas = NULL}
     if (d > 0) {
-      deltas = Ajf[,(k*p + nu*q + 1):(k*p + nu*q + d)]
+      deltas = matrix(Ajf[,(k*p + nu*q + 1):(k*p + nu*q + d)],nrow = k,ncol = d)
     }else{deltas = NULL}
     Aj = cbind(Aj[,1],phis, matrix(0,nrow = k, ncol = k*(pmax - p)),
                betas,matrix(0,nrow = k, ncol = nu*(qmax - q)),
@@ -285,7 +291,11 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   #permutaciones para cadena Yt:
   for (ij in PosNAvec[[1]]) {
-    posNAi = PosNAMat[[1]][,ij]
+    if (k == 1){
+      posNAi = PosNAMat[[1]][ij]
+    }else{
+      posNAi = PosNAMat[[1]][,ij]
+    }
     if (!all(posNAi)) {
       K_zti[[ij]] = K_zti[[ij]][order(posNAi),]
       Ytr[,ij] = Ytr[,ij][order(posNAi)]
@@ -331,23 +341,31 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       }else{
         estUp = AlphaT[[i1 + 1]]
       }
-      R2 = R_zt[[Indi[i1]]][1:k,] %*% diag(k) %*% t(R_zt[[Indi[i1]]][1:k,])
-      Qt = MASS::ginv(H_zt[[Indi[i1]]][1:k,] %*%  Pt[[i1]] %*% t(H_zt[[Indi[i1]]][1:k,]) + R2)
-      Bt = Pt[[i1]] %*% t(H_zt[[Indi[i1]]][1:k,]) %*% Qt
+      H_zt_tm = matrix(H_zt[[Indi[i1]]][1:k,],nrow = k,ncol = ncol(H_zt[[Indi[i1]]]))
+      R_zt_tm = matrix(R_zt[[Indi[i1]]][1:k,],nrow = k,ncol = ncol(R_zt[[Indi[i1]]]))
+
+      R2 = R_zt_tm %*% diag(k) %*% t(R_zt_tm)
+      Qt = MASS::ginv(H_zt_tm %*%  Pt[[i1]] %*% t(H_zt_tm) + R2)
+      Bt = Pt[[i1]] %*% t(H_zt_tm) %*% Qt
       if (nu == 0) {
         Gt = estUp[1:k] - M_zt[[Indi[i1]]][1:k,]*Ut[,i1] - L_zt[[Indi[i1]]][1:k] - H_zt[[Indi[i1]]][1:k,] %*% Alphat[[i1]]
       }else{
         Gt = estUp[1:k] - M_zt[[Indi[i1]]][1:k,] %*% Ut[,i1] - L_zt[[Indi[i1]]][1:k] - H_zt[[Indi[i1]]][1:k,] %*% Alphat[[i1]]
       }
       AlphaT[[i1]] = Alphat[[i1]] + Bt %*% Gt
-      PT[[i1]] = Pt[[i1]] - Bt %*% H_zt[[Indi[i1]]][1:k,] %*% Pt[[i1]]
+      PT[[i1]] = Pt[[i1]] - Bt %*% H_zt_tm %*% Pt[[i1]]
       PT[[i1]] = symm(PT[[i1]])
     }
     # Simulaion de datos faltantes en Yt
     for (i1 in PosNAvec[[1]]) {
       Ysim = as.matrix(MASS::mvrnorm(1,AlphaT[[i1 + 1]],PT[[i1 + 1]]))
-      Yt_iter[,i][PosNAvecT[[1]] == i1] = Ysim[1:k][PosNAMat[[1]][,i1]]
-      Ytr[,i1] = Ysim[1:k]
+      if (k ==1) {
+        Yt_iter[,i][PosNAvecT[[1]] == i1] = Ysim[1:k]
+        Ytr[,i1] = Ysim[1:k]
+      }else{
+        Yt_iter[,i][PosNAvecT[[1]] == i1] = Ysim[1:k][PosNAMat[[1]][,i1]]
+        Ytr[,i1] = Ysim[1:k]
+      }
       AlphaT[[i1 + 1]] = Ysim
     }
     #random walk U
@@ -355,8 +373,12 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
       ek = mvtnorm::rmvnorm(1,mean = rep(0,nu + 1), sigma = cU*diag(nu + 1))
       # Simulacion de la propues
       Usim = Utr
-      Usim[,i1] = Utr[,i1] + c(ek)
-      Usim[!PosNAMat[[2]][,i1],i1] =  Utr[!PosNAMat[[2]][,i1],i1]
+      if (dim(Utr)[1] == 1){
+        Usim[i1] = Utr[i1] + c(ek)
+      }else{
+        Usim[,i1] = Utr[,i1] + c(ek)
+        Usim[!PosNAMat[[2]][,i1],i1] =  Utr[!PosNAMat[[2]][,i1],i1]
+      }
       # Calculo de las probabilidades segun sea el caso
       # Numerador
       if (i1 <= b) {

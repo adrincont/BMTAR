@@ -47,6 +47,7 @@ mtaregime = function(orders = list(p = 1,q = 0,d = 0), cs = NULL,
     if (!is.list(Beta)) {
       stop('Beta must be a list of real matrix of dimension kxnu')
     } else{
+      if (is.numeric(Beta[[1]]) & !is.matrix(Beta[[1]])) {Beta[[1]] = as.matrix(Beta[[1]])}
       if (is.matrix(Beta[[1]])) {nu = ncol(Beta[[1]])
       }else{stop('Beta must be a list of real matrix of dimension kxnu')}
       for (i in 1:length(Beta)) {
