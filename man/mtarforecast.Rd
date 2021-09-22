@@ -4,15 +4,14 @@
 \title{Forecast for MTAR model}
 \description{Bayesian method to compute forecasts of a MTAR model}
 \usage{
-mtarforecast(regimemodel,niter = 500,newdata,level = 0.95, chain = FALSE, modelU)
+mtarforecast(regimemodel,h,level = 0.95, chain = FALSE, modelU)
 }
 \arguments{
   \item{regimemodel}{object of class \dQuote{\code{regime_model}} of the process
   to forecast. Not NULL}
-  \item{niter}{numeric type, number of runs of MCMC. Default 500}
-  \item{newdata}{data.frame type object with forecasting times. Not NULL}
+  \item{h}{numeric type, steps for forecast. Not NULL}
   \item{level}{numeric type, confident interval for estimations. Default 0.95}
-  \item{chain}{logical type, if return chains of forecasts. Default FALSE}
+  \item{chain}{logical type, if return chains of forecasts. Default TRUE}
   \item{modelU}{object of class \dQuote{\code{regime_model}} of the covariate
   and threshold processes. Not NULL}
 }
@@ -28,11 +27,10 @@ of the forecast intervals and the variability of the predictive distributions.
 }
 \value{
   Return a list type object
-    \item{data}{list type object $Yt and $Ut = (Zt,Xt)}
-    \item{forecast}{list type object with confident interval and mean value of the forecasts}
+    \item{forecast}{list type object with confident interval, mean value of the forecasts and if the chains if TRUE}
+    \item{tsregime}{object of class tsregime of the final Output process with forecast}
     \item{FNDP}{Frobenius norm of the covariance matrix of
 the predictive distribution for Yt and Ut}
-    \item{Chain}{if chain TRUE list type object with forecasts chains}
 }
 \references{
 Calderon, S., & Nieto, F. H. (2021). \emph{Forecasting with Multivariate Threshold Autoregressive Models.} Revista Colombiana de Estadística, 44(2), 369-383.
@@ -60,9 +58,7 @@ Calderon, S., & Nieto, F. H. (2021). \emph{Forecasting with Multivariate Thresho
                         list_model = list(pars = parameters))
   estimut = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 
-  newdata = data.frame(time = 1:1000)
-  pred1 = mtarforecast(regimemodel = estimyt,niter = 500,
-                       newdata = newdata,modelU = estimut)
+  pred1 = mtarforecast(regimemodel = estimyt,h = 100,modelU = estimut)
 
 }
 \keyword{Threshold process}
