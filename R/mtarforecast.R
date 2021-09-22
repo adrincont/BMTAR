@@ -253,15 +253,15 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
       results$forecast$Zth = Zth
       results$forecast$Xth = Xth
       if(nu == 1){
-        ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = c(Ut[1,],Uth[1,]),Xt = c(Ut[-1,],Uth[-1,]),r = rev(rev(regimemodel$r)[-1]))
+        ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = c(Ut[1,],Uth[1,]),Xt = c(Ut[-1,],Uth[-1,]),r = regimemodel$r)
       }else{
-          ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = c(Ut[1,],Uth[1,]),Xt = t(cbind(Ut[-1,],Uth[-1,])),r = rev(rev(regimemodel$r)[-1]))
+          ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = c(Ut[1,],Uth[1,]),Xt = t(cbind(Ut[-1,],Uth[-1,])),r = regimemodel$r)
       }
     }else{
       Zth = Uth
       results$forecast$estim$Zt = estimUt
       results$forecast$Zth = Uth
-      ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = t(cbind(Ut,Uth)),r = rev(rev(regimemodel$r)[-1]))
+      ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = t(cbind(Ut,Uth)),r = regimemodel$r)
     }
   }else{
     ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)))
