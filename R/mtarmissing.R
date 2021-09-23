@@ -439,7 +439,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   Names_Yt = paste0("(",1:N,",",1,")")
   if (k > 1) {
     for (i in 2:k) {
-      Names_Yt = rbind(Names_Yt,paste0("(",1:N,",",k,")"))
+      Names_Yt = rbind(Names_Yt,paste0("(",1:N,",",i,")"))
     }
   }
   Names_Zt = paste0("(",1:N,",",1,")")

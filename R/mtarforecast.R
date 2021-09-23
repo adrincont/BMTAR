@@ -106,7 +106,9 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
     }else{
       wtj = c(1,yti,xti,zti)}
     if (!is.null(regimemodel$Chain$Sigma)) {
-      cov = ks::invvec(sigma_iter[[Ind]][,i2])
+      if (k == 1){
+        cov = ks::invvec(sigma_iter[[Ind]][i2])
+      }else{cov = ks::invvec(sigma_iter[[Ind]][,i2])}
     }else{cov = regimemodel$regime[[Ind]]$sigma}
     Xj = t(wtj) %x% diag(k)[1,]
     if (k != 1) {for (s in 2:k) {Xj = cbind(Xj,t(wtj) %x% diag(k)[s,])}}
@@ -191,7 +193,7 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
   j = 1
   UF = YF = vector('numeric',h)
   for (i5 in seq(1,k*h,k)) {
-    YF[j] = norm(cov(ChainYt[-c(1:burn),i5:(i5 + k - 1)]),type = 'F')
+    YF[j] = norm(cov(as.matrix(ChainYt[-c(1:burn),i5:(i5 + k - 1)])),type = 'F')
     j = j + 1
   }
   row.names(estimYt) = namesYT
