@@ -1,6 +1,6 @@
 # Ejemplos de Textos
 ## Ut = (Zt,Xt)
-Tlen = 1000
+Tlen = 1000;k = 2
 Sigma_ut = expm::sqrtm(matrix(c(1,0.4,0.4,2),k,k,byrow = TRUE))
 Phi_ut = list(phi1 = matrix(c(0.5,0.4,0.1,0.5),2,2))
 R_ut = list(R1 = mtaregime(orders = list(p = 1,q = 0,d = 0),Phi = Phi_ut,Sigma = Sigma_ut))

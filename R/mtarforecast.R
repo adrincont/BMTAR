@@ -12,18 +12,6 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
   if (class(regimemodel) != "regime_model") {
     stop("regimemodel must be an object of type (regime_model)")
   }
-  if (!is.numeric(niter)){
-    stop("niter must be a numeric object")
-  }else{
-    if (!(round(niter) == niter)){stop("niter must be a integer numeric object")}
-  }
-  if (!is.null(burn)){
-    if (!is.numeric(burn)){
-      stop("burn must be a numeric object")
-    }else{
-      if (!(round(burn) == burn)){stop("burn must be a integer numeric object")}
-    }
-  }
   if (!is.numeric(h)){
     stop("h must be a numeric object")
   }else{
