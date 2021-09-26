@@ -20,7 +20,7 @@ autoplot.regime_model = function(object, type = 1, ...) {
       }
     }
     p = ggplot2::ggplot(ggplot2::aes_(x = ~time,y = ~value),data = dat2)
-    p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::ggtitle('Threshold variable chains')
+    p = p + ggplot2::geom_line() + ggplot2::facet_grid(name~.,scales = 'free') + ggplot2::ggtitle('Threshold value chains')
     p = p + ggplot2::theme_bw() + ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE))
     return(p)
     }
@@ -373,7 +373,7 @@ autoplot.regime_number = function(object, type = 1, ...){
     for (m_i in names(object$list_m)) {
       tex_aux = paste(round(rev(rev(object$list_m[[m_i]]$par$r)[-1]),3),collapse=" | ")
       plot1_list[[m_i]] = autoplot.regime_model(object$list_m[[m_i]]$par,1) +
-        ggplot2::ggtitle(paste0('Threshold variable chains (r = ',tex_aux,')')) +
+        ggplot2::ggtitle(paste0('Threshold value chains (r = ',tex_aux,')')) +
         ggplot2::geom_smooth()
     }
     return(plot1_list)
@@ -386,7 +386,7 @@ autoplot.regime_number = function(object, type = 1, ...){
       r_i = rev(rev(data_i$par$r)[-1])
       tsregime_i = tsregime(Yt = data_i$par$data$Yt,Zt = data_i$par$data$Zt,Xt = data_i$par$data$Xt,r = r_i)
       plot2_list[[m_i]] = autoplot.tsregime(tsregime_i,2) +
-        ggplot2::ggtitle(paste0('Threshold variable chains (r = ',tex_aux,')'))
+        ggplot2::ggtitle(paste0('Threshold process chains (r = ',tex_aux,')'))
       cat(paste(m_i,'===========================|','\n'))
       print(tsregime_i$Summary_r)
     }
@@ -561,7 +561,7 @@ print.tsregime = function(object, ...){
     if (!is.null(object$Zt)) {
       cat('Unknown threshold values','\n')
     }else{
-      cat('Non-existent threshold variable','\n')
+      cat('Non-existent threshold process','\n')
     }
   }
   cat('======================','\n')
