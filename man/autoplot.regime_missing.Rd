@@ -13,7 +13,7 @@ Produces a ggplot object for the results of the mtarmissing function.
 \arguments{
 \item{object}{Object of class \dQuote{\code{regim_missing}}. Not NULL}
 \item{type}{character string giving the type of plot to be computed. Allowed
-values are 1 for "\code{Missing data (Yt) chains}" (the default) or 2 for \dQuote{\code{Missing data (Ut = [Zt,Xt]) chains}}.
+values are 1 for "\code{Missing data \{Yt\} chains}" (the default), 2 for \dQuote{\code{Missing data \{Zt\} chains}}, 3 for \dQuote{\code{Missing data \{Xt\} chains}} if there is or 4 for list of estimated missing values for each process.
 }
 \item{...}{other arguments passed to specific methods}
 }

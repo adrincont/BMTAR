@@ -13,8 +13,7 @@ Produces a ggplot object for the results of the mtarforecast function.
 \arguments{
 \item{object}{Object of class \dQuote{\code{regim_forecast}}. Not NULL}
 \item{type}{numeric giving the type of plot to be computed. Allowed
-values are 1 for list of \dQuote{\code{Output, Threshold and Covariate process forecast chains}(the default) or 2 for a list "\code{Output,Threshold and Covariate process}" with the estimated forecast and its credibilit bands.
-}
+values are 1 for list of \dQuote{\code{Output, Threshold and Covariate process forecast chains}}(the default) or 2 for a list "\code{Output,Threshold and Covariate process}" with the estimated forecast and its credibilit bands.}
 \item{...}{other arguments passed to specific methods}
 }
 \details{

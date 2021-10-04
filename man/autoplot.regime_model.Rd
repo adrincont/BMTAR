@@ -13,7 +13,7 @@ Produces a ggplot object for the results of the mtarns and mtarstr functions.
 \arguments{
 \item{object}{Object of class \dQuote{\code{regime_model}}. Not NULL}
 \item{type}{character string giving the type of plot to be computed. Allowed
-values are 1 for "\code{Thresholds chains}" (the default), 2 for \dQuote{\code{Sigma chains}}, 3 for \dQuote{\code{Theta chains}}, 4 for \dQuote{\code{Gamma chains}} or 5 for \dQuote{\code{Output process fit}}
+values are 1 for "\code{Thresholds value chains}" (the default), 2 for \dQuote{\code{Sigma chains}}, 3 for \dQuote{\code{Theta chains}}, 4 for \dQuote{\code{Gamma chains}} (2,3 and 4 for each regime and associated with the corresponding parameters) or 5 for \dQuote{\code{Output process fit}}
 }
 \item{...}{other arguments passed to specific methods}
 }

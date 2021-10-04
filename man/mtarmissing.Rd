@@ -31,8 +31,9 @@ are Gaussian for simplicity. However, in the next updates, we are going to get f
 \value{
   Return list type object of class \dQuote{\code{regime_missing}}
   \item{tsregime}{ini_obj$tsregime_obj with estimated observations}
-  \item{estimates}{confident interval and mean of estimated missing values}
+  \item{estimates}{credibility interval and mean of estimated missing values}
   \item{Chain}{if chain TRUE, chains of the estimated missing values}
+  \item{pos_na}{list for where are the missing values in each process (Yt and Ut)}
 }
 \references{
 Calderon, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:10.1080/03610926.2014.990758.

@@ -29,12 +29,13 @@ r_init = NULL, parallel = FALSE)
   \item{estimates}{list for each regime with confident interval and mean value of the parameters}
   \item{regime}{\dQuote{\code{regime}} class objects with final estimations}
   \item{Chain}{if chain TRUE list type object with parameters chains}
-  \item{fitted.values}{matrix type object with fitted.values of the estimated model}
   \item{residuals}{matrix type object with residuals of the estimated model}
+  \item{fitted.values}{matrix type object with fitted.values of the estimated model}
   \item{logLikj}{log-likelihood of each regime with final estimations}
   \item{data}{list type object $Yt and $Ut = (Zt,Xt)}
   \item{r}{final threshold value estimation with acceptance percentage}
   \item{orders}{list type object with names (pj,qj,dj) final estimations}
+  \item{initial}{ini_obj given}
 }
 \references{
 Calderon, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:10.1080/03610926.2014.990758.

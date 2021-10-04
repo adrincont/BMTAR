@@ -16,7 +16,7 @@ diagnostic_mtar(regime_model,lagmax = NULL,alpha = '0.05')
 }
 
 \details{
-  For the graphical tests it returns: \dQuote{\code{Residuals plot}} and \dQuote{\code{Residuals density plot}} (overlaps a standard normal density),\dQuote{\code{Residuals plot}} and \dQuote{\code{Residuals plot}}, \dQuote{\code{CUSUM}} statistic for residuals, \dQuote{\code{ACF}} and \dQuote{\code{PACF}} plots for residuals series.
+  For the graphical tests it returns: \dQuote{\code{Residuals serie plot}}, \dQuote{\code{Standardized residuals serie plot}},\dQuote{\code{Residuals density plot}} (overlaps a standard normal density),\dQuote{\code{CUSUM}} statistic for residuals,,\dQuote{\code{Cusum square}} statistic for residuals, \dQuote{\code{ACF}} and \dQuote{\code{PACF}} plots for residuals series.
 }
 \value{
 Returns a list of ggplot objects with the graphics mentioned before.

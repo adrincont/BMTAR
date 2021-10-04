@@ -26,6 +26,8 @@ Missing data is allowed for processes \eqn{Y_t}, \eqn{X_t} and \eqn{Z_t} (can th
 }
 \value{
   Return a list type object of class \dQuote{\code{tsregime}}:
+  \item{l}{number of regimes}
+  \item{nu}{number of covariates variables}
   \item{Yt}{stochastic output process}
   \item{Xt}{stochastic covariate process (if enter)}
   \item{Zt}{stochastic threshold process (if enter)}

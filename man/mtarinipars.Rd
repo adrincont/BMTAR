@@ -43,7 +43,7 @@ sigma_prior = NULL,gamma_prior = NULL, r_prior = NULL)
  First, pars refers to known parameters in the model like ``l'' number of regimes, ``orders'' lags for output, covariate and threshold processes, ``r'' threshold value and ``Sigma'' covariance error matrix for each regime.
  Also when lags orders or l0 are unknown this could be added to this list.
  Second, in order to identify autoregressive orders in MTAR models, two methods for stochastic search are selected because it permits us that the estimation is done in only one step.
- The first method, called Kuo and Mallick (Kuo), was introduced in (Kuo & Mallick, 1998) for variable selection in regression models. The second one was proposed in (George & McCulloch, 1993) and it is called Stochastic Search Variable Selection (SSVS).
+ The first method, called Kuo and Mallick (KUO), was introduced in (Kuo & Mallick, 1998) for variable selection in regression models. The second one was proposed in (George & McCulloch, 1993) and it is called Stochastic Search Variable Selection (SSVS).
  Then ``method'' refers to one of this two for estimating structural parameters of the MTAR model.
  Third, all related to prior distributions of our parameters of interest
   \deqn{\theta_j \sim N(\theta_0j,\Sigma_0j) in Regime j and \theta_j = vec(A_j) A_j = [\Phi_0 \Phi_1:p \beta_1:q \delta_1:d]}

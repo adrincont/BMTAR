@@ -33,12 +33,11 @@ parallel = FALSE)
   \item{tsregime}{ini_obj$tsregime_obj}
   \item{list_m}{if list_m TRUE list of models considered}
   \item{m_chain}{if chain_m TRUE chains of m}
+  \item{prop}{array of proportions each number of regimes have in each iteration}
   \item{estimates}{table of the proportions of m estimated}
   \item{final_m}{numeric type, final number of regimes estimated}
 
-  If NAIC TRUE
-  \item{tsregime}{ini_obj$tsregime_obj}
-  \item{list_m}{list of consider models}
+  If NAIC TRUE add
   \item{NAIC}{list type of NAIC for each considered model}
   \item{NAIC_final_m}{numeric type, final number of regimes by this criteria}
 }

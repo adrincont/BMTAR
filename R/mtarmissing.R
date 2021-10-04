@@ -546,7 +546,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
   }
   compiler::enableJIT(0)
   if (chain) {
-    result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates, Chains = Chains,pos_na = PosNAMat)
+    result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates, Chain = Chains,pos_na = PosNAMat)
   }else{
     result = list(tsregime = ini_obj$tsregime_obj, estimates = estimates)
   }

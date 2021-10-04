@@ -2,7 +2,7 @@
 \alias{missingest}
 \title{simulated data}
 \description{
-results example missing data estimation process for a mtar process
+Results example missing data estimation process for a mtar process
 }
 \usage{data(missingest)}
 \format{Object whit class \code{mtar_missing}}
