@@ -8,7 +8,7 @@ mtarforecast(regimemodel,h,level = 0.95, chain = FALSE, modelU)
 }
 \arguments{
   \item{regimemodel}{object of class \dQuote{\code{regime_model}} of the process
-  to forecast. Not NULL}
+  to forecast, it must have exit 'Chain'. Not NULL}
   \item{h}{numeric type, steps for forecast. Not NULL}
   \item{level}{numeric type, confident interval for estimations. Default 0.95}
   \item{chain}{logical type, if return chains of forecasts. Default TRUE}

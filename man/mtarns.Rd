@@ -32,7 +32,7 @@ The function implements Bayesian estimation of non-structural parameters of each
   \item{Nj}{number of observations in each regime}
   \item{estimates}{list for each regime with confident interval and mean value of the parameters}
   \item{regime}{\dQuote{\code{regime}} class objects with final estimations}
-  \item{Chain}{if chain TRUE list type object with parameters chains}
+  \item{Chain}{if chain TRUE list type object with parameters chains. Necessary in mtarforecast.}
   \item{residuals}{matrix type object with residuals of the estimated model}
   \item{fitted.values}{matrix type object with fitted.values of the estimated model}
   \item{logLikj}{log-likelihood of each regime with final estimations}
@@ -45,6 +45,8 @@ The function implements Bayesian estimation of non-structural parameters of each
 Calderon, S. and Nieto, F. (2017) \emph{Bayesian analysis of multivariate threshold autoregress models with missing data.} Communications in Statistics - Theory and Methods 46 (1):296–318. doi:10.1080/03610926.2014.990758.
 }
 \author{Valeria Bejarano \email{vbejaranos@unal.edu.co}, Sergio Calderon \email{sacalderonv@unal.edu.co} & Andrey Rincon \email{adrincont@unal.edu.co}}
+
+\seealso{\code{\link[BMTAR]{mtarforecast}}}
 
 \examples{
 data("datasim")
