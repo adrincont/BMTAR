@@ -150,11 +150,11 @@ autoplot.regime_missing = function(object, type = 1, ...) {
       if (!inherits(object, 'regime_missing')) {
         stop('autoplot.regime_missing requires a regime_missing object')
       }}
-    if (is.null(object$Chains$Y)) {stop('There are no chains to graph')}
+    if (is.null(object$Chain$Yt)) {stop('There are no chains to graph')}
     if (!{type %in% c(1:4)}) {stop('type should take values in c (1,2,3,4)')}
     if (type == 1) {
       if (is.null(object$estimates$Yt)) {stop('Yt has no missing data')}
-      Chain_Yt = t(object$Chains$Yt)
+      Chain_Yt = t(object$Chain$Yt)
       time = seq(1,nrow(Chain_Yt))
       names_yt = rownames(object$estimates$Yt)
       dat2 = data.frame(name = names_yt[1],time = time,value = Chain_Yt[,1])
@@ -170,7 +170,7 @@ autoplot.regime_missing = function(object, type = 1, ...) {
     }
     if (type == 2) {
       if (is.null(object$estimates$Zt)) {stop('Zt has no missing data')}
-      Chain_Zt = t(object$Chains$Zt)
+      Chain_Zt = t(object$Chain$Zt)
       time = seq(1,nrow(Chain_Zt))
       names_Zt = rownames(object$estimates$Zt)
       dat2 = data.frame(name = names_Zt[1],time = time,value = Chain_Zt[,1])
@@ -186,7 +186,7 @@ autoplot.regime_missing = function(object, type = 1, ...) {
     }
     if (type == 3) {
       if (is.null(object$estimates$Xt)) {stop('Xt has no missing data')}
-      Chain_Xt = t(object$Chains$Xt)
+      Chain_Xt = t(object$Chain$Xt)
       time = seq(1,nrow(Chain_Xt))
       names_Xt = rownames(object$estimates$Xt)
       dat2 = data.frame(name = names_Xt[1],time = time,value = Chain_Xt[,1])
