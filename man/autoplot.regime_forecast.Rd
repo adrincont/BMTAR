@@ -34,9 +34,7 @@ data('datasim')
 estim = mtarns(mtarinipars(tsregime(datasim$Sim$Yt,datasim$Sim$Zt),
 list_model = list(pars = list(l = datasim$Sim$l,r = datasim$Sim$r,
 orders = list(pj = datasim$pj)))))
-estimU = mtarns(mtarinipars(tsregime(datasim$Sim$Zt),
-list_model = list(pars = list(l = 1,orders = list(pj = 1)))))
-forecast = mtarforecast(estim,h = 10,modelU = estimU)
+forecast = mtarforecast(estim,h = 10)
 autoplot.regime_forecast(forecast,1)
 }
 
