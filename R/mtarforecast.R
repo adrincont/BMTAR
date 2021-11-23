@@ -1,11 +1,8 @@
 # Date: 18/07/2019
 # Description:
-#-> Por ahora depende de kernel sea normal y sola da el orden de este
-#   Hay que buscar un diccionario grande de distribuciones y quedarnos hay
-#-> Comentar que hacemos si r desconocido en este caso
 # Function:
 mtarforecast = function(object, ...) UseMethod("mtarforecast")
-mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, modelU){
+mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  b = NULL){
   niter = dim(regimemodel$Chain$Theta$R1)[2] # Toma las iteraciones de regimemodel
   burn = round(0.3*niter)
   # validaciones
@@ -17,15 +14,15 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
   }else{
     if (!(round(h) == h)){stop("h must be a integer numeric object")}
   }
+  if (!is.numeric(b)){
+    stop("b must be a numeric object")
+  }else{
+    if (!(round(b) == b)){stop("b must be a integer numeric object")}
+  }
   if (!is.numeric(level)){stop("level must be a numeric object between (0,1)")}
   if (!(identical(chain,FALSE) | identical(chain,TRUE))){stop("chain must be TRUE or FALSE")}
-  # Validar que Ut es un VAR(p)
-  if (class(modelU) != "regime_model") {stop("modelU must be an object of type (regime_model)")}
-  if(length(modelU$regime) > 1) {
-    stop("modelU must be an VAR(p) model (regime model with a single regimen and without covariates)")}
-  if(any(c("beta","delta") %in% names(modelU$regime$R1))){
-    stop("modelU must be an VAR(p) model (beta and delta must not exist)")}
   # Varibles auxiliares
+  b = ifelse(is.null(b),1,b)
   newdata = data.frame(time = seq(regimemodel$data$N + 1,regimemodel$data$N + h))
   Yt = t(regimemodel$data$Yt)
   Ut = t(cbind(regimemodel$data$Zt,regimemodel$data$Xt))
@@ -109,7 +106,9 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
     return(val)
   }
   ### generador de Ut
-  b = modelU$orders$pj
+  initialU = mtarinipars(tsregime(t(Ut)),list_model = list(pars = list(l = 1,orders = list(pj = b,qj = 0,dj = 0))))
+  message('Estimating model Ut = (Zt,Xt) \n')
+  modelU = mtarns(ini_obj = initialU,niter = niter + 100,chain = FALSE,burn = 1000)
   modelU = modelU$regime$R1
   Ugen = function(t,U,...){
     cs = modelU$cs
@@ -202,7 +201,9 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE, m
   }
   row.names(estimUt) = namesUT
   colnames(estimUt) = colnames(estimYt) =
-    c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""),"RVPD")
+    c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""),"FNDP")
+  estimUt[,'FNDP'] = UF %*% rep(1,nu)
+  estimYt[,'FNDP'] = UF %*% rep(1,k)
   if(is.null(regimemodel$data$Xt)) {
     estimZt = estimUt
   }else{
