@@ -4,7 +4,7 @@
 \title{Forecast for MTAR model}
 \description{Bayesian method to compute forecasts of a MTAR model}
 \usage{
-mtarforecast(regimemodel,h,level = 0.95, chain = FALSE, modelU)
+mtarforecast(regimemodel,h,level = 0.95, chain = FALSE, b = NULL)
 }
 \arguments{
   \item{regimemodel}{object of class \dQuote{\code{regime_model}} of the process
@@ -12,8 +12,7 @@ mtarforecast(regimemodel,h,level = 0.95, chain = FALSE, modelU)
   \item{h}{numeric type, steps for forecast. Not NULL}
   \item{level}{numeric type, confident interval for estimations. Default 0.95}
   \item{chain}{logical type, if return chains of forecasts. Default TRUE}
-  \item{modelU}{object of class \dQuote{\code{regime_model}} of the covariate
-  and threshold processes. Not NULL}
+  \item{b}{numeric type greater or equal 1, autoregressive order of Ut = (Zt ,Xt). Default NULL meaning 1}
 }
 \details{
 Based on the equation of the Multivariate Threshold Autoregressive(MTAR) Model
@@ -51,14 +50,7 @@ Calderon, S., & Nieto, F. H. (2021). \emph{Forecasting with Multivariate Thresho
 
   estimyt = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
 
-  Ut = tsregime(datasim$Sim$Zt)
-  parameters = list(l = 1,
-                    orders = list(pj = 1))
-  initial = mtarinipars(tsregime_obj = Ut,
-                        list_model = list(pars = parameters))
-  estimut = mtarns(ini_obj = initial,niter = 1000,chain = TRUE)
-
-  pred1 = mtarforecast(regimemodel = estimyt,h = 100,modelU = estimut)
+  pred1 = mtarforecast(regimemodel = estimyt,h = 100)
 
 }
 \keyword{Threshold process}
