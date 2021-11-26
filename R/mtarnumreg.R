@@ -35,6 +35,10 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
   }else{
     method = ini_obj$method
   }
+  if(is.null(ini_obj$tsregime_obj$Xt) & ordersprev$maxqj > 0 ){
+    warning('Xt does not exist, ordersprev $ maxqj = 0')
+    ordersprev$maxqj = 0
+  }
   # data
   Yt = ini_obj$tsregime_obj$Yt
   Ut = cbind(ini_obj$tsregime_obj$Zt,ini_obj$tsregime_obj$Xt)
