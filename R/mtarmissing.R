@@ -226,6 +226,18 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     p = pj[lj]
     q = qj[lj]
     d = dj[lj]
+    maxj = max(p,q,d)
+    if (t < maxj){
+      maxj = maxj + 1
+      Yt = cbind(matrix(0,nrow = k,ncol = maxj - t),Yt)
+      if (nu != 0) {
+        Xt = cbind(matrix(0,nrow = nu,ncol = maxj - t),Xt)
+      }else{
+        Xt = cbind(matrix(0,nrow = 1,ncol = maxj - t),Xt)
+      }
+      Zt = c(rep(0,maxj - t),Zt)
+      t = maxj
+    }
     Wj = matrix(0,nrow = etaj[lj],ncol = 1)
     yti = c()
     for (w in 1:p) {yti = c(yti,Yt[,t - w])}
