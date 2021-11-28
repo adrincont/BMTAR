@@ -14,6 +14,7 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  
   }else{
     if (!(round(h) == h)){stop("h must be a integer numeric object")}
   }
+  b = ifelse(is.null(b),1,b)
   if (!is.numeric(b)){
     stop("b must be a numeric object")
   }else{
@@ -22,7 +23,6 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  
   if (!is.numeric(level)){stop("level must be a numeric object between (0,1)")}
   if (!(identical(chain,FALSE) | identical(chain,TRUE))){stop("chain must be TRUE or FALSE")}
   # Varibles auxiliares
-  b = ifelse(is.null(b),1,b)
   newdata = data.frame(time = seq(regimemodel$data$N + 1,regimemodel$data$N + h))
   Yt = t(regimemodel$data$Yt)
   Ut = t(cbind(regimemodel$data$Zt,regimemodel$data$Xt))
