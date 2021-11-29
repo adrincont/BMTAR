@@ -183,7 +183,7 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  
     YF[j] = norm(cov(as.matrix(ChainYt[-c(1:burn),i5:(i5 + k - 1)])),type = 'F')
     j = j + 1
   }
-  row.names(estimYt) = namesYT
+  rownames(estimYt) = namesYT
   # Estimaciones de Ut
   estimUt = matrix(nrow = (nu + 1)*h,ncol = 4)
   estimUt[,1] = apply(ChainUt[-c(1:burn),],2,quantile,probs = (1 - level)/2)
@@ -199,11 +199,11 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  
     }
     j = j + 1
   }
-  row.names(estimUt) = namesUT
+  rownames(estimUt) = namesUT
   colnames(estimUt) = colnames(estimYt) =
     c(paste('lower limit ',(1 - level)/2*100,'%',sep = ""),'mean',paste('upper limit ',(1 + level)/2*100,'%',sep = ""),"FNDP")
-  estimUt[,'FNDP'] = UF %*% rep(1,nu)
-  estimYt[,'FNDP'] = UF %*% rep(1,k)
+  estimUt[,'FNDP'] = UF %x% rep(1,nu + 1)
+  estimYt[,'FNDP'] = UF %x% rep(1,k)
   if(is.null(regimemodel$data$Xt)) {
     estimZt = estimUt
   }else{
@@ -212,7 +212,7 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  
     # Estimaciones de Xt
     if(nu != 0) {
       estimXt = estimUt[namesXt,]
-      row.names(estimXt) = namesXt_def
+      rownames(estimXt) = namesXt_def
       }
   }
   ## Salidas
@@ -225,7 +225,7 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  
       estimZt = estimUt[namesZT,]
       if (nu != 0){
         estimXt = estimUt[namesXt,]
-        row.names(estimXt) = namesXt_def
+        rownames(estimXt) = namesXt_def
         }
     }
   }
@@ -252,7 +252,7 @@ mtarforecast.regime_model = function(regimemodel,h,level = 0.95, chain = TRUE,  
       Zth = Uth
       results$forecast$estim$Zt = estimUt
       results$forecast$Zth = Uth
-      ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = t(cbind(Ut,Uth)),r = regimemodel$r)
+      ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)),Zt = t(cbind(Ut,Uth)),r = regimemodel$r[1])
     }
   }else{
     ts_reg_ht = tsregime(Yt = t(cbind(Yt,Yth)))
