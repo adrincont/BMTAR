@@ -227,7 +227,7 @@ mtarmissing = function(ini_obj,niter = 1000, chain = FALSE, level = 0.95, burn =
     q = qj[lj]
     d = dj[lj]
     maxj = max(p,q,d)
-    if (t < maxj){
+    if (t <= maxj){
       maxj = maxj + 1
       Yt = cbind(matrix(0,nrow = k,ncol = maxj - t),Yt)
       if (nu != 0) {

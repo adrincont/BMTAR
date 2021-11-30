@@ -1,0 +1,64 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+En la aplicación con datos se busca encontrar la relación entre la precipitación diaria (en mm) y el caudal diario del río (en $m^3/s$) de dos ríos donde un río desemboca en el otro en una región del departamento del Cauca en Colombia.La precipitación se midió en la estación meteorológica San Juan con una altitud de 2400 metros. El primer caudal del río se midió en la estación hidrológica ''El Trébol'' del río Bedón con una altitud de 1720 metros y el segundo caudal se midió en el río de la Plata en la estación hidrológica de ''Villalosada'' con una altitud de 1300 metros. Las estaciones están ubicadas cerca del ecuador de la Tierra en una zona geográfica muy seca. Esta última característica permite el control de factores hidrológicos/meteorológicos, los cuales pueden distorsionar el tipo de relación dinámica explicada por el modelo MTAR.
+
+El período de tiempo que se considero es del 1 de enero de 2006 al 14 de abril de 2009 (1200 puntos de tiempo) que tiene 57 puntos de tiempo con datos faltantes en la serie de precipitaciones, 214 en la serie del caudal del río Bedon y 213 en la serie del cauce del río de la Plata. Estos datos fueron proporcionados por el IDEAM (disponibles en la libreria R para los modelos TAR y MTAR).
+
+```{r,message=FALSE}
+# install.packages("devtools")
+# devtools::install_github("adrincont/BMTAR",force = TRUE)
+library(BMTAR)
+library(zoo)
+library(patchwork)
+imput_y = function(y){
+  ts_prob = data.frame(time = 1:length(y),dat = y)
+  ts_prob_2 = ts_prob[!is.na(ts_prob$dat),]
+  ks_imput = ksmooth(x = ts_prob_2$time,y = ts_prob_2$dat,'normal'
+                     ,bandwidth= 10,x.points = 1:length(y))
+  ts_prob$dat[is.na(ts_prob$dat)] = ks_imput$y[is.na(ts_prob$dat)]
+  return(ts_prob$dat)
+}
+```
+
+```{r,message=FALSE,fig.height = 3,fig.width=10}
+# [Lectura de Datos]
+data("hydrodata")
+Yt = hydrodata[,3:4]
+Pt = hydrodata$Rainfall
+data_miss = list(Yt = as.matrix(log(sqrt(Yt[-1,]))),
+                 Zt = as.matrix(sqrt(Pt[-nrow(hydrodata)])))
+## Graficas de las series ..................................................####
+datos = tsregime(Yt = data_miss$Yt,Zt = data_miss$Zt)
+autoplot(datos,1) + autoplot(datos,2)
+```
+
+Para la aplicación de la metodología para estimación de modelos MTAR con datos faltantes se recurre a la Liberia de R ‘’MTAR’’ (librería basada en el mismo artículo y que implementa toda la metodología de estimación). Como primer paso y como se propone en el articulo se consideran las series transformadas $Y_t = (\log(\sqrt(Y_{1t}),\log(\sqrt(Y_{2t}))$ y $Z_t = \sqrt(P_{t-1})$ (precipitaciones y el caudal bivariado de los ríos Bedón y La Plata el día t). En la metodología de estimación para estos modelos, el primer paso corresponde a la imputación inicial de datos faltantes que en este caso se realiza por medio de un promedio móvil sobre cada uno de los componentes.
+
+```{r,message=FALSE,fig.height = 3,fig.width=10}
+Y_temp = datos$Yt
+Y_temp[,1] = imput_y(Y_temp[,1])
+Y_temp[,2] = imput_y(Y_temp[,2])
+Z_temp = datos$Zt
+Z_temp[,1] = imput_y(Z_temp[,1])
+datos_temp = tsregime(Yt = Y_temp,Zt = Z_temp)
+autoplot(datos_temp,1) + autoplot(datos_temp,2)
+```
+
+Una vez completada la serie, el siguiente paso corresponde a la estimación del número de regímenes mediante el método de selección de modelos de ''Carlin and Chib'' y el uso del criterio ''NAIC'', seguido de la estimación de ordenes para el modelo por medio de la metodología de ''Kuo and Mallick'' (ambas metodologías explicadas en la primera parte de estos informes). Para ello, se usan las funciones ''mtarnumreg()'' y ''mtarstr()'' que implementan dichas metodologías usando prioris no informativas (el usuario podría dar prioris informativas si es el caso).
+
+```{r,fig.height = 3,fig.width=10}
+# initial = mtarinipars(tsregime_obj = datos_temp,list_model = list(l0_max = 3),method = 'KUO')
+# estim_nr = mtarnumreg(ini_obj = initial,iterprev = 2000,niter_m = 3000,burn_m = 1000,
+#                      list_m = TRUE,ordersprev = list(maxpj = 5,maxqj = 0,maxdj = 5))
+# autoplot(estim_nr,1) + autoplot(estim_nr,2)
+```
+
+
+
+
