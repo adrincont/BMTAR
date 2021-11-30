@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: ""
 output:
   pdf_document: default
   html_notebook: default
@@ -38,7 +38,7 @@ datos = tsregime(Yt = data_miss$Yt,Zt = data_miss$Zt)
 autoplot(datos,1) + autoplot(datos,2)
 ```
 
-Para la aplicación de la metodología para estimación de modelos MTAR con datos faltantes se recurre a la Liberia de R ‘’MTAR’’ (librería basada en el mismo artículo y que implementa toda la metodología de estimación). Como primer paso y como se propone en el articulo se consideran las series transformadas $Y_t = (\log(\sqrt(Y_{1t}),\log(\sqrt(Y_{2t}))$ y $Z_t = \sqrt(P_{t-1})$ (precipitaciones y el caudal bivariado de los ríos Bedón y La Plata el día t). En la metodología de estimación para estos modelos, el primer paso corresponde a la imputación inicial de datos faltantes que en este caso se realiza por medio de un promedio móvil sobre cada uno de los componentes.
+Para la aplicación de la metodología para estimación de modelos MTAR con datos faltantes se recurre a la Liberia de R ‘’MTAR’’ (librería basada en el mismo artículo y que implementa toda la metodología de estimación). Como primer paso y como se propone en el articulo se consideran las series transformadas $Y_t = (\ln{\sqrt(Y_{1t}}),\ln(\sqrt{Y_{2t}}))$ y $Z_t = \sqrt{P_{t-1}}$ (precipitaciones y el caudal bivariado de los ríos Bedón y La Plata el día t). En la metodología de estimación para estos modelos, el primer paso corresponde a la imputación inicial de datos faltantes que en este caso se realiza por medio de un promedio móvil sobre cada uno de los componentes.
 
 ```{r,message=FALSE,fig.height = 3,fig.width=10}
 Y_temp = datos$Yt
@@ -59,6 +59,36 @@ Una vez completada la serie, el siguiente paso corresponde a la estimación del 
 # autoplot(estim_nr,1) + autoplot(estim_nr,2)
 ```
 
+```{r,fig.height = 3,fig.width=10}
+
+```
+
+```{r,fig.height = 3,fig.width=10}
+# list_model = list(pars = list(l = 2,r = 2.6,orders = list(pj = c(5,5),dj = c(4,5))))
+# initial = mtarinipars(tsregime_obj = tsregime(Yt = data_miss$Yt,Zt = data_miss$Zt),list_model = list_model)
+# missingest = mtarmissing(ini_obj = initial,chain = TRUE, niter = 5000,burn = 1000)
+# autoplot.regime_missing(missingest,4)
+# data_c = missingest$tsregim
+```
+
+```{r,fig.height = 3,fig.width=10}
+# initial = mtarinipars(tsregime_obj = data_c,method = 'KUO',
+#                       list_model = list(pars = list(l = 2),
+#                                         orders = list(pj = c(5,5),dj = c(5,5))))
+# estruc2 = mtarstr(ini_obj = initial,niter = 5000,chain = TRUE,burn = 1000,r_init = 2.6)
+# autoplot.regime_model(estruc2,4)
+#estruc2$orders
+```
 
 
+```{r,fig.height = 3,fig.width=10}
+# initial = mtarinipars(tsregime_obj = data_c,list_model = list(pars = list(l = 2,orders = list(pj = c(5,5),dj = c(4,5)))))
+# ns2 = mtarns(ini_obj = initial,niter = 15000,chain = TRUE,burn = 5000,r_init = 2.6)
+```
+
+```{r,fig.height = 3,fig.width=10}
+# pred1 = mtarforecast(ns2,h = 10)
+# autoplot.regime_forecast(pred1,1)
+# autoplot.regime_forecast(pred1,2)
+```
 
