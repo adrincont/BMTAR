@@ -7,7 +7,7 @@
 # Function:
 #==================================================================================================#
 mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = TRUE, r_init = NULL,
-                   parallel = TRUE){
+                   parallel = FALSE){
   # Just-In-Time (JIT)
   compiler::enableJIT(3)
   # checking
