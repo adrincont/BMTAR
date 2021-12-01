@@ -6,6 +6,9 @@ output:
   html_document:
     df_print: paged
 ---
+```{r,message=FALSE,echo = FALSE,warning=FALSE}
+load('tempS/data_c.RData')
+```
 En la aplicación con datos se busca encontrar la relación entre la precipitación diaria (en mm) y el caudal diario del río (en $m^3/s$) de dos ríos donde un río desemboca en el otro en una región del departamento del Cauca en Colombia.La precipitación se midió en la estación meteorológica San Juan con una altitud de 2400 metros. El primer caudal del río se midió en la estación hidrológica ''El Trébol'' del río Bedón con una altitud de 1720 metros y el segundo caudal se midió en el río de la Plata en la estación hidrológica de ''Villalosada'' con una altitud de 1300 metros. Las estaciones están ubicadas cerca del ecuador de la Tierra en una zona geográfica muy seca. Esta última característica permite el control de factores hidrológicos/meteorológicos, los cuales pueden distorsionar el tipo de relación dinámica explicada por el modelo MTAR.
 
 El período de tiempo que se considero es del 1 de enero de 2006 al 14 de abril de 2009 (1200 puntos de tiempo) que tiene 57 puntos de tiempo con datos faltantes en la serie de precipitaciones, 214 en la serie del caudal del río Bedon y 213 en la serie del cauce del río de la Plata. Estos datos fueron proporcionados por el IDEAM (disponibles en la libreria R para los modelos TAR y MTAR).
@@ -26,7 +29,7 @@ imput_y = function(y){
 }
 ```
 
-```{r,message=FALSE,fig.height = 3,fig.width=10}
+```{r,message=FALSE,fig.height = 3,fig.width=10,message=FALSE}
 # [Lectura de Datos]
 data("hydrodata")
 Yt = hydrodata[,3:4]
@@ -63,12 +66,12 @@ Una vez completada la serie, el siguiente paso corresponde a la estimación del 
 
 ```
 
-```{r,fig.height = 3,fig.width=10}
+```{r,fig.height = 3,fig.width=10,warning=FALSE}
 # list_model = list(pars = list(l = 2,r = 2.6,orders = list(pj = c(5,5),dj = c(4,5))))
 # initial = mtarinipars(tsregime_obj = tsregime(Yt = data_miss$Yt,Zt = data_miss$Zt),list_model = list_model)
 # missingest = mtarmissing(ini_obj = initial,chain = TRUE, niter = 5000,burn = 1000)
-# autoplot.regime_missing(missingest,4)
 # data_c = missingest$tsregim
+autoplot(missingest,4)[[1]] + autoplot(missingest,4)[[2]]
 ```
 
 ```{r,fig.height = 3,fig.width=10}
@@ -76,19 +79,24 @@ Una vez completada la serie, el siguiente paso corresponde a la estimación del 
 #                       list_model = list(pars = list(l = 2),
 #                                         orders = list(pj = c(5,5),dj = c(5,5))))
 # estruc2 = mtarstr(ini_obj = initial,niter = 5000,chain = TRUE,burn = 1000,r_init = 2.6)
-# autoplot.regime_model(estruc2,4)
 #estruc2$orders
+#autoplot(estruc2,4)
 ```
 
 
-```{r,fig.height = 3,fig.width=10}
+```{r,fig.height = 3,fig.width=10,warning=FALSE,message=FALSE}
 # initial = mtarinipars(tsregime_obj = data_c,list_model = list(pars = list(l = 2,orders = list(pj = c(5,5),dj = c(4,5)))))
 # ns2 = mtarns(ini_obj = initial,niter = 15000,chain = TRUE,burn = 5000,r_init = 2.6)
+autoplot(ns2,1)
+autoplot(ns2,2)$R1+autoplot(ns2,2)$R2
+autoplot(ns2,3)$R1$c+autoplot(ns2,3)$R2$c
+autoplot(ns2,3)$R1$phi+autoplot(ns2,3)$R2$phi
+autoplot(ns2,3)$R1$delta+autoplot(ns2,3)$R2$delta
+autoplot(ns2,5)
 ```
 
 ```{r,fig.height = 3,fig.width=10}
-# pred1 = mtarforecast(ns2,h = 10)
-# autoplot.regime_forecast(pred1,1)
-# autoplot.regime_forecast(pred1,2)
+pred1 = mtarforecast(ns2,h = 10)
+pred1$forecast$estim
 ```
 
