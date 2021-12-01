@@ -66,6 +66,8 @@ Una vez completada la serie, el siguiente paso corresponde a la estimación del 
 
 ```
 
+
+Después de encontrar un aproximación a los ordenes de los rezagos (parámetros estructurales) así como del valor del umbral es posible una primera estimación de los datos faltantes, esto a partir de la función ``mtarmissing()'' observando en la gráfica el valor puntual y su respectivo intervalo de credibilidad al 95\% en azul para los valores faltantes.
 ```{r,fig.height = 3,fig.width=10,warning=FALSE}
 # list_model = list(pars = list(l = 2,r = 2.6,orders = list(pj = c(5,5),dj = c(4,5))))
 # initial = mtarinipars(tsregime_obj = tsregime(Yt = data_miss$Yt,Zt = data_miss$Zt),list_model = list_model)
@@ -73,28 +75,33 @@ Una vez completada la serie, el siguiente paso corresponde a la estimación del 
 # data_c = missingest$tsregim
 autoplot(missingest,4)[[1]] + autoplot(missingest,4)[[2]]
 ```
+Una vez completados los valores faltantes es necesario realizar nuevamente el procedimiento tanto de estimación de la cantidad de régimenes como de los parámetros estructurales para seguir reestimando los valores faltantes hasta tener una convergencia. Una vez concluido este proceso y teniendo los valores finales tanto de los faltantes como de los parámetros estructurales se realiza la estimación final de los parámetros no estructurales por medio de la función ``mtarns()'' para los cuales evaluamos el comportamiento de las cadenas y supuestos sobre los residuos al ajuste final.
 
-```{r,fig.height = 3,fig.width=10}
-# initial = mtarinipars(tsregime_obj = data_c,method = 'KUO',
-#                       list_model = list(pars = list(l = 2),
-#                                         orders = list(pj = c(5,5),dj = c(5,5))))
-# estruc2 = mtarstr(ini_obj = initial,niter = 5000,chain = TRUE,burn = 1000,r_init = 2.6)
-#estruc2$orders
-#autoplot(estruc2,4)
-```
-
-
+Los primeros gráficos nos muestran un buen comportamiento de cadenas sin valores que salten, por su parte los residuos aunque presenten algunas inconsistencias en normalidad podemos ver que no son autocorrelacionados, sin embargo es posible considerar otros ajustes al modelo para garantizar los supuestos.
 ```{r,fig.height = 3,fig.width=10,warning=FALSE,message=FALSE}
 # initial = mtarinipars(tsregime_obj = data_c,list_model = list(pars = list(l = 2,orders = list(pj = c(5,5),dj = c(4,5)))))
 # ns2 = mtarns(ini_obj = initial,niter = 15000,chain = TRUE,burn = 5000,r_init = 2.6)
 autoplot(ns2,1)
 autoplot(ns2,2)$R1+autoplot(ns2,2)$R2
 autoplot(ns2,3)$R1$c+autoplot(ns2,3)$R2$c
+```
+```{r,fig.height = 6,fig.width=10,warning=FALSE,message=FALSE}
 autoplot(ns2,3)$R1$phi+autoplot(ns2,3)$R2$phi
 autoplot(ns2,3)$R1$delta+autoplot(ns2,3)$R2$delta
+```
+```{r,fig.height = 4,fig.width=10,warning=FALSE,message=FALSE}
+diagnostic_mtar(ns2)[[2]] +  diagnostic_mtar(ns2)[[3]]
+diagnostic_mtar(ns2)[[4]] + diagnostic_mtar(ns2)[[5]]
+diagnostic_mtar(ns2)[[6]]
+```
+
+Finalmente vemos la estimación de los parámetros con valor de umbral estimado 2.54 y en el gráfico el ajuste del modelo a la serie de datos una vez completados los valores faltantes.
+```{r,fig.height = 3,fig.width=10,warning=FALSE,message=FALSE}
+ns2$regime
 autoplot(ns2,5)
 ```
 
+Con lo anterior ya es posible realizar el pronóstico de la serie, por medio de la función ``mtarforecast()'' considerando $h = 10$ observamos el prónostico 10 pasos adelante tanto de la variable de respuesta como umbral con su respectivo intervalo de credibilidad al 95\% 
 ```{r,fig.height = 3,fig.width=10}
 #pred1 = mtarforecast(ns2,h = 10)
 pred1$forecast$estim
