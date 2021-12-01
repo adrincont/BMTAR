@@ -9,7 +9,7 @@ mtarnumreg = function(ini_obj, level = 0.95, burn_m = NULL, niter_m = 1000,
                       ordersprev = list(maxpj = 2,maxqj = 0,maxdj = 0), parallel = TRUE){
   compiler::enableJIT(3)
   if (!is.logical(chain_m)) {stop('chain_m must be a logical object')}
-    if (!is.logical(parallel)) {stop('paralell must be a logical object')}
+    if (!is.logical(parallel)) {stop('parallel must be a logical object')}
   if (!is.logical(NAIC)) {stop('NAIC must be a logical object')}
   # Checking
   if (!inherits(ini_obj, 'regime_inipars')) {
