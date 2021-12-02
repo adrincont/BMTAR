@@ -8,6 +8,7 @@ output:
 ---
 ```{r,message=FALSE,echo = FALSE,warning=FALSE}
 load('data_c.RData')
+load('Resultados mtarns.RData')
 ```
 
 En la aplicación con datos se busca encontrar la relación entre la precipitación diaria (en mm) y el caudal diario del río (en $m^3/s$) de dos ríos donde un río desemboca en el otro en una región del departamento del Cauca en Colombia.La precipitación se midió en la estación meteorológica San Juan con una altitud de 2400 metros. El primer caudal del río se midió en la estación hidrológica ''El Trébol'' del río Bedón con una altitud de 1720 metros y el segundo caudal se midió en el río de la Plata en la estación hidrológica de ''Villalosada'' con una altitud de 1300 metros. Las estaciones están ubicadas cerca del ecuador de la Tierra en una zona geográfica muy seca. Esta última característica permite el control de factores hidrológicos/meteorológicos, los cuales pueden distorsionar el tipo de relación dinámica explicada por el modelo MTAR.
