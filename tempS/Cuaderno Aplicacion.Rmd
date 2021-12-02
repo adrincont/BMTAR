@@ -76,7 +76,7 @@ Teniendo en cuenta criterios como el comportamiento de las cadenas en los muestr
 autoplot(estim_nr,1)$m2 + autoplot(estim_nr,1)$m3
 ```
 
-Observando en los resultados del procedimiento el comportamiento de las variables gamma (variables indicadoras relacionadas con los ordenes) y sus frecuencias mas comunes, se tienen las estimaciones de ordenes para el modelo con $p_1 = 5,d_1 = 4$ para el primer regimen y $p_1 = 5,d_1 = 5$ para el segundo ademas de una estimación para $r = 2.6$. Luego de encontrar un aproximación a los ordenes de los rezagos (parámetros estructurales) así como del valor del umbral es posible una primera estimación de los datos faltantes (por medio de la metodología del filtro de Kalman y el modelo espacio-estado), esto a partir de la función ``mtarmissing()'' que realiza la estimación de datos faltantes realizando el proceso de muestreo conjunto de parámetros no estructurales y observaciones faltantes. El la gráfica observamos el valor puntual y su respectivo intervalo de credibilidad al 95\% en azul para los valores faltantes.
+Observando en los resultados del procedimiento el comportamiento de las variables gamma (variables indicadoras relacionadas con los ordenes) y sus frecuencias mas comunes, se tienen las estimaciones de ordenes para el modelo con $p_1 = 5,d_1 = 4$ para el primer regimen y $p_2 = 5,d_2 = 5$ para el segundo además de una estimación para $r = 2.6$. Luego de encontrar un aproximación a los ordenes de los rezagos (parámetros estructurales) así como del valor del umbral es posible una primera estimación de los datos faltantes (por medio de la metodología del filtro de Kalman y el modelo espacio-estado), esto a partir de la función ``mtarmissing()'' que realiza la estimación de datos faltantes realizando el proceso de muestreo conjunto de parámetros no estructurales y observaciones faltantes. En la gráfica observamos el valor puntual y su respectivo intervalo de credibilidad al 95\% en azul para los valores faltantes.
 
 ```{r,fig.height = 3,fig.width=10,warning=FALSE}
 # list_model = list(pars = list(l = 2,r = 2.6,orders = list(pj = c(5,5),dj = c(4,5))))
@@ -107,7 +107,7 @@ diagnostic_mtar(ns2)[[4]] + diagnostic_mtar(ns2)[[5]]
 diagnostic_mtar(ns2)[[6]]
 ```
 
-Finalmente vemos la estimación de los parámetros con valor de umbral estimado 2.54 y en el gráfico el ajuste del modelo a la serie de datos una vez completados los valores faltantes.
+Finalmente vemos la estimación de los parámetros con valor de umbral estimado final de 2.54 y en el gráfico el ajuste del modelo a la serie de datos una vez completados los valores faltantes.
 
 ```{r,fig.height = 3,fig.width=10,warning=FALSE,message=FALSE}
 ns2$regime
