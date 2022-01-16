@@ -597,11 +597,11 @@ mtarstr = function(ini_obj, level = 0.95, niter = 1000, burn = NULL, chain = TRU
   if (chain) {
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,Chain = Chain,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
-                   logLikj = logLikj,data = data,r = rvec,orders = orders,initial = initial)
+                   logLikj = logLikj,data = data,r = rvec,orders = orders,initial = ini_obj)
   }else{
     results = list(Nj = listj$Nrg,estimates = estimates,regime = Rest,
                    residuals = t(Yt_res), fitted.values = t(Yt_fit),
-                   logLikj = logLikj,data = data,r = rvec,orders = orders,initial = initial)
+                   logLikj = logLikj,data = data,r = rvec,orders = orders,initial = ini_obj)
   }
   compiler::enableJIT(0)
   class(results) = 'regime_model'
